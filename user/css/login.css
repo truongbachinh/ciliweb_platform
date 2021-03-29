@@ -1,0 +1,68 @@
+.lableSign
+{
+    margin-top: -10px  !important;
+}
+#password{
+    margin-bottom: -10px;
+}
+
+.break-heading
+{
+    text-align: center;
+    position: relative;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+   
+}
+  
+  .break-heading::before,
+  .break-heading::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #000;
+  }
+  
+  .break-heading:not(:empty)::before {
+    margin-right: .25em;
+  }
+  
+  .break-heading:not(:empty)::after {
+    margin-left: .25em;
+  }
+  .btn-info{
+  
+        color: #fff;
+         background-color: #3B5998  !important; 
+        border-color: #3B5998 !important;
+   
+  }
+  .btn-primary{
+  
+    color: #fff;
+     background-color: #dd4b39  !important; 
+    border-color: #dd4b39 !important;
+
+}
+
+  .fa {
+    padding: 6px;
+    font-size: 23px;
+    width: 40px;
+    text-align: center;
+    text-decoration: none;
+    margin: 5px 2px;
+  }
+  
+  .fa:hover {
+      opacity: 0.7;
+  }
+  
+  .fa-facebook {
+    background: #3B5998;
+    color: white;
+  }
+  .fa-google {
+    background: #dd4b39;
+    color: white;
+  }

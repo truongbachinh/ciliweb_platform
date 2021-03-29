@@ -1,0 +1,12 @@
+#orderForm{
+    margin-top: 140px;;
+}
+#cart-product-infor
+{
+    display: flex;
+    flex-flow: column;
+}
+#avatar-products
+{
+    margin: 10px 0px;
+}
