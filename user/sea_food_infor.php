@@ -14,7 +14,7 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
 ?>
 
 <link rel="stylesheet" href="./css/sea_food_infor.css">
-<div class="seafood-infor" style="margin-top: 140px;">
+<div class="seafood-infor" style="margin-top: 50px;">
     <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Sản phẩm của shop <i class="fal fa-chevron-right" style="font-size: 10px;"></i> <?php echo "<font>" . $line_food["shop_name"] . "</font>" ?></a></i>
     </div>
     <div class="infor">

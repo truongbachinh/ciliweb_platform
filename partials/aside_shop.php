@@ -79,7 +79,7 @@
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="../shop/manage_or  der.php" class=" menu-link">
+                                <a href="../shop/manage_order.php" class=" menu-link">
                                     <span class="menu-label">
                                         <span class="menu-name">Manage Order</span>
                                     </span>

@@ -30,7 +30,7 @@ if (!empty($_SESSION["current_user"])) {
                 </ul>
                 <?php
                 if (isset($_POST["cartBT"])) {
-                    header("location: ../user/cart/cart.php");
+                    header("location: ./cart/cart.php");
                 }
                 ?>
 

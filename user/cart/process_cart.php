@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "./connect_db.php";
+include "../connect_db.php";
 if (!empty($_SESSION["current_user"]['username'])) {
 
     $cartUserId = $_SESSION["current_user"]['user_id'];
@@ -9,43 +9,41 @@ if (!empty($_SESSION["current_user_social"]['fullname'])) {
 
     $cartUserId = $_SESSION["current_user_social"]['user_id'];
 }
-
-// $shopInfor = $link->query("SELECT shop.*, products.* from products INNER JOIN shop ON shop.shop_id = products.p_shop_id IN (" . implode(",", array_keys($_POST["quantity"])) . ")");
-// $GLOBALS['shopInfor'] = mysqli_fetch_assoc($shopInfor);
 switch ($_GET['view']) {
     case "add_to_cart":
         if (isset($_POST["quantity"])) {
-            $cartResult = $link->query("SELECT products.*, shop.* FROM products INNER JOIN shop ON products.p_shop_id = shop.shop_id IN (" . implode(",", array_keys($_POST["quantity"])) . ")");
-            $cartShop = array();
+
+            $cartResult = $link->query("SELECT * FROM products WHERE p_id IN (" . implode(",", array_keys($_POST["quantity"])) . ")");
+            $cartProduct = array();
             $productId = "";
             $cartProductPrice = "";
             while ($row = mysqli_fetch_array($cartResult)) {
-                $cartShop[] = $row;
+                $cartProduct[] = $row;
                 $productId = $row['p_id'];
                 $cartProductPrice = $row['p_price'];
             }
 
-            // $insertString = "";
-            // foreach ($cartShop as $key => $productShop) {
+            $insertString = "";
+            foreach ($cartProduct as $key => $product) {
 
-            //     $insertString .= "(NULL, '" . $cartUserId . "', '" . $productShop['p_id'] . "', '" . $_POST['quantity'][$product["p_id"]] . "', '" . time() . "', '" . time() . "')";
-            //     if ($key != count($cartProduct) - 1) {
-            //         $insertString .= ",";
-            //     }
-            // }
-            // $cartProductId = "";
-            // $cartId = "";
+                $insertString .= "(NULL, '" . $cartUserId . "', '" . $product['p_id'] . "', '" . $_POST['quantity'][$product["p_id"]] . "', '" . time() . "')";
+                if ($key != count($cartProduct) - 1) {
+                    $insertString .= ",";
+                }
+            }
+            $cartProductId = "";
+            $cartId = "";
             foreach ($_POST['quantity'] as $id => $quantity) {
 
                 $cartSql = mysqli_query($link, "select * from `cart` where cart_user_id = '$cartUserId' and cart_product_id = '$id' ");
                 while ($rowCart = mysqli_fetch_array($cartSql)) {
                     $cartId = $rowCart['cart_id'];
-                    $cartAmount = $rowCart["cart_amount"];
+                    $cartAmount = $rowCart["cart_quantity"];
                 }
                 if ($cartId) {
                     $amount = $cartAmount + $_POST['quantity'][$product["p_id"]];
                     // $price = ($cartAmount * $cartProductPrice) + ($_POST['quantity'][$product["p_id"]] * $cartProductPrice);
-                    $cartUpdate = mysqli_query($link, "UPDATE `cart` SET `cart_amount` = '" . $amount . "' where cart_id = '$cartId'");
+                    $cartUpdate = mysqli_query($link, "UPDATE `cart` SET `cart_quantity` = '" . $amount . "', `cart_update_time` = '" . time() . "' where cart_id = '$cartId'");
                     echo json_encode(
                         array(
                             'status' => $cartUpdate,
@@ -53,7 +51,7 @@ switch ($_GET['view']) {
                         )
                     );
                 } else {
-                    $cartDetail = mysqli_query($link, "INSERT INTO `cart` (`cart_id`, `cart_user_id`, `cart_product_id`, `cart_amount`, `create_time`, `update_time`) VALUES " . $insertString . ";");
+                    $cartDetail = mysqli_query($link, "INSERT INTO `cart` (`cart_id`, `cart_user_id`, `cart_product_id`, `cart_quantity`, `cart_create_time`) VALUES " . $insertString . ";");
                     echo json_encode(array(
                         'status' => $cartDetail,
                         'message' => "Add product oke"
@@ -75,7 +73,7 @@ switch ($_GET['view']) {
     case "update_cart";
         if (isset($_POST["quantity"])) {
             foreach ($_POST['quantity'] as $id => $quantity) {
-                $cartUpdate = mysqli_query($link, "UPDATE `cart`  SET `cart_amount`  = '" . $quantity . "'  where cart_user_id = '$cartUserId' AND  cart_id = $id");
+                $cartUpdate = mysqli_query($link, "UPDATE `cart`  SET `cart_quantity`  = '" . $quantity . "', `cart_update_time` = '" . time() . "'  where cart_user_id = '$cartUserId' AND  cart_id = $id");
             }
             echo json_encode(array(
                 'status' => $cartUpdate,

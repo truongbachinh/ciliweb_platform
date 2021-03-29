@@ -11,14 +11,18 @@ if (!empty($_SESSION["current_user_social"]['fullname'])) {
     $cartUserId = $_SESSION["current_user_social"]['user_id'];
 }
 
-$cartInfor = "SELECT shop.*, c.cart_id, c.cart_amount, c.cart_user_id, c.cart_product_id, p.p_name, p.p_price, p_fresh, p.p_image from cart as c inner join products as p on. c.cart_product_id = p.p_id inner join shop on p.p_shop_id = shop.shop_id where cart_user_id  = '$cartUserId'";
-$resultCart = mysqli_query($link, $cartInfor);
+
+$resultCart = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id   = '$cartUserId'");
+$resultCarts = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id   = '$cartUserId'");
 $cartInforCheckout = array();
 $a = array();
 while ($rowC = mysqli_fetch_array($resultCart)) {
     $cartInforCheckout[] =  $rowC;
     $a[] = $rowC['shop_id'];
 }
+
+
+$rowProduct = array();
 
 
 ?>
@@ -47,11 +51,14 @@ while ($rowC = mysqli_fetch_array($resultCart)) {
     </div>
     <div id="orderForm">
         <div class="container">
+
             <div class="py-5 text-center">
 
                 <h2>Checkout form</h2>
                 <p class="lead">Below is form checkout of seafoodweb please field information bellow to order.</p>
             </div>
+
+
 
             <div class="row">
                 <div class="col-md-4 order-md-2 mb-4">
@@ -67,30 +74,20 @@ while ($rowC = mysqli_fetch_array($resultCart)) {
                         // $ctG = array();
                         $countShop = array();
                         foreach ($cartInforCheckout as  $row) {
-                            $countShop[] = ($row['shop_id']);
-
-                            // $a =   array_count_values($ctG);
-                            // var_dump($a);
-                            // var_dump(($row['shop_id']));
-                            // foreach ($row['shop_id'] as $key => $values) {
-                            //     $ab =   array_count_values($key);
-                            // }
-                            // var_dump($ab);
-
-                            // var_dump(array_count_values($countShop));
 
                         ?>
+
                             <li class="list-group-item d-flex justify-content-between lh-condensed">
                                 <div class="d-flex flex-column">
                                     <h6 class="my-0">Product Infor</h6>
                                     <div id="avatar-products" class=" my-2">
-                                        <img src="/ciliweb_project/shop/<?php echo $row['p_image'] ?>" style=" border-radius:5px " width="60" height="60" id="img-infor" class="img-fluid  ">
+                                        <img src="../../shop/image_products/<?php echo $row['p_image'] ?>" style=" border-radius:5px " width="60" height="60" id="img-infor" class="img-fluid  ">
                                     </div>
                                     <small class="text-muted">Name: <?= $row['p_name'] ?></small>
-                                    <small class="text-muted">Quantity: <?= $quantity = $row['cart_amount'] ?></small>
+                                    <small class="text-muted">Quantity: <?= $quantity = $row['cart_quantity'] ?></small>
                                     <small class="text-muted">Shop: <?= $row['shop_name'] ?></small>
                                 </div>
-                                <span class="text-muted"><?= number_format($cost = $row['p_price'], 0, ",", ".") . ' VNĐ' ?></span>
+                                <span class="text-muted"><?= number_format($cost  = $row["cart_quantity"] *  $row["p_price"], 0, ",", ".") . ' VNĐ' ?></span>
                             </li>
                         <?php
                             $total += $cost;
@@ -276,7 +273,7 @@ if (isset($_POST["buttonCheckout"])) {
     // exit;
     // // xủ lý giỏ hàng lưu vào db
 
-    $cartOrder = $link->query("SELECT shop.*, c.cart_id, SUM(c.cart_amount) as total_amount, c.cart_user_id, c.cart_product_id, p.p_name, SUM(p.p_price) as total_price, p_fresh, p.p_image from cart as c inner join products as p on. c.cart_product_id = p.p_id inner join shop on p.p_shop_id = shop.shop_id where cart_user_id = '$cartUserId' GROUP BY shop.shop_id");
+    $cartOrder = $link->query("SELECT shop.*, c.cart_id, SUM(c.cart_quantity) as total_amount, c.cart_user_id, c.cart_product_id, p.p_name, SUM(p.p_price) as total_price, p_fresh, p.p_image from cart as c inner join products as p on. c.cart_product_id = p.p_id inner join shop on p.p_shop_id = shop.shop_id where cart_user_id = '$cartUserId' GROUP BY shop.shop_id");
     $cartInforOrder = array();
     while ($rowCart = mysqli_fetch_array($cartOrder)) {
         $cartInforOrder[] =  $rowCart;
@@ -286,13 +283,20 @@ if (isset($_POST["buttonCheckout"])) {
 
         $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" . time() . "','1')");
         $orderId = ($link->insert_id);
-        var_dump($orderId);
+        $shopIdProduct = $carts['shop_id'];
 
+
+        $cartCheckoutProduct  = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id = '$cartUserId' AND shop.shop_id = '$shopIdProduct' ");
+        var_dump($cartCheckoutProduct);
+        $checkOutOrder = array();
+        while ($rowOrder = mysqli_fetch_array($cartCheckoutProduct)) {
+            $checkOutOrder[] =  $rowOrder;
+        }
 
         $insertString = "";
-        foreach ($cartInforCheckout  as $key => $cart) {
-            $insertString .= "(NULL, '" . $orderId . "', '" . $cart['cart_product_id'] . "', '" . $cart['cart_amount']  . "', '" . $cart['p_price'] . "', '" . time() . "')";
-            if ($key != count($cartInforCheckout) - 1) {
+        foreach ($checkOutOrder  as $key => $cart) {
+            $insertString .= "(NULL, '" . $orderId . "', '" . $cart['cart_product_id'] . "', '" . $cart['cart_quantity']  . "', '" . $cart['p_price'] . "', '" . time() . "')";
+            if ($key != count($checkOutOrder) - 1) {
                 $insertString .=  ",";
             }
         }
@@ -302,16 +306,15 @@ if (isset($_POST["buttonCheckout"])) {
 
         $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_country`, `oda_state`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $_POST[firstName]','$_POST[lastName]','$_POST[address1]','$_POST[address2]','$_POST[phoneNumber]','$_POST[email]','$_POST[selectCountry]','$_POST[selectStates]','$_POST[zipCode]','$_POST[noteCheckout]', '" . time() . "')");
         echo $success = "order thành công";
+
         var_dump($order);
         var_dump($orderDetail);
         var_dump($orderAddress);
-
-
-        // if (isset($order) && isset($orderDetail)) {
-        //     $link->query("DELETE FROM cart WHERE `cart_user_id` = '$cartUserId'");
-        // }
     }
-    exit;
+
+    if (isset($order) && isset($orderDetail)) {
+        $link->query("DELETE FROM cart WHERE `cart_user_id` = '$cartUserId'");
+    }
 }
 
 if (isset($_POST["order_online"])) {

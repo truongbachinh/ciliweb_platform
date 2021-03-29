@@ -11,7 +11,7 @@
 <script src="../assets/vendor/bootstrap-notify/bootstrap-notify.min.js"></script>
 <script src="../assets/js/atmos.js"></script>
 <!--page specific scripts for demo-->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
 <!--Additional Page includes-->
 <script src="../assets/vendor/apexchart/apexcharts.min.js"></script>
 <!--chart data for current dashboard-->
