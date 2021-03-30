@@ -90,7 +90,7 @@ include "../connect_db.php"
         if (isset($_POST["register"])) {
             $count = 0;
             $result = $link->query("SELECT * from `user` where `username` ='$_POST[username]'");
-            $count = mysqli_num_rows($res);
+            $count = mysqli_num_rows($result);
 
             if ($count > 0) {
         ?>
@@ -100,14 +100,18 @@ include "../connect_db.php"
                 </script>
             <?php
             } else {
-                $addAccount =  mysqli_query($link, "insert into user (user_id, fullname,username, password, email,user_role_id,user_status,user_create_time) values('$_POST[fullname]','$_POST[username]','$_POST[password]','$_POST[email]','$_POST[role]','1','" . time() . "')");
+                $addAccount = $link->query("INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `fullname`, `user_status`, `user_role_id`, `user_create_time`) VALUES (NULL, '$_POST[username]', '$_POST[password]', '$_POST[email]', '$_POST[fullname]', '1', '$_POST[role]', '" . time() . "');");
+
             ?>
                 <script type="text/javascript">
                     const a = document.getElementById("success")
                     document.getElementById("success").style.display = "block";
                     document.getElementById("failure").style.display = "none";
                     if (a.style.display == "block") {
-                        window.location.href = "./login.php"
+                        setTimeout(function() {
+                            window.location.href = "./login.php";
+                        }, 500);
+
                     }
                 </script>
         <?php

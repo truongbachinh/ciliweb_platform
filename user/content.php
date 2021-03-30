@@ -36,7 +36,7 @@ include "../connect_db.php";
             }
             if ($t == 'add_to_cart') {
 
-                include('./cart/cart.php');
+                include('../cart/cart.php.php');
                 include('./search/search_categories.php');
             }
             // if ($t == 'add_to_cart') {

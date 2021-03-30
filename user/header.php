@@ -19,6 +19,8 @@ if (!empty($_SESSION["current_user"])) {
             </button>
             <div class="collapse navbar-collapse" id="ciliweb-navBar">
                 <ul class="navbar-nav ml-auto ">
+
+
                     <li class="nav-item active">
                         <form action="" method="post">
                             <div style="margin-right: 15px; ">

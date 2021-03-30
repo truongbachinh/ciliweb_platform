@@ -1,5 +1,5 @@
 <?php
-include "../config_user.php";
+include "../config_shop.php";
 $resultShopInfor = $link->query("SELECT * from shop where shop_user_id = '$userId'");
 $shopInfor = mysqli_fetch_assoc($resultShopInfor);
 
@@ -28,8 +28,8 @@ if (isset($_POST["addShopInfor"])) {
             if (move_uploaded_file($_FILES["shopImage"]["tmp_name"], $targetFilePath)) {
                 $addShop = $link->query("INSERT INTO `shop` (`shop_id`, `shop_user_id`, `shop_name`, `shop_address`, `shop_description`, `shop_avatar`, `shop_status`, `shop_create_time`) VALUES (NULL,'$userId','$_POST[shopName]','$_POST[shopAddress]','$_POST[shopDescription]','$fileName','1','" . time() . "')");
             }
-            var_dump($addShop);
-            exit;
+            // var_dump($addShop);
+            // exit;
             if ($addShop) {
 ?>
                 <script type="text/javascript">

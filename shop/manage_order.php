@@ -1,5 +1,5 @@
 <?php
-include "../config_user.php";
+include "../config_shop.php";
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
 ?>

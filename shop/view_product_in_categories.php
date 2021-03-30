@@ -1,5 +1,5 @@
 <?php
-include "../config_user.php";
+include "../config_shop.php";
 $idCtg = $_GET["idctg"];
 $shopId = $_GET["idsh"];
 $result = $link->query("SELECT categories.* from categories  where ctg_id = $idCtg");

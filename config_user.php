@@ -2,20 +2,18 @@
 include "connect_db.php";
 session_start();
 
-$isLoggedIn = isset($_SESSION['current_username']);
-$isLoggedInShop = isset($_SESSION['current_user']);
-if ($isLoggedIn) $currentUser = $_SESSION['current_username'];
-if ($isLoggedInShop) $currentUser = $_SESSION['current_user'];
+
+$isLoggedInUser = isset($_SESSION['current_user']);
+$isLoggedInUserSocial = isset($_SESSION['current_user_social']);
+if ($isLoggedInUser) $currentUser = $_SESSION['current_username'];
+if ($isLoggedInUserSocial) $currentUser = $_SESSION['current_user_social'];
 
 $userId = $_SESSION["current_user"]["user_id"];
+$userSocialId = $_SESSION["current_user_social"]["user_id"];
+if (!empty($userId)) {
+    $resultUserInfor = mysqli_query($link, "select * from user where user_id = '$userId'");
+} elseif (!empty($userSocialId)) {
+    $resultUserInfor = mysqli_query($link, "select * from user where user_id = '$userSocialId'");
+}
 
-$shopInfor = $link->query("select * from shop where shop_user_id = $userId ");
-$GLOBALS['shopInfor'] = mysqli_fetch_assoc($shopInfor);
-
-
-$pageTitle = "Ciliweb Seafood Platform";
-
-$resultShopInfor = mysqli_query($link, "select * from shop where shop_user_id = '$userId'");
-$resultUserInfor = mysqli_query($link, "select * from user where user_id = '$userId'");
-$rowShop = mysqli_fetch_array($resultShopInfor, MYSQLI_ASSOC);
 $rowUser = mysqli_fetch_array($resultUserInfor, MYSQLI_ASSOC);

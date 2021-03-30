@@ -312,7 +312,7 @@ if (isset($_POST["buttonCheckout"])) {
         var_dump($orderAddress);
     }
 
-    if (isset($order) && isset($orderDetail)) {
+    if (isset($order) && isset($orderDetail) &&  ($orderAddress)) {
         $link->query("DELETE FROM cart WHERE `cart_user_id` = '$cartUserId'");
     }
 }
