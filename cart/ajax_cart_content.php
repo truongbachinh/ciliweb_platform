@@ -16,9 +16,9 @@
         $result = $link->query("SELECT cart.*, products.*, shop.* from cart INNER JOIN products on cart.cart_product_id = products.p_id INNER JOIN shop ON shop.shop_id = products.p_shop_id where cart_user_id ='$cartUserId'");
     }
     ?>
-    <div>
+    <div class="table-responsive p-t-10">
         <form action="../payment/checkout.php" method="post" id="updateCartProduct" enctype="multipart/form-data">
-            <table class="table table-bordered table-striped" style="text-align: center; background-color:blanchedalmond !important">
+            <table class="table table-hover table-bordered table-striped" style="text-align: center; background-color:blanchedalmond !important">
                 <thead>
                     <tr>
                         <!-- <th>Select</th> -->

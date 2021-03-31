@@ -35,7 +35,7 @@ if (!empty($_SESSION["current_user"])) {
                             <div class="avatar avatar-sm avatar-online">
                                 <?php
                                 if ($resultUserInfor->num_rows > 0) {
-                                    $imageURL = '../user/avatar_user' . $rowUser["ui_avatar"];
+                                    $imageURL = '../user/avatar/' . $rowUser["ui_avatar"];
                                 ?>
                                     <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
                                 <?php

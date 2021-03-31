@@ -1,4 +1,4 @@
-<div class="container-fluid" style="margin-top: 150px">
+<div class="container-fluid" style="margin-top: 120px">
     <div class="row">
         <div class="col-lg-7  mr-auto">
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">

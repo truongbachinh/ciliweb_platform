@@ -33,9 +33,10 @@ include "../config_user.php";
     <?php include "../partials/footer_user.php"; ?>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function(e) {
-
-        })
+        $(".nav .nav-link").on("click", function() {
+            $(".nav").find(".active").removeClass("active");
+            $(this).addClass("active");
+        });
     </script>
 </body>
 

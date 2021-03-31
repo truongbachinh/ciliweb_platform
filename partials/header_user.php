@@ -45,7 +45,7 @@ ob_start();
                                         <div class="avatar avatar-sm avatar-online">
                                             <?php
                                             if ($resultUserInfor->num_rows > 0) {
-                                                $imageURL = '../user/avatar_user' . $rowUser["ui_avatar"];
+                                                $imageURL = '../user/avatar/' . $rowUser["ui_avatar"];
                                             ?>
                                                 <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
                                             <?php
@@ -58,8 +58,9 @@ ob_start();
                                         </div>
                                     </a>
                                     <div class="dropdown-menu  dropdown-menu-right">
-                                        <a href="../user/index.php?view=profile&id=<?php echo $_SESSION["current_user"]["user_id"] ?>" class="dropdown-item"> Profile</a>
-                                        <a href="/user/change-password.php" class="dropdown-item"> Reset Password</a>
+                                        <a href="../user/index.php?view=profile" class="dropdown-item"> Profile</a>
+                                        <a href="../user/index.php?view=myorder" class="dropdown-item"> My Order</a>
+                                        <a href="../account/change_password.php" class="dropdown-item"> Reset Password</a>
                                         <a class="dropdown-item" href=""> Help </a>
                                         <div class="dropdown-divider"></div>
                                         <a href="../account/logout.php" class="dropdown-item"> Logout</a>
@@ -69,7 +70,7 @@ ob_start();
                         </div>
                     </nav>
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
-                        <a class="navbar-brand" href="https://ciliweb.vn/ciliweb_project/shop/register_shop.php">
+                        <a class="navbar-brand" href="../account/login.php">
                             <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="75" height="75">
                         </a>
                         <div class="collapse navbar-collapse">

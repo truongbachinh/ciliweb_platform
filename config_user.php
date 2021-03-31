@@ -14,10 +14,11 @@ if ($isLoggedInUser) {
 
 
 if (!empty($userId)) {
-    $resultUserInfor = mysqli_query($link, "select * from user_infor where ui_user_id = '$userId'");
+    $resultUserInfor = mysqli_query($link, "SELECT  user.*, user_infor.*  from user_infor INNER JOIN user ON user.user_id = user_infor.ui_user_id WHERE `user_id` = '$userId'");
 }
 
-if (!isset($resultUserInfor)) {
+if (isset($resultUserInfor)) {
     $rowUser = mysqli_fetch_array($resultUserInfor, MYSQLI_ASSOC);
 }
+
 $pageTitle = "Ciliweb Seafood Platform";
