@@ -4,16 +4,20 @@ session_start();
 
 
 $isLoggedInUser = isset($_SESSION['current_user']);
-$isLoggedInUserSocial = isset($_SESSION['current_user_social']);
-if ($isLoggedInUser) $currentUser = $_SESSION['current_username'];
-if ($isLoggedInUserSocial) $currentUser = $_SESSION['current_user_social'];
 
-$userId = $_SESSION["current_user"]["user_id"];
-$userSocialId = $_SESSION["current_user_social"]["user_id"];
-if (!empty($userId)) {
-    $resultUserInfor = mysqli_query($link, "select * from user where user_id = '$userId'");
-} elseif (!empty($userSocialId)) {
-    $resultUserInfor = mysqli_query($link, "select * from user where user_id = '$userSocialId'");
+if ($isLoggedInUser) $currentUser = $_SESSION['current_user'];
+
+if ($isLoggedInUser) {
+    $userId = $_SESSION["current_user"]["user_id"];
 }
 
-$rowUser = mysqli_fetch_array($resultUserInfor, MYSQLI_ASSOC);
+
+
+if (!empty($userId)) {
+    $resultUserInfor = mysqli_query($link, "select * from user_infor where ui_user_id = '$userId'");
+}
+
+if (!isset($resultUserInfor)) {
+    $rowUser = mysqli_fetch_array($resultUserInfor, MYSQLI_ASSOC);
+}
+$pageTitle = "Ciliweb Seafood Platform";

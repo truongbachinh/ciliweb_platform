@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="./css/header_payment.css">
 <?php
 
-include "../connect_db.php";
+include "../config_user.php";
 
 if (!empty($_SESSION["current_user"])) {
 
@@ -31,26 +31,28 @@ if (!empty($_SESSION["current_user"])) {
 
                 <ul class="navbar-nav ">
                     <li class="nav-item dropdown ">
-                        <a class="nav-link dropdown-toggle" href="https://ciliweb.vn/ciliweb_project/user/account/profile.php" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div class="d-inline-flex">
-                                <div class="avatar avatar-sm avatar-online mr-3">
-                                    <span class="avatar-title rounded-circle"><i class="fas fa-user "></i></span>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <div class="name-student"> <?php echo $_SESSION["current_user"]["username"]; ?></div>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="avatar avatar-sm avatar-online">
+                                <?php
+                                if ($resultUserInfor->num_rows > 0) {
+                                    $imageURL = '../user/avatar_user' . $rowUser["ui_avatar"];
+                                ?>
+                                    <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
+                                <?php
+                                } else { ?>
+                                    <span class="avatar-title rounded-circle bg-warning"><?php echo $_SESSION["current_user"]["username"]; ?></span>
 
-                                </div>
+                                <?php } ?>
+
+
                             </div>
                         </a>
-                        <div class="dropdown-menu dropdown-color  dropdown-menu-right">
-                            <a class="dropdown-item" href="https://ciliweb.vn/ciliweb_project/user/account/profile.php"> Profile
-                            </a>
-                            <a class="dropdown-item" href="https://ciliweb.vn/ciliweb_project/user/account/profile.php"> Đơn mua
-                            </a>
-                            <a class="dropdown-item" href="https://ciliweb.vn/ciliweb_project/user/account/change_password.php"> Reset Password</a>
-                            <a class="dropdown-item" href="#"> Help </a>
+                        <div class="dropdown-menu  dropdown-menu-right">
+                            <a href="/user/profile.php" class="dropdown-item"> Profile</a>
+                            <a href="/user/change-password.php" class="dropdown-item"> Reset Password</a>
+                            <a class="dropdown-item" href=""> Help </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="https://ciliweb.vn/ciliweb_project/user/account/logout.php"> Logout</a>
+                            <a href="../account/logout.php" class="dropdown-item"> Logout</a>
                         </div>
                     </li>
                 </ul>

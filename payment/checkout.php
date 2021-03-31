@@ -81,7 +81,7 @@ $rowProduct = array();
                                 <div class="d-flex flex-column">
                                     <h6 class="my-0">Product Infor</h6>
                                     <div id="avatar-products" class=" my-2">
-                                        <img src="../../shop/image_products/<?php echo $row['p_image'] ?>" style=" border-radius:5px " width="60" height="60" id="img-infor" class="img-fluid  ">
+                                        <img src="../shop/image_products/<?php echo $row['p_image'] ?>" style=" border-radius:5px " width="60" height="60" id="img-infor" class="img-fluid  ">
                                     </div>
                                     <small class="text-muted">Name: <?= $row['p_name'] ?></small>
                                     <small class="text-muted">Quantity: <?= $quantity = $row['cart_quantity'] ?></small>

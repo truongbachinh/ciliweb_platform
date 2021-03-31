@@ -5,7 +5,7 @@ $id = $_GET["id"];
 $idShop = $_GET["idsh"];
 
 
-$query_food = mysqli_query($conn, $sql_food);
+
 $query_food = $link->query("SELECT categories.*, shop.*, products.* from products INNER JOIN shop ON shop.shop_id = products.p_shop_id INNER JOIN categories ON categories.ctg_id = products.p_category_id WHERE products.p_id = $id AND shop.shop_id = $idShop  AND categories.ctg_id = $idCtg");
 $line_food = mysqli_fetch_array($query_food, MYSQLI_ASSOC);
 
@@ -14,11 +14,11 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
 ?>
 
 <link rel="stylesheet" href="./css/sea_food_infor.css">
-<div class="seafood-infor" style="margin-top: 50px;">
-    <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Sản phẩm của shop <i class="fal fa-chevron-right" style="font-size: 10px;"></i> <?php echo "<font>" . $line_food["shop_name"] . "</font>" ?></a></i>
+<div class="seafood-infor" style="margin-top: 100px; ">
+    <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Sản phẩm của shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $line_food["shop_name"] . "</font>" ?></a></i>
     </div>
     <div class="infor">
-        <form action="./cart/cart.php?view=add_to_cart" method="post" enctype="multipart/form-data">
+        <form action="../cart/cart.php?view=add_to_cart" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6 col-lg-6 " style="text-align: center;">
                     <div class="row-lg-5 row-md-5 row-5 list-imglist">
@@ -29,10 +29,10 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
                             <div class="list-img-library">
                                 <div class="show-image-library">
                                     <div id="arrowL-Img">
-                                        <i class="fa fa-chevron-left" aria-hidden="true" id="arrow-button"></i>
+                                        <i class="mdi mdi-chevron-left mdi:24px" aria-hidden="true" id="arrow-button"></i>
                                     </div>
                                     <div id="arrowR-Img">
-                                        <i class="fa fa-chevron-right" aria-hidden="true" id="arrow-button"></i>
+                                        <i class="mdi mdi-chevron-right mdi:24px" aria-hidden="true" id="arrow-button"></i>
                                     </div>
                                     <div class="list">
 
@@ -215,7 +215,6 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
     </div>
 
 </div>
-<!-- <script src="./library/js/jquery-3.3.1.min.js"></script> -->
 <script type="text/javascript">
     $(document).ready(function() {
 

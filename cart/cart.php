@@ -1,7 +1,5 @@
 <?php
-$GLOBALS['session'] = session_start();
-include "../../connect_db.php";
-include "../header.php";
+include "../config_user.php";
 
 if (!empty($_SESSION["current_user"]['username'])) {
 
@@ -11,9 +9,7 @@ if (!empty($_SESSION["current_user_social"]['fullname'])) {
 
     $cartUserId = $_SESSION["current_user_social"]['user_id'];
 }
-
-
-if (isset($_SESSION["current_user"]['username']) || isset($_SESSION["current_user_social"]['fullname'])) {
+if (isset($_SESSION["current_user"]['username']) || isset($_SESSION["current_user"]['fullname'])) {
     $error = false;
     $success = false;
     if (isset($_GET["view"])) {
@@ -46,14 +42,14 @@ if (isset($_SESSION["current_user"]['username']) || isset($_SESSION["current_use
                         $cartSql = mysqli_query($link, "select * from `cart` where cart_user_id = '$cartUserId' and cart_product_id = '$id' ");
                         while ($rowCart = mysqli_fetch_array($cartSql)) {
                             $cartId = $rowCart['cart_id'];
-                            $cartAmount = $rowCart["cart_amount"];
+                            $cartAmount = $rowCart["cart_quantity"];
                         }
                         if ($cartId) {
                             $amount = $cartAmount + $_POST['quantity'][$product["p_id"]];
-                            $cartUpdate = mysqli_query($link, "UPDATE `cart` SET `cart_amount` = '" . $amount . "' where cart_id = '$cartId'");
+                            $cartUpdate = mysqli_query($link, "UPDATE `cart` SET `cart_quantity` = '" . $amount . "' where cart_id = '$cartId'");
                             echo "updateoke";
                         } else {
-                            $cartDetail = mysqli_query($link, "INSERT INTO `cart` (`cart_id`, `cart_user_id`, `cart_product_id`, `cart_amount`, `create_time`, `update_time`) VALUES " . $insertString . ";");
+                            $cartDetail = mysqli_query($link, "INSERT INTO `cart` (`cart_id`, `cart_user_id`, `cart_product_id`, `cart_quantity`, `create_time`, `update_time`) VALUES " . $insertString . ";");
                             echo "addoke";
                         }
                     }
@@ -171,7 +167,7 @@ if (isset($_SESSION["current_user"]['username']) || isset($_SESSION["current_use
 
     if (!empty($cartUserId)) {
 
-        $cart_sql = "SELECT c.cart_id, c.cart_amount, c.cart_user_id, c.cart_product_id, p.p_name, p.p_price, p.p_image from cart as c inner join products as p on. c.cart_product_id = p.p_id where cart_user_id = '$cartUserId'";
+        $cart_sql = "SELECT c.*,p.* from cart as c inner join products as p on. c.cart_product_id = p.p_id where cart_user_id = '$cartUserId'";
         $result = mysqli_query($link, $cart_sql);
     }
 ?>
@@ -179,52 +175,42 @@ if (isset($_SESSION["current_user"]['username']) || isset($_SESSION["current_use
     <html lang="en">
 
     <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-
-        <!-- font-cdn -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
-        <!-- bootstrap 4 cdn -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <!-- jquery 4 cdn -->
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
-
-        </script>
-        <link rel="stylesheet" href="../css/header.css">
-        <link rel="stylesheet" href="../css/cart.css">
+        <?php include "../partials/html_header.php"; ?>
+        <link rel="stylesheet" href="./css/cart.css">
     </head>
 
-    <body>
-        <div class="container-fluid" style="margin-top: 160px">
-            <div>
-                <p id="cart-title">Your Cart</p>
-            </div>
-            <div class="justify-content-center align-items-center" id="cart-form">
-                <?php
-                include "ajax_cart_content.php"
-                ?>
-            </div>
-        </div>
+    <body class="sidebar-pinned " style="overflow-x: hidden;">
 
+        <main class="user-main">
+            <?php include "../partials/header_user.php"; ?>
+            <!-- PLACE CODE INSIDE THIS AREA -->
+            <div class="container-fluid" style="margin-top: 160px">
+                <div>
+                    <p id="cart-title">Your Cart</p>
+                </div>
+                <div class="justify-content-center align-items-center" id="cart-form">
+                    <?php
+                    include "ajax_cart_content.php"
+                    ?>
+                </div>
+            </div>
+
+
+            <!--/ PLACE CODE INSIDE THIS AREA -->
+        </main>
+        <?php include "../partials/js_libs.php"; ?>
+        <?php include "../partials/footer_user.php"; ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(e) {
+
+            })
+        </script>
     </body>
 
-    <!-- Popper JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     </html>
-
 <?php
-
 } else {
 
     header('location: ../account/login.php');
 }
-?>
-<?php
-
-include "../footer.php";
 ?>

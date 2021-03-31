@@ -1,10 +1,8 @@
 <div class="container-fluid">
     <?php
     if (!isset($_SESSION)) {
-        session_start();
+        include "../config_user.php";
     }
-
-    include "../connect_db.php";
     if (!empty($_SESSION["current_user"]['username'])) {
 
         $cartUserId = $_SESSION["current_user"]['user_id'];
@@ -20,7 +18,7 @@
     ?>
     <div>
         <form action="../payment/checkout.php" method="post" id="updateCartProduct" enctype="multipart/form-data">
-            <table class="table table-bordered" style="text-align: center;">
+            <table class="table table-bordered table-striped" style="text-align: center; background-color:blanchedalmond !important">
                 <thead>
                     <tr>
                         <!-- <th>Select</th> -->
@@ -31,7 +29,6 @@
                         <th>Price (VND)</th>
                         <th>Delete</th>
                     </tr>
-
                 </thead>
                 <tbody>
                     <?php
@@ -45,10 +42,10 @@
                             <tr>
                                 <td><?= $i++ ?></td>
                                 <td><?= $row['p_name'] ?></td>
-                                <td><img src="../../shop/image_products/<?= $row['p_image'] ?>" width="60" height="70"></td>
+                                <td><img src="../shop/image_products/<?= $row['p_image'] ?>" width="60" height="70"></td>
                                 <td> <input type="number" oninput="javascript:updateQuantity(this.value)" value="<?= $row["cart_quantity"] ?>" name="quantity[<?= $row['cart_id'] ?>]" min="1" max="1000"></td>
                                 <td><?= number_format($cost = $row["cart_quantity"] *  $row["p_price"], 0, ",", ".")   ?>VNĐ</td>
-                                <td><a href="javascript:deleteCartItem(<?= $row['cart_id'] ?>)"><i class="fas fa-trash-alt"></i></a></td>
+                                <td><a href="javascript:deleteCartItem(<?= $row['cart_id'] ?>)"><i class="mdi mdi-delete-empty mdi:20px"></i></a></td>
                             </tr>
 
                         <?php

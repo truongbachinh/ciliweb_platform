@@ -32,8 +32,8 @@ include "header.php";
 <body>
     <?php
     session_start();
-    if (!empty($_SESSION['current_user_social'])) {
-        $currentUser = $_SESSION['current_user_social'];
+    if (!empty($_SESSION['current_user'])) {
+        $currentUser = $_SESSION['current_user'];
 
     ?>
         <script type="text/javascript">

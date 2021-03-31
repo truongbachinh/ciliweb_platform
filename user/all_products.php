@@ -13,7 +13,6 @@ $totalPage = ceil($totalProduct / $pPerPage);
 // exit;
 ?>
 <link rel="stylesheet" href="./css/all_products.css">
-<link rel="stylesheet" href="./library/fancybox/jquery.fancybox.min.css">
 </link>
 
 
@@ -31,7 +30,7 @@ $totalPage = ceil($totalProduct / $pPerPage);
         </p>
     </div>
     <?php
-    include('pagination.php');
+    include('./pagination/pagination.php');
     ?>
     <div class="list-all-product flex-container">
         <?php
@@ -54,7 +53,7 @@ $totalPage = ceil($totalProduct / $pPerPage);
                     <?php
                     if ($productInfor["p_quantity"] > "0") {
                     ?>
-                        <form action="./cart/cart.php?view=add_to_cart" class="buy-now-form" method="post" enctype="multipart/form-data">
+                        <form action="../cart/cart.php?view=add_to_cart" class="buy-now-form" method="post" enctype="multipart/form-data">
                             <input type="text" value="1" name="quantity[<?= $productInfor['p_id'] ?>]" hidden="true">
                             <input type="submit" class="btn" id="btn-buy" value="Buy Now">
                         </form>
@@ -75,10 +74,9 @@ $totalPage = ceil($totalProduct / $pPerPage);
         <?php } ?>
     </div>
 </div>
-<script type="text/javascript" src="./library/js/jquery-3.3.6.min.js"></script>
-<script type="text/javascript" src="./library/fancybox/jquery.fancybox.min.js"></script>
-<a data-fancybox data-type="ajax" data-src="./ajax/cart.php" href="javascript:;">Ajax content</a>
+
+
 <?php
-include('pagination.php');
+include('./pagination/pagination.php');
 
 ?>

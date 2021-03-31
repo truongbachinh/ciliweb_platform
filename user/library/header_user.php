@@ -1,8 +1,3 @@
-<?php
-ob_start();
-?>
-
-
 <link rel="stylesheet" href="../partials/css/header_user.css">
 <header class="user-header">
     <a href="#" class="sidebar-toggle" data-toggleclass="sidebar-open" data-target="body"> </a>
@@ -27,16 +22,14 @@ ob_start();
                                 <li class="nav-item active">
                                     <form action="" method="post">
                                         <div style="margin-right: 15px; ">
-                                            <button type="submit" class="btn btn-outline-danger" name="cartBT"> <span id="cartCountHeader"><?php include "../partials/cart_count.php" ?></span></i>
-                                                </span></button>
+                                            <button type="submit" class="btn btn-outline-danger" name="cartBT"> <span id="cartCountHeader"> <?php include_once "../cart_count.php"; ?> </span></button>
                                         </div>
                                     </form>
                                 </li>
                             </ul>
                             <?php
                             if (isset($_POST["cartBT"])) {
-
-                                header("location: ../cart/cart.php");
+                                header("location: ./cart/cart.php");
                             }
                             ?>
                             <ul class="navbar-nav ">
@@ -58,7 +51,7 @@ ob_start();
                                         </div>
                                     </a>
                                     <div class="dropdown-menu  dropdown-menu-right">
-                                        <a href="../user/index.php?view=profile&id=<?php echo $_SESSION["current_user"]["user_id"] ?>" class="dropdown-item"> Profile</a>
+                                        <a href="/user/profile.php" class="dropdown-item"> Profile</a>
                                         <a href="/user/change-password.php" class="dropdown-item"> Reset Password</a>
                                         <a class="dropdown-item" href=""> Help </a>
                                         <div class="dropdown-divider"></div>
@@ -117,16 +110,16 @@ ob_start();
                                 <li class="nav-item active">
                                     <form action="" method="post">
                                         <div style="margin-right: 15px; ">
-                                            <button type="submit" class="btn btn-outline-danger " id="cartBT"> <span id="cartCountHeader"> <?php include_once "../user/cartCount.php"; ?> </span></button>
+                                            <button type="submit" class="btn btn-outline-danger" name="cartBT"> <span id="cartCountHeader"> <?php include_once "../user/cartCount.php"; ?> </span></button>
                                         </div>
                                     </form>
                                 </li>
                             </ul>
-                            <!-- <?php
-                                    if (isset($_POST["cartBT"])) {
-                                        header("location: ../cart/cart.php");
-                                    }
-                                    ?> -->
+                            <?php
+                            if (isset($_POST["cartBT"])) {
+                                header("location: ../cart/cart.php");
+                            }
+                            ?>
                             <ul class="navbar-nav ">
                                 <li class="nav-item dropdown ">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -200,36 +193,3 @@ ob_start();
 
     </nav>
 </header>
-<script type="text/javascript">
-    // $("#cartBT").submit(function(event) {
-    //     event.preventDefault();
-    //     console.log("data", $(this).serializeArray());
-
-    //     $.ajax({
-    //         type: "POST",
-    //         url: '../cart_count.php',
-    //         data: $(this).serializeArray(),
-    //         success: function(response) {
-    //             response = JSON.parse(response);
-    //             if (response.status == 0) {
-
-    //             } else {
-    //                 // alert(response.message);
-    //                 // $.get('../cart_count.php', function(cartCountHTML) {
-    //                 //     console.log("cart-count", cartCountHTML);
-    //                 //     $('#cartCountHeader').html(cartCountHTML);
-    //                 // })
-    //                 <?php
-                        //                 var_dump($_POST["cartBT"]);
-                        //                 exit;
-                        //                 header("location: ./cart/cart.php");
-                        //                 
-                        ?>
-    //             }
-    //         }
-
-    //     })
-
-
-    // })
-</script>

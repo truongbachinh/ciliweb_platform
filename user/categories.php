@@ -1,6 +1,4 @@
-<?php
-include "../connect_db.php";
-?>
+<link rel="stylesheet" href="../user/css/categories.css">
 <div class="container-fluid " style="overflow: hidden; ">
     <div class="ctg">
         <span id="ctg-list"> <i class="fa fa-list-alt" aria-hidden="true"> Categories</span></i>
@@ -8,10 +6,10 @@ include "../connect_db.php";
     <form id="form1" runat="server">
         <div class="categories ">
             <div id="arrowL">
-                <i class="fa fa-chevron-left" aria-hidden="true" id="arrow-button"></i>
+                <i class="mdi mdi-chevron-left mdi:24px" aria-hidden="true" id="arrow-button"></i>
             </div>
             <div id="arrowR">
-                <i class="fa fa-chevron-right" aria-hidden="true" id="arrow-button"></i>
+                <i class="mdi mdi-chevron-right mdi:24px" aria-hidden="true" id="arrow-button"></i>
             </div>
             <div class="list">
                 <div class="list-group list-group-horizontal col-lg-9 d-md-flex" id="view-list-categories">
@@ -55,9 +53,9 @@ include "../connect_db.php";
 
 
         </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
-
                 var $item = $('div.item-categories'), //Cache your DOM selector
                     visible = 4, //Set the number of items that will be visible
                     index = 0, //Starting index

@@ -1,0 +1,155 @@
+*{box-sizing: border-box !important;}
+.bg-nav
+{
+   
+    background-color:  #7abaa1 !important;
+};
+
+
+.navbar{
+    background: transparent!important;
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+    border-bottom: 1px solid #fa4956 ;
+}
+.nav-link{
+    
+    color: #ffffff !important;
+    font-size:14px !important;
+    outline:none;
+    width:100%;
+    display: inline-block;
+    border:0px;
+    font-family:arial;
+    margin-right: 5px;
+
+}
+.nav-link:hover
+{
+   
+    color: black  !important;
+}
+
+.dropdown-color a:hover
+{
+
+        background-color: #ddd;
+        color: black;
+    
+}
+.input.empty {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+.fa-home, .fa-envelope, .fa-sign-in-alt, .fa-user-plus, .fa-user{
+    margin-right: 5px;
+    color: #f9b34c;
+  
+}
+
+.verticalLine {
+    border-left: 2px solid #f9b34c;
+    margin: 10px 2px 8px 2px;
+    margin-left: 12px;
+    
+  }
+
+  .search-bar{
+    position: absolute;
+    z-index: 1;
+    top: 100px;
+    width: 100%;
+    margin-top: -30px;
+   
+}
+#img-logo{
+    margin-left: 30px !important;
+    margin-top: -20px !important;
+}
+#search-addon{
+    background-color: #fff !important;
+}
+.carousel-inner
+{
+    border: 2px solid #fff  !important;
+    border-radius: 10px  !important;
+
+}
+
+.b-img-ads{
+   
+    border: 2px solid #fff  !important;
+    border-radius: 10px  !important;
+}
+.t-img-ads{
+   
+   
+    border: 2px solid #fff  !important;
+    border-radius: 10px  !important;
+}
+
+
+.header-content{
+  width: 100%;
+  position: fixed;
+  z-index: 5; 
+  top:0;
+}
+
+.col-img{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+   
+}
+ .item {
+  
+    max-width: 100%;
+    max-height: 350px;
+    padding: 0 4px;
+  
+  }
+  .items {
+  
+    max-width: 100%;
+    max-height: 350px;
+    padding: 0 4px;
+  
+  }
+  .img-group
+  {
+    width: 100%;
+    height:170px ;
+     margin-top:14px;
+  }
+#logo-brand
+{
+    color:white  !important; 
+    font-size: 15px;
+     margin-left: 11px;
+}
+  /* .item img {
+   
+    vertical-align: middle;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s linear;
+    
+  } */
+
+ 
+  @media screen and (min-width: 0px) and (max-width: 500px) {
+    .search-content{ display: none; }  /* hide it on smaller screen */
+  }
+  @media screen and (min-width: 501px) and (max-width: 1024px) {
+    .search-content{ display: block; }   /* show it on larger screens */
+  }
+ 
+
+  
+
+

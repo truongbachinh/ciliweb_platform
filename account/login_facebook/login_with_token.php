@@ -2,7 +2,7 @@
 //Hàm login sau khi mạng xã hội trả dữ liệu về
 function loginFromSocialCallBack($socialUser)
 {
-    include "../connect_db.php";
+    include "../../connect_db.php";
 
     $result = mysqli_query($link, "Select `user_id`,`username`,`email`,`fullname` from `user` WHERE `email` ='" . $socialUser['email'] . "'");
     if ($result->num_rows == 0) {
@@ -18,30 +18,30 @@ function loginFromSocialCallBack($socialUser)
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $_SESSION['current_user_social'] = $user;
+        $_SESSION['current_user'] = $user;
 
         header('Location: ../account/login.php');
     }
 }
 function loginWithGoogle($socialUser)
 {
-    include "../connect_db.php";
+    include "../../connect_db.php";
 
-    $result = mysqli_query($link, "Select `user_id`,`username`,`email`,`fullname` from `user` WHERE `email` ='" . $socialUser['email'] . "'");
+    $result = mysqli_query($link, "SELECT user.* from `user` WHERE `email` ='" . $socialUser['email'] . "'");
     if ($result->num_rows == 0) {
         $result = mysqli_query($link, "INSERT INTO `user` (`fullname`,`email`, `user_status`) VALUES ('" . $socialUser['name'] . "', '" . $socialUser['email'] . "', 1);");
         if (!$result) {
             echo mysqli_error($link);
             exit;
         }
-        $result = mysqli_query($link, "Select `id`,`username`,`email`,`fullname` from `user` WHERE `email` ='" . $socialUser['email'] . "'");
+        $result = mysqli_query($link, "Select user.* from `user` WHERE `email` ='" . $socialUser['email'] . "'");
     }
     if ($result->num_rows > 0) {
         $user = mysqli_fetch_assoc($result);
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $_SESSION['current_user_google'] = $user;
+        $_SESSION['current_user'] = $user;
         header('Location: ../account/login.php');
     }
 }
