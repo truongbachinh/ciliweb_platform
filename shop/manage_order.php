@@ -116,6 +116,7 @@ if (isset($_POST["addCategories"])) {
                                                 <th>Total</th>
                                                 <th>Quantity</th>
                                                 <th>Payment status</th>
+                                                <th>View Detail</th>
                                                 <th>Action</th>
 
                                             </tr>
@@ -136,6 +137,7 @@ if (isset($_POST["addCategories"])) {
                                                     <td><?= $row['order_total_cost'] ?></td>
                                                     <td><?= $row['order_total_amount'] ?></td>
                                                     <td>NOT YET</td>
+                                                    <td><a href="bill.php?id=<?= $row["id"] ?>&idu=<?= $row["order_user_id"] ?>">Show Detail</a></td>
                                                     <td>
                                                         <div class="btn-group" role="group" aria-label="Basic example">
                                                             <a href="bill.php?id=<?= $row["id"] ?>&idu=<?= $row["order_user_id"] ?>" class="btn btn-info  btn-edit-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
@@ -196,8 +198,8 @@ if (isset($_POST["addCategories"])) {
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="detailRole">Detail
-                                    Information role
+                                <h5 class="modal-title" id="detailRole">Detail order
+                                    Information
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -208,23 +210,23 @@ if (isset($_POST["addCategories"])) {
                                     <table class="table table-striped">
                                         <tbody>
                                             <tr>
-                                                <td>Role Name</td>
+                                                <td>Order Id</td>
                                                 <td id="roleNameDetail"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role description</td>
+                                                <td>Người nhận</td>
                                                 <td id="roleDescriptionDetail"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role status</td>
+                                                <td>Address</td>
                                                 <td id="roleStatusDetail"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role create time</td>
+                                                <td>Phone</td>
                                                 <td id="roleCreateTime"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role update time</td>
+                                                <td>Sản phẩm</td>
                                                 <td id="roleUpdateTime"></td>
                                             </tr>
                                         </tbody>

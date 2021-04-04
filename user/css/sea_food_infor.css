@@ -18,6 +18,8 @@
 }
 #view-list-libImg
 {
+    display: flex !important;
+    flex-flow: row;
     overflow: visible;
     background: #CFEAE4;
 }

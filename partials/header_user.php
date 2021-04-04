@@ -71,7 +71,7 @@ ob_start();
                     </nav>
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
                         <a class="navbar-brand" href="../account/login.php">
-                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="75" height="75">
+                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="55" height="55">
                         </a>
                         <div class="collapse navbar-collapse">
                         </div>
@@ -159,7 +159,7 @@ ob_start();
                     </nav>
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
                         <a class="navbar-brand" href="https://ciliweb.vn/ciliweb_project/shop/register_shop.php">
-                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="75" height="75">
+                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="55" height="55">
                         </a>
                         <div class="collapse navbar-collapse">
                         </div>

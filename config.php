@@ -2,6 +2,6 @@
 include "connect_db.php";
 session_start();
 
-$isLoggedIn = isset($_SESSION['current_admin']);
-if ($isLoggedIn) $currentUser = $_SESSION['current_admin'];
+$isLoggedIn = isset($_SESSION['current_user']);
+if ($isLoggedIn) $currentUser = $_SESSION['current_user'];
 $pageTitle = "Ciliweb Seafood Platform";

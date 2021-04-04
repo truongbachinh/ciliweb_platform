@@ -1,52 +1,57 @@
 <!-- Main Navigation -->
 <link rel="stylesheet" href="./css/header_payment.css">
 <?php
+// include "../config_user.php";
 
-include "../config_user.php";
+if (!empty($_SESSION["current_user"]['username'])) {
 
+    $userId = $_SESSION["current_user"]['user_id'];
+}
+if (!empty($_SESSION["current_user_social"]['fullname'])) {
+
+    $userId = $_SESSION["current_user_social"]['user_id'];
+}
+
+if (!isset($resultUserInfor)) {
+    $resultUserInfor = mysqli_query($link, "SELECT  user.*, user_infor.*  from user_infor INNER JOIN user ON user.user_id = user_infor.ui_user_id WHERE `user_id` = '$userId'");
+}
+if (isset($resultUserInfor)) {
+    $rowUser = mysqli_fetch_array($resultUserInfor, MYSQLI_ASSOC);
+}
 if (!empty($_SESSION["current_user"])) {
-
-
-    // $cartUId = $_SESSION["current_user"]['user_id'];
-    // $results = $link->query("SELECT COUNT(cart_id) FROM cart WHERE cart_user_id = ' $cartUId'");
-    // $countProduct = mysqli_fetch_array($results);
-
-
-
 ?>
     <div class="header-content">
         <nav class="navbar navbar-expand-lg bg-nav">
-            <a class="navbar-brand" href="https://ciliweb.vn/ciliweb_project/user/index.php" id="logo-brand">
-                <i class="fas fa-home"></i> Seller channel
-            </a>
+            <ul class="navbar-nav  ">
+                <nav class="navbar navbar-expand-lg bg-nav">
+                    <a class="navbar-brand" href="../user/index.php">
+                        <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="55" height="55">
+                    </a>
+                </nav>
+            </ul>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ciliweb-navBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="ciliweb-navBar">
+
                 <ul class="navbar-nav ml-auto ">
-
-                </ul>
-
-
-
-                <ul class="navbar-nav ">
                     <li class="nav-item dropdown ">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div class="avatar avatar-sm avatar-online">
-                                <?php
-                                if ($resultUserInfor->num_rows > 0) {
-                                    $imageURL = '../user/avatar/' . $rowUser["ui_avatar"];
-                                ?>
-                                    <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
-                                <?php
-                                } else { ?>
-                                    <span class="avatar-title rounded-circle bg-warning"><?php echo $_SESSION["current_user"]["username"]; ?></span>
+                        <div>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="avatar avatar-sm avatar-online">
+                                    <?php
+                                    if ($resultUserInfor->num_rows > 0) {
+                                        $imageURL = '../user/avatar/' . $rowUser["ui_avatar"];
+                                    ?>
+                                        <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
+                                    <?php
+                                    } else { ?>
+                                        <span class="avatar-title rounded-circle bg-warning"><?php echo $_SESSION["current_user"]["username"]; ?></span>
 
-                                <?php } ?>
-
-
-                            </div>
-                        </a>
+                                    <?php } ?>
+                                </div>
+                            </a>
+                        </div>
                         <div class="dropdown-menu  dropdown-menu-right">
                             <a href="/user/profile.php" class="dropdown-item"> Profile</a>
                             <a href="/user/change-password.php" class="dropdown-item"> Reset Password</a>
@@ -58,18 +63,7 @@ if (!empty($_SESSION["current_user"])) {
                 </ul>
             </div>
         </nav>
-        <nav class="navbar navbar-expand-lg bg-nav">
-            <a class="navbar-brand" href="../user/index.php">
-                <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="75" height="75">
-            </a>
-            <div class="collapse navbar-collapse">
-            </div>
-        </nav>
-
-
-
     </div>
-
 <?php
 } elseif (!empty($_SESSION["current_user_social"])) {
     // $cartUId = $_SESSION["current_user_social"]['user_id'];

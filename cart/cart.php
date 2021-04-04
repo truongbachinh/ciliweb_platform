@@ -177,6 +177,7 @@ if (isset($_SESSION["current_user"]['username']) || isset($_SESSION["current_use
     <head>
         <?php include "../partials/html_header.php"; ?>
         <link rel="stylesheet" href="./css/cart.css">
+        <link rel="stylesheet" href="../user/css/my_order.css">
     </head>
 
     <body class="sidebar-pinned " style="overflow-x: hidden;">
@@ -184,10 +185,10 @@ if (isset($_SESSION["current_user"]['username']) || isset($_SESSION["current_use
         <main class="user-main">
             <?php include "../partials/header_user.php"; ?>
             <!-- PLACE CODE INSIDE THIS AREA -->
-            <div class="container-fluid" style="margin-top: 160px">
-                <div>
-                    <p id="cart-title">Your Cart</p>
-                </div>
+            <div class="container-fluid" style="margin-top: 100px">
+                <!-- <div>
+                    <p id="cart-title" style="width:30%">Your Cart</p>
+                </div> -->
                 <div class="justify-content-center align-items-center" id="cart-form">
                     <?php
                     include "ajax_cart_content.php"

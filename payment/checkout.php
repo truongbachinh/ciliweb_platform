@@ -1,6 +1,6 @@
 <?php
-session_start();
-include "../connect_db.php";
+include "../config.php";
+
 
 if (!empty($_SESSION["current_user"]['username'])) {
 
@@ -10,19 +10,18 @@ if (!empty($_SESSION["current_user_social"]['fullname'])) {
 
     $cartUserId = $_SESSION["current_user_social"]['user_id'];
 }
-
-
 $resultCart = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id   = '$cartUserId'");
-$resultCarts = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id   = '$cartUserId'");
 $cartInforCheckout = array();
-$a = array();
 while ($rowC = mysqli_fetch_array($resultCart)) {
     $cartInforCheckout[] =  $rowC;
-    $a[] = $rowC['shop_id'];
 }
 
-
 $rowProduct = array();
+$result = $link->query("SELECT cart.*, products.*, shop.* from cart INNER JOIN products on cart.cart_product_id = products.p_id INNER JOIN shop ON shop.shop_id = products.p_shop_id where cart_user_id ='$cartUserId' GROUP BY shop.shop_id");
+$cartShopInfor = array();
+while ($rowShop = mysqli_fetch_array($result)) {
+    $cartShopInfor[] =  $rowShop;
+}
 
 
 ?>
@@ -49,17 +48,13 @@ $rowProduct = array();
         include "header_payment.php";
         ?>
     </div>
-    <div id="orderForm">
+    <div id="order-form">
         <div class="container">
-
             <div class="py-5 text-center">
 
                 <h2>Checkout form</h2>
                 <p class="lead">Below is form checkout of seafoodweb please field information bellow to order.</p>
             </div>
-
-
-
             <div class="row">
                 <div class="col-md-4 order-md-2 mb-4">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -68,45 +63,77 @@ $rowProduct = array();
                     </h4>
                     <ul class="list-group mb-3">
                         <?php
-                        $total = 0;
+                        $totalCostCheckout = 0;
                         $count = 0;
 
                         // $ctG = array();
                         $countShop = array();
-                        foreach ($cartInforCheckout as  $row) {
-
+                        foreach ($cartShopInfor as $rowShop) {
+                            $rowShopId = $rowShop['shop_id'];
+                            $cartProduct = $link->query("SELECT cart.*, products.*, shop.* from cart INNER JOIN products on cart.cart_product_id = products.p_id INNER JOIN shop ON shop.shop_id = products.p_shop_id where cart_user_id ='$cartUserId' and shop_id = '$rowShopId'");
+                            $myCartProduct = array();
+                            while ($rowCartProduct = mysqli_fetch_array($cartProduct)) {
+                                $myCartProduct[] =  $rowCartProduct;
+                            }
                         ?>
 
-                            <li class="list-group-item d-flex justify-content-between lh-condensed">
-                                <div class="d-flex flex-column">
-                                    <h6 class="my-0">Product Infor</h6>
-                                    <div id="avatar-products" class=" my-2">
-                                        <img src="../shop/image_products/<?php echo $row['p_image'] ?>" style=" border-radius:5px " width="60" height="60" id="img-infor" class="img-fluid  ">
+                            <div id="cart-shop">
+                                <div><img src="../shop/image_shop/<?= $rowShop['shop_avatar'] ?>" width="60" height="70"></div>
+                                <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Order of shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $rowShop['shop_name'] . "</font>" ?></a></i></div>
+                            </div>
+                            <?php
+                            $total = 0;
+                            $totalCost = 0;
+                            $count = 0;
+                            $i = 1;
+                            foreach ($myCartProduct  as $rowMyCartProduct) {
+
+                            ?>
+
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                    <div class="d-flex flex-column">
+                                        <h6 class="my-0">Product Infor</h6>
+                                        <div id="avatar-products" class=" my-2">
+                                            <img src="../shop/image_products/<?php echo $rowMyCartProduct['p_image'] ?>" style=" border-radius:5px " width="60" height="60" id="img-infor" class="img-fluid  ">
+                                        </div>
+                                        <small class="text-muted">Name: <?= $rowMyCartProduct['p_name'] ?></small>
+                                        <small class="text-muted">Quantity: <?= $quantity = $rowMyCartProduct['cart_quantity'] ?></small>
+                                        <small class="text-muted">Shop: <?= $rowMyCartProduct['shop_name'] ?></small>
                                     </div>
-                                    <small class="text-muted">Name: <?= $row['p_name'] ?></small>
-                                    <small class="text-muted">Quantity: <?= $quantity = $row['cart_quantity'] ?></small>
-                                    <small class="text-muted">Shop: <?= $row['shop_name'] ?></small>
-                                </div>
-                                <span class="text-muted"><?= number_format($cost  = $row["cart_quantity"] *  $row["p_price"], 0, ",", ".") . ' VNĐ' ?></span>
+                                    <span class="text-muted"><?= number_format($cost  = $rowMyCartProduct["cart_quantity"] *  $rowMyCartProduct["p_price"], 0, ",", ".") . ' VNĐ' ?></span>
+                                </li>
+                            <?php
+                                $total += $cost;
+                                $count += $quantity;
+                            }
+                            $totalCost += $total;
+
+                            ?>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Total cost</span>
+                                <strong><?= number_format($total, 0, ",", ".") ?>VNĐ</strong>
                             </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Total Quantity</span>
+                                <strong><?= $count ?></strong>
+                            </li>
+
                         <?php
-                            $total += $cost;
-                            $count += $quantity;
+                            $totalCostCheckout += $totalCost;
                         }
 
-
-
                         ?>
 
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Total cost</span>
-                            <strong><?= number_format($total, 0, ",", ".") ?>VNĐ</strong>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Total Quantity</span>
-                            <strong><?= $count ?></strong>
-                        </li>
+
                     </ul>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Promo code">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-secondary"><?= $totalCostCheckout ?></button>
+                        </div>
+                    </div>
+
                     <form class="card p-2">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Promo code">

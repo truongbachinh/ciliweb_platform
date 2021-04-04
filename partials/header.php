@@ -8,7 +8,7 @@
                         <!-- <span class="notification-counter"></span></a> -->
             </li>
 
-            <?php if (!empty($_SESSION["current_username"]["username"])) : ?>
+            <?php if (!empty($_SESSION["current_user"]["username"])) : ?>
                 <li class="nav-item dropdown ">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="avatar avatar-sm avatar-online">
@@ -25,7 +25,7 @@
                 </li>
                 <div class="nav-item m-r-3">
                     <a href="#">
-                        <b><?= $_SESSION['current_username']['username'] ?></b>
+                        <b><?= $_SESSION['current_user']['username'] ?></b>
                     </a>
                 </div>
             <?php elseif (!empty($_SESSION["current_user"]["username"])) : ?>

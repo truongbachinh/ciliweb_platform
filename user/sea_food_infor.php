@@ -215,6 +215,7 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
     </div>
 
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
 
