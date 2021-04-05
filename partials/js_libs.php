@@ -16,3 +16,7 @@
 <script src="../assets/vendor/apexchart/apexcharts.min.js"></script>
 <!--chart data for current dashboard-->
 <script src="../assets/js/utils.js"></script>
+<!--Location-->
+<script src="../assets/js/districts.min.js"></script>
+<!--Validation-->
+<script src="../assets/vendor/jquery.validate/jquery.validate.min.js"></script>

@@ -38,47 +38,61 @@ $orderProduct = $link->query(" ");
                                     $myOrderProduct[] =  $rowOrderProduct;
                                 }
                             ?>
-                                <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Order of shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $rowS['shop_name'] . "</font>" ?></a></i></div>
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr style="text-align: center;">
-                                            <th> Id</th>
-                                            <th>Order Id</th>
-                                            <th>Order Product</th>
-                                            <th>Order quantity</th>
-                                            <th>Order cost</th>
-                                            <th>Order satus</th>
-                                            <th>Order create time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
+                            <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Order of shop <i
+                                        class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $rowS['shop_name'] . "</font>" ?></a></i>
+                            </div>
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr style="text-align: center;">
+                                        <th> Id</th>
+                                        <th>Order Product</th>
+                                        <th>Order quantity</th>
+                                        <th>Order cost</th>
+                                        <th>Order satus</th>
+                                        <th>Order create time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
                                         $i = 1;
+                                        $cost = 0;
                                         foreach ($myOrderProduct  as $rowMyOrderProduct) {
 
                                         ?>
-                                            <tr>
-                                                <td><?= $i++ ?></td>
-                                                <td><?= $rowMyOrderProduct['id'] ?></td>
-                                                <td><?= $rowMyOrderProduct['p_name'] ?></td>
-                                                <td><?= $rowMyOrderProduct['quantity'] ?></td>
-                                                <td><?= $rowMyOrderProduct['price'] ?></td>
-                                                <?php if ($rowMyOrderProduct['payment_order_status'] == 1) {
+                                    <tr>
+                                        <td><?= $i++ ?></td>
+                                        <td><?= $rowMyOrderProduct['p_name'] ?></td>
+                                        <td><?= $rowMyOrderProduct['quantity'] ?></td>
+                                        <td><?= $cost =  $rowMyOrderProduct['quantity'] * $rowMyOrderProduct['price'] ?>
+                                        </td>
+                                        <?php if ($rowMyOrderProduct['payment_order_status'] == 1) {
                                                 ?>
-                                                    <td>Shipping</td>
-                                                <?php
+                                        <td>Ordered</td>
+                                        <?php
+                                                } elseif ($rowMyOrderProduct['payment_order_status'] == 2) {
+                                                ?>
+                                        <td>Shipping</td>
+                                        <?php
+                                                } elseif ($rowMyOrderProduct['payment_order_status'] == 3) {
+                                                ?>
+                                        <td>Received</td>
+                                        <?php
+                                                } elseif ($rowMyOrderProduct['payment_order_status'] == 4) {
+                                                ?>
+                                        <td>Cencle</td>
+                                        <?php
                                                 }
                                                 ?>
-                                                <td>
-                                                    <?= date("Y-m-d H:i:s", $rowMyOrderProduct["order_create_time"]) ?>
-                                                </td>
-                                            </tr>
-                                        <?php
+                                        <td>
+                                            <?= date("Y-m-d H:i:s", $rowMyOrderProduct["order_create_time"]) ?>
+                                        </td>
+                                    </tr>
+                                    <?php
                                         }
 
                                         ?>
-                                    </tbody>
-                                </table>
+                                </tbody>
+                            </table>
 
 
                             <?php

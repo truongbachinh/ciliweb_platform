@@ -1,33 +1,15 @@
 <?php
 include "../config.php";
-
+$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 1;
+$currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
+$offest = ($currentPage - 1) * $pPerPage;
+$countRole = mysqli_query($link, "SELECT * from role");
+$res = mysqli_query($link, "SELECT * from `role`  order by `role_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
+$totalRole = $countRole->num_rows;
+$totalPage = ceil($totalRole / $pPerPage);
 ?>
 
-<?php
 
-if (isset($_POST["addRole"])) {
-
-    $count = 0;
-
-    $result = $link->query("SELECT * from `role` where `role_name` ='$_POST[nameRole]'");
-    $count = mysqli_num_rows($result);
-    if ($count > 0) {
-?>
-        <script type="text/javascript">
-            alert("error")
-        </script>
-    <?php
-    } else {
-        $sqlAddRole = $link->query("INSERT INTO `role` (`role_id`, `role_name`, `role_description`, `role_status`, `role_create_time`) VALUES (NULL,'$_POST[nameRole]', '$_POST[descriptionRole]','1','" . time() . "')");
-    ?>
-        <script type="text/javascript">
-            alert("addOKe")
-        </script>
-<?php
-    }
-}
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -66,6 +48,9 @@ if (isset($_POST["addRole"])) {
                                         </a>
                                     </div>
                                 </div>
+                                <?php
+                                include('../pagination/pagination.php');
+                                ?>
                                 <div class="table-responsive p-t-10">
                                     <table class="table table-bordered table-striped">
                                         <thead>
@@ -82,7 +67,7 @@ if (isset($_POST["addRole"])) {
                                         <tbody>
                                             <?php
                                             $i = 1;
-                                            $res = mysqli_query($link, "select * from role");
+
                                             while ($row = mysqli_fetch_array($res)) {
                                             ?>
                                                 <tr>
@@ -97,7 +82,7 @@ if (isset($_POST["addRole"])) {
 
                                                     <?php
                                                     } else {  ?>
-                                                        <td style="padding: 1.5%;"><button style="border-radius: 10px" type="button" class="btn btn-danger">Active</button></td>
+                                                        <td style="padding: 1.5%;"><button style="border-radius: 10px" type="button" class="btn btn-danger">Block</button></td>
                                                     <?php
                                                     }
 
@@ -121,10 +106,9 @@ if (isset($_POST["addRole"])) {
 
                                                     <td>
                                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                                            <a href="" class="btn btn-info  btn-edit-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
-                                                            <a href="" class="btn btn-danger btn-delete-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-delete"></i>
+                                                            <a href="" class="btn btn-info  btn-edit-role  d-flex justify-content-between" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
+                                                            <a href="" class="btn btn-danger btn-delete-role d-flex justify-content-between" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-delete"></i>
                                                             </a>
-                                                            <a href="" class="btn btn-primary  btn-get-role-info" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -134,6 +118,9 @@ if (isset($_POST["addRole"])) {
                                         </tbody>
                                     </table>
                                 </div>
+                                <?php
+                                include('../pagination/pagination.php');
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -215,12 +202,12 @@ if (isset($_POST["addRole"])) {
                         </div>
                     </div>
                 </div>
-
-                <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editTopic" aria-hidden="true">
+                <!-- Modal Edit -->
+                <div class="modal fade" id="editRole" tabindex="-1" role="dialog" aria-labelledby="editRole" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editTopic">Edit User Information</h5>
+                                <h5 class="modal-title" id="editRole">Edit Role Information</h5>
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -229,41 +216,26 @@ if (isset($_POST["addRole"])) {
                             <div class="modal-body">
                                 <form action="" id="create-account-form">
                                     <div class="form-group">
-                                        <label for="inp-username">Username</label>
-                                        <input type="text" class="form-control" id="inp-username" required>
+                                        <label for="editRoleKey">Role key</label>
+                                        <input type="text" class="form-control" id="editRoleKey" readonly required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inp-fullname">Full Name</label>
-                                        <input type="text" class="form-control" id="inp-fullname" required>
+                                        <label for="editRoleName">Role name</label>
+                                        <input type="text" class="form-control" id="editRoleName" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inp-email">Email</label>
-                                        <input type="text" class="form-control" id="inp-email" required>
+                                        <label for="editRoleDescription">Role Description</label>
+                                        <input type="text" class="form-control" id="editRoleDescription" required>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inp-status">Status</label>
-                                        <select id="inp-status" class="form-control">
+                                    <div class="form-group statusRole">
+                                        <label for="editRoleStatus">Role Status</label>
+                                        <select id="editRoleStatus" class="form-control">
                                             <option value="1">Active</option>
                                             <option value="2">Blocked</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inp-role">Role</label>
-                                        <select id="inp-role" class="form-control">
-                                            <option value="student">Student</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="manager-coordinator">Coordinator Manager</option>
-                                            <option value="manager-marketing">Marketing Manager</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="inp-password">New Password (Leave blank for unchanged)</label>
-                                        <input type="password" placeholder="Leave blank for unchanged..." class="form-control" id="inp-password" required>
-                                    </div>
-
                                     <div class="model-footer">
-                                        <button type="button" class="btn btn-warning btn-save">
+                                        <button type="button" class="btn btn-warning btn-update-role">
                                             Save Changes
                                         </button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -283,34 +255,55 @@ if (isset($_POST["addRole"])) {
     <script>
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
-            $(document).on('click', ".btn-add-role", function(e) {
-                Utils.api("add_role_info", {
-                    roleName: $('#addNameRole').val(),
-                    roleDescription: $('#addDescriptionRole').val(),
-                }).then(response => {
 
-
-
-                }).catch(err => {
-
-                })
-            });
-            $(document).on('click', ".btn-get-role-info", function(e) {
+            $(document).on('click', ".btn-delete-role", function(e) {
                 e.preventDefault();
-                $('#roleDetailModal').modal();
+                swal({
+                    title: "Please confirm",
+                    text: 'Are sure you want to delete this role?',
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        Utils.api('delete_role_info', {
+                            id: $(this).data('id'),
+                        }).then(response => {
+                            swal("Notice", response.msg, "success")
+                            location.reload();
+
+                        }).catch(err => {})
+                    }
+                });
+            });
+            $(document).on('click', '.btn-edit-role', function(e) {
+                e.preventDefault();
                 const roleId = parseInt($(this).data("id"));
                 activeId = roleId;
                 console.log(roleId);
                 Utils.api("get_role_info", {
                     id: roleId
+                }).then(role => {
+                    $("input#editRoleKey").val(role.data.role_id)
+                    $("#editRoleName").val(role.data.role_name)
+                    $("#editRoleDescription").val(role.data.role_description)
+                    $("#editRoleStatus ").val(role.data.role_status)
+                    $('#editRole').modal();
+                }).catch(err => {
+
+                });
+            });
+            $(document).on('click', '.btn-update-role', function(e) {
+                Utils.api("update_role_info", {
+                    id: activeId,
+                    editRoleName: $("#editRoleName").val(),
+                    editRoleDescription: $("#editRoleDescription").val(),
+                    editRoleStatus: $("#editRoleStatus").val(),
                 }).then(response => {
-                    console.log("name", response.data.role_name);
-                    $('#roleNameDetail').text(response.data.role_name);
-                    $('#roleDescription').text(response.data.role_description);
-                    $('#roelStatus').texy(response.data.role_status);
-                    $('#roelCreateTime').text(response.data.role_create_time);
-                    $('#roelUpdateTime').text(response.data.topic_update_time);
-                    $('#roleDetailModal').modal();
+                    $("#editRole").modal("hide");
+                    swal("Notice", "Record is updated successfully!", "success").then(function(e) {
+                        location.reload()
+                    });
                 }).catch(err => {
 
                 })
@@ -322,11 +315,28 @@ if (isset($_POST["addRole"])) {
 </html>
 
 
-
-
-
-
 <?php
-// session_start();
-include "../connect_db.php";
+
+if (isset($_POST["addRole"])) {
+
+    $count = 0;
+
+    $result = $link->query("SELECT * from `role` where `role_name` ='$_POST[nameRole]'");
+    $count = mysqli_num_rows($result);
+    if ($count > 0) {
+?>
+        <script type="text/javascript">
+            alert("error");
+        </script>
+    <?php
+    } else {
+        $sqlAddRole = $link->query("INSERT INTO `role` (`role_id`, `role_name`, `role_description`, `role_status`, `role_create_time`) VALUES (NULL,'$_POST[nameRole]', '$_POST[descriptionRole]','1','" . time() . "')");
+    ?>
+        <script type="text/javascript">
+            swal("Notice", "Add successfully!", "success");
+        </script>
+<?php
+    }
+}
+
 ?>

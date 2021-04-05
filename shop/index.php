@@ -26,7 +26,7 @@ if (isset($_POST["addShopInfor"])) {
         $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
         if (in_array($fileType, $allowTypes)) {
             if (move_uploaded_file($_FILES["shopImage"]["tmp_name"], $targetFilePath)) {
-                $addShop = $link->query("INSERT INTO `shop` (`shop_id`, `shop_user_id`, `shop_name`, `shop_address`, `shop_description`, `shop_avatar`, `shop_status`, `shop_create_time`) VALUES (NULL,'$userId','$_POST[shopName]','$_POST[shopAddress]','$_POST[shopDescription]','$fileName','1','" . time() . "')");
+                $addShop = $link->query("INSERT INTO `shop` (`shop_id`, `shop_user_id`, `shop_name`, `shop_address`, `shop_description`, `shop_avatar`, `shop_status`,`shop_rank`, `shop_create_time`) VALUES (NULL,'$userId','$_POST[shopName]','$_POST[shopAddress]','$_POST[shopDescription]','$fileName','1','1','" . time() . "')");
             }
             // var_dump($addShop);
             // exit;

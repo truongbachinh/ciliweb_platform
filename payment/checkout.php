@@ -56,15 +56,17 @@ while ($rowShop = mysqli_fetch_array($result)) {
                 <p class="lead">Below is form checkout of seafoodweb please field information bellow to order.</p>
             </div>
             <div class="row">
-                <div class="col-md-4 order-md-2 mb-4">
+                <div class="col-md-4 order-md-2 mb-4 checkout-cart">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">Your cart</span>
+                        <span class="text-muted">Cart summary</span>
                         <span class="badge badge-secondary badge-pill"><?= count($cartInforCheckout) ?></span>
                     </h4>
+                    <hr>
                     <ul class="list-group mb-3">
                         <?php
+                        $totalCountCheckout = 0;
                         $totalCostCheckout = 0;
-                        $count = 0;
+
 
                         // $ctG = array();
                         $countShop = array();
@@ -78,70 +80,87 @@ while ($rowShop = mysqli_fetch_array($result)) {
                         ?>
 
                             <div id="cart-shop">
-                                <div><img src="../shop/image_shop/<?= $rowShop['shop_avatar'] ?>" width="60" height="70"></div>
-                                <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Order of shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $rowShop['shop_name'] . "</font>" ?></a></i></div>
-                            </div>
-                            <?php
-                            $total = 0;
-                            $totalCost = 0;
-                            $count = 0;
-                            $i = 1;
-                            foreach ($myCartProduct  as $rowMyCartProduct) {
+                                <div style="margin-top: 35px;"><img src="../shop/image_shop/<?= $rowShop['shop_avatar'] ?>" width="60" height="70">
+                                </div>
+                                <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Order of shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $rowShop['shop_name'] . "</font>" ?></a></i>
+                                </div>
 
-                            ?>
+                                <?php
+                                $total = 0;
+                                $totalCost = 0;
+                                $count = 0;
+                                $totalCount = 0;
+                                $i = 1;
+                                foreach ($myCartProduct  as $rowMyCartProduct) {
 
-                                <li class="list-group-item d-flex justify-content-between lh-condensed">
-                                    <div class="d-flex flex-column">
-                                        <h6 class="my-0">Product Infor</h6>
-                                        <div id="avatar-products" class=" my-2">
-                                            <img src="../shop/image_products/<?php echo $rowMyCartProduct['p_image'] ?>" style=" border-radius:5px " width="60" height="60" id="img-infor" class="img-fluid  ">
-                                        </div>
-                                        <small class="text-muted">Name: <?= $rowMyCartProduct['p_name'] ?></small>
-                                        <small class="text-muted">Quantity: <?= $quantity = $rowMyCartProduct['cart_quantity'] ?></small>
-                                        <small class="text-muted">Shop: <?= $rowMyCartProduct['shop_name'] ?></small>
+                                ?>
+
+                                    <!-- <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                <div class="d-flex flex-column">
+                                    <h6 class="my-0">Product Infor</h6>
+                                    <div id="avatar-products" class=" my-2">
+                                        <img src="../shop/image_products/<?php echo $rowMyCartProduct['p_image'] ?>"
+                                            style=" border-radius:5px " width="60" height="60" id="img-infor"
+                                            class="img-fluid  ">
                                     </div>
-                                    <span class="text-muted"><?= number_format($cost  = $rowMyCartProduct["cart_quantity"] *  $rowMyCartProduct["p_price"], 0, ",", ".") . ' VNĐ' ?></span>
+                                    <small class="text-muted">Name: <?= $rowMyCartProduct['p_name'] ?></small>
+                                    <small class="text-muted">Quantity:
+                                        <?= $quantity = $rowMyCartProduct['cart_quantity'] ?></small>
+                                    <small class="text-muted">Shop: <?= $rowMyCartProduct['shop_name'] ?></small>
+                                </div>
+                                <span
+                                    class="text-muted"><?= number_format($cost  = $rowMyCartProduct["cart_quantity"] *  $rowMyCartProduct["p_price"], 0, ",", ".") . ' VNĐ' ?></span>
+                            </li> -->
+                                <?php
+                                    number_format($cost  = $rowMyCartProduct["cart_quantity"] *  $rowMyCartProduct["p_price"], 0, ",", ".");
+                                    $total += $cost;
+                                    $count += $quantity;
+                                }
+                                $totalCost += $total;
+                                $totalCount += $count;
+
+                                ?>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Total cost</span>
+                                    <strong><?= number_format($total, 0, ",", ".") ?>VNĐ</strong>
                                 </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Total Quantity</span>
+                                    <strong><?= $count ?></strong>
+                                </li>
+
                             <?php
-                                $total += $cost;
-                                $count += $quantity;
-                            }
-                            $totalCost += $total;
-
-                            ?>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Total cost</span>
-                                <strong><?= number_format($total, 0, ",", ".") ?>VNĐ</strong>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>Total Quantity</span>
-                                <strong><?= $count ?></strong>
-                            </li>
-
-                        <?php
                             $totalCostCheckout += $totalCost;
+                            $totalCountCheckout +=  $totalCount;
                         }
 
-                        ?>
+                            ?>
 
-
+                            </div>
                     </ul>
 
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Promo code">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-secondary"><?= $totalCostCheckout ?></button>
-                        </div>
-                    </div>
+                    <hr>
+                    <h3>Total</h3>
+                    <div class="card">
 
-                    <form class="card p-2">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item  d-flex justify-content-between"> <span>Total All</span>
+                                <strong><?= number_format($totalCostCheckout, 0, ",", ".")  ?>VNĐ</strong>
+                            </li>
+                            <li class="list-group-item  d-flex justify-content-between"> <span>Total Quantity</span>
+                                <strong><?= $totalCountCheckout ?></strong>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!-- <form class="card p-2">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Promo code">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-secondary">Redeem</button>
                             </div>
                         </div>
-                    </form>
+                    </form> -->
                 </div>
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Billing address</h4>
@@ -189,7 +208,37 @@ while ($rowShop = mysqli_fetch_array($result)) {
                             </div>
 
                         </div>
+                        <div class="row">
+                            <div class="col-md-5 mb-3">
+                                <label for="country">City</label>
+                                <select class="custom-select d-block w-100" name="calc_shipping_provinces" required="">
+                                    <option value="">Province / City</option>
+                                </select>
+                                <input class="billing_address_1" name="" type="hidden" value="">
+                                <div class="invalid-feedback">
+                                    Please select a valid country.
+                                </div>
+                            </div>
 
+
+                            <div class="col-md-4 mb-3">
+                                <label for="state">District</label>
+                                <select class="custom-select d-block w-100" name="calc_shipping_district" required>
+                                    <option value="">Township / District</option>
+                                </select>
+                                <input class="billing_address_2" name="" type="hidden" value="">
+                                <div class="invalid-feedback">
+                                    Please provide a valid state.
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="zip">Zip</label>
+                                <input type="text" class="form-control" id="zip" name="zipCode" placeholder="" required>
+                                <div class="invalid-feedback">
+                                    Zip code required.
+                                </div>
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <label for="address">Address</label>
                             <div class="input-group">
@@ -213,55 +262,41 @@ while ($rowShop = mysqli_fetch_array($result)) {
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-5 mb-3">
-                                <label for="country">Country</label>
-                                <select class="custom-select d-block w-100" id="country" name="selectCountry" required>
-                                    <option value="">Choose...</option>
-                                    <option>Vietnam</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Please select a valid country.
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="state">State</label>
-                                <select class="custom-select d-block w-100" id="state" name="selectStates" required>
-                                    <option value="">Choose...</option>
-                                    <option>Hanoi</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Please provide a valid state.
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="zip">Zip</label>
-                                <input type="text" class="form-control" id="zip" name="zipCode" placeholder="" required>
-                                <div class="invalid-feedback">
-                                    Zip code required.
-                                </div>
-                            </div>
-                        </div>
+
                         <div class="mb-3">
                             <label for="address2">Note <span class="text-muted">(Optional)</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i style="color:#f9b34c;" class="fas fa-clipboard"></i></span>
                                 </div>
-                                <textarea type="text" name="noteCheckout" class="form-control" id="address2" placeholder="Apartment or suite"></textarea>
+                                <textarea type="text" name="noteCheckout" class="form-control" id="noteCheckout" placeholder="Apartment or suite"></textarea>
                             </div>
                         </div>
                         <hr class="mb-4">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="same-address">
-                            <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
+                            <label class="custom-control-label" for="same-address">Shipping address is the same as my
+                                billing address</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="save-info">
-                            <label class="custom-control-label" for="save-info">Save this information for next time</label>
+                            <label class="custom-control-label" for="save-info">Save this information for next
+                                time</label>
                         </div>
                         <hr class="mb-4">
-                        <button class="btn btn-primary btn-lg btn-block" type="submit" name="buttonCheckout">Continue to checkout</button>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <button class="btn btn-primary px-3 btn-lg btn-block rounded-pill" type="submit" name="buttonCheckout">Continue to
+                                    checkout</button>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button class="btn btn-warning px-3 btn-lg btn-block rounded-pill" type="submit" name="buttonOnlinePayment">
+                                    Online payment</button>
+                            </div>
+
+
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -279,25 +314,36 @@ while ($rowShop = mysqli_fetch_array($result)) {
 
 
     <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 
     <!-- Popper JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
 
     <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
     <!-- fancybox -->
     <!-- <script type="text/javascript" src="./library/fancybox/jquery.fancybox.min.js"></script> -->
+    <?php include "../partials/js_libs.php"; ?>
+    <script src="./js/checkout.js"></script>
+
 </body>
 
 </html>
 
 <?php
+
+if (isset($_POST["buttonOnlinePayment"])) {
+?>
+    <script type="text/javascript">
+        window.location = "../vnpay_php/index.php";
+    </script>
+    <?php
+}
+
+
+
 if (isset($_POST["buttonCheckout"])) {
-    // var_dump($_POST);
-    // exit;
+
     // // xủ lý giỏ hàng lưu vào db
 
     $cartOrder = $link->query("SELECT shop.*, c.cart_id, SUM(c.cart_quantity) as total_amount, c.cart_user_id, c.cart_product_id, p.p_name, SUM(p.p_price) as total_price, p_fresh, p.p_image from cart as c inner join products as p on. c.cart_product_id = p.p_id inner join shop on p.p_shop_id = shop.shop_id where cart_user_id = '$cartUserId' GROUP BY shop.shop_id");
@@ -314,7 +360,7 @@ if (isset($_POST["buttonCheckout"])) {
 
 
         $cartCheckoutProduct  = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id = '$cartUserId' AND shop.shop_id = '$shopIdProduct' ");
-        var_dump($cartCheckoutProduct);
+        // var_dump($cartCheckoutProduct);
         $checkOutOrder = array();
         while ($rowOrder = mysqli_fetch_array($cartCheckoutProduct)) {
             $checkOutOrder[] =  $rowOrder;
@@ -327,31 +373,27 @@ if (isset($_POST["buttonCheckout"])) {
                 $insertString .=  ",";
             }
         }
-        var_dump($insertString);
+        // var_dump($insertString);
         $orderDetail = mysqli_query($link, "INSERT INTO `order_items` (`id`, `order_id`, `order_product_id`, `quantity`, `price`, `create_time`) VALUES " . $insertString . ";");
 
 
-        $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_country`, `oda_state`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $_POST[firstName]','$_POST[lastName]','$_POST[address1]','$_POST[address2]','$_POST[phoneNumber]','$_POST[email]','$_POST[selectCountry]','$_POST[selectStates]','$_POST[zipCode]','$_POST[noteCheckout]', '" . time() . "')");
+        $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_city`, `oda_district`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $_POST[firstName]','$_POST[lastName]','$_POST[address1]','$_POST[address2]','$_POST[phoneNumber]','$_POST[email]','$_POST[calc_shipping_provinces]','$_POST[calc_shipping_district]','$_POST[zipCode]','$_POST[noteCheckout]', '" . time() . "')");
         echo $success = "order thành công";
 
-        var_dump($order);
-        var_dump($orderDetail);
-        var_dump($orderAddress);
+        // var_dump($order);
+        // var_dump($orderDetail);
+        // var_dump($orderAddress);
     }
 
     if (isset($order) && isset($orderDetail) && isset($orderAddress)) {
+    ?>
+        <script type="text/javascript">
+            swal("Notice", "Order successfully!", "success");
+        </script>
+<?php
         $link->query("DELETE FROM cart WHERE `cart_user_id` = '$cartUserId'");
     }
 }
 
-if (isset($_POST["order_online"])) {
 
-
-    $_SESSION["username"] = $_POST["username"]
-?>
-    <script type="text/javascript">
-        window.location = "../payment/vnpay_php/index.php";
-    </script>
-<?php
-}
 ?>

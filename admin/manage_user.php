@@ -1,34 +1,13 @@
 <?php
 include "../config.php";
-
+$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 2;
+$currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
+$offest = ($currentPage - 1) * $pPerPage;
+$countUser = mysqli_query($link, "SELECT * from user");
+$res = mysqli_query($link, "SELECT * from user  order by `user_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
+$totalUser = $countUser->num_rows;
+$totalPage = ceil($totalUser / $pPerPage);
 ?>
-
-<?php
-
-if (isset($_POST["register"])) {
-
-    $count = 0;
-
-    $result = $link->query("SELECT * from `role` where `role_name` ='$_POST[nameRole]'");
-    $count = mysqli_num_rows($result);
-    if ($count > 0) {
-?>
-        <script type="text/javascript">
-            alert("error")
-        </script>
-    <?php
-    } else {
-        $sqlAddRole = $link->query("INSERT INTO `role` (`role_id`, `role_name`, `role_description`, `role_status`, `role_create_time`) VALUES (NULL,'$_POST[nameRole]', '$_POST[descriptionRole]','1','" . time() . "')");
-    ?>
-        <script type="text/javascript">
-            alert("addOKe")
-        </script>
-<?php
-    }
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -63,6 +42,9 @@ if (isset($_POST["register"])) {
                                         </div>
                                     </div>
                                 </div>
+                                <?php
+                                include('../pagination/pagination.php');
+                                ?>
                                 <div class="table-responsive p-t-10">
                                     <table class="table table-responsive center table-bordered table-striped">
                                         <thead>
@@ -82,7 +64,6 @@ if (isset($_POST["register"])) {
                                         <tbody>
                                             <?php
                                             $i = 1;
-                                            $res = mysqli_query($link, "select * from user");
                                             while ($row = mysqli_fetch_array($res)) {
                                             ?>
                                                 <tr>
@@ -148,6 +129,9 @@ if (isset($_POST["register"])) {
                                         </tbody>
                                     </table>
                                 </div>
+                                <?php
+                                include('../pagination/pagination.php');
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -163,7 +147,7 @@ if (isset($_POST["register"])) {
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="" id="create-account-form">
+                                <form action="" id="edit-account-form">
                                     <div class="form-group">
                                         <label for="editUsername">User Account</label>
                                         <input type="text" class="form-control" id="editUsername" readonly>
@@ -209,6 +193,13 @@ if (isset($_POST["register"])) {
                                 <div class="detail">
                                     <table class="table table-striped">
                                         <tbody>
+                                            <tr>
+                                                <td>Avatar</td>
+                                                <td>
+                                                    <img src="" alt="No avatar" id="detailAvatar" width="65" height="65">
+                                                </td>
+                                            </tr>
+
                                             <tr>
                                                 <td>Fullname</td>
                                                 <td id="detailFullname"></td>
@@ -285,7 +276,7 @@ if (isset($_POST["register"])) {
                             id: $(this).data('id'),
                         }).then(response => {
                             swal("Notice", response.msg, "success").then(function(e) {
-                                windown.location.reload();
+                                location.replace("./manage_user.php");
                             });
                         }).catch(err => {})
                     }
@@ -316,7 +307,7 @@ if (isset($_POST["register"])) {
                 }).then(response => {
                     $("#editUser").modal("hide");
                     swal("Notice", "Record is updated successfully!", "success").then(function(e) {
-                        location.reload()
+                        location.replace("./manage_user.php");
                     });
                 }).catch(err => {
 
@@ -324,12 +315,13 @@ if (isset($_POST["register"])) {
             });
             $(document).on('click', '.btn-detail-user', function(e) {
                 e.preventDefault();
-                $('#detailUser').modal();
+                var pathFile = "../user/avatar/";
                 const userId = parseInt($(this).data("id"));
                 console.log(userId)
                 Utils.api('get_user_info_detail', {
                     id: userId
                 }).then(response => {
+                    $('#detailAvatar').attr('src', pathFile.concat(response.data.ui_avatar));
                     $('#detailFullname').text(response.data.fullname);
                     $('#detailUsername').text(response.data.username);
                     $('#detailPassword').text(response.data.password);
@@ -338,7 +330,7 @@ if (isset($_POST["register"])) {
                     $('#detailPhone').text(response.data.ui_phone);
                     $('#detailCreateTime').text(response.data.user_create_time);
                     $('#detailUpdateTime').text(response.data.user_update_time);
-
+                    $('#detailUser').modal();
                 }).catch(err => {
 
                 })

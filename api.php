@@ -23,9 +23,79 @@ switch ($action) {
             $msg = "Error delete record: " . $link->error;
         }
         break;
+    case "delete_role_info":
+        $id = $_POST['id'];
+        $query = $link->query("DELETE FROM `role` WHERE `role_id` = '$id'");
+        if ($query) {
+            $msg = "Record deleted successfully";
+        } else {
+            $error = 400;
+            $msg = "Error delete record: " . $link->error;
+        }
+        break;
+    case "delete_categories_info":
+        $id = $_POST['id'];
+        $query = $link->query("DELETE FROM `categories` WHERE `ctg_id` = '$id'");
+        if ($query) {
+            $msg = "Record deleted successfully";
+        } else {
+            $error = 400;
+            $msg = "Error delete record: " . $link->error;
+        }
+        break;
+    case "delete_shop_info":
+        $id = $_POST['id'];
+        $query = $link->query("DELETE FROM `shop` WHERE `shop_id` = '$id'");
+        if ($query) {
+            $msg = "Record deleted successfully";
+        } else {
+            $error = 400;
+            $msg = "Error delete record: " . $link->error;
+        }
+        break;
+    case "delete_product_info":
+        $id = $_POST['id'];
+        $query = $link->query("DELETE FROM `products` WHERE `p_id` = '$id'");
+        if ($query) {
+            $msg = "Record deleted successfully";
+        } else {
+            $error = 400;
+            $msg = "Error delete record: " . $link->error;
+        }
+        break;
     case "get_user_info":
         $id = $_POST['id'];
         $query = $link->query("SELECT * FROM `user` WHERE `user_id` = $id");
+        if ($query->num_rows == 0) {
+            $error = 1;
+            $msg = "This file is not available.";
+        } else {
+            $data = $query->fetch_assoc();
+        }
+        break;
+    case "get_shop_info":
+        $id = $_POST['id'];
+        $query = $link->query("SELECT * FROM `shop` WHERE `shop_id` = $id");
+        if ($query->num_rows == 0) {
+            $error = 1;
+            $msg = "This file is not available.";
+        } else {
+            $data = $query->fetch_assoc();
+        }
+        break;
+    case "get_categories_info":
+        $id = $_POST['id'];
+        $query = $link->query("SELECT * FROM `categories` WHERE `ctg_id` = $id");
+        if ($query->num_rows == 0) {
+            $error = 1;
+            $msg = "This file is not available.";
+        } else {
+            $data = $query->fetch_assoc();
+        }
+        break;
+    case "get_role_info":
+        $id = $_POST['id'];
+        $query = $link->query("SELECT * FROM `role` WHERE `role_id` = $id");
         if ($query->num_rows == 0) {
             $error = 1;
             $msg = "This file is not available.";
@@ -43,7 +113,58 @@ switch ($action) {
             $data = $query->fetch_assoc();
         }
         break;
+    case "get_shop_info_detail":
+        $id = $_POST['id'];
+        $query = $link->query("SELECT user.*, shop.* FROM `shop` INNER JOIN user ON user.user_id = shop.shop_user_id WHERE `shop_id` = $id");
+        if ($query->num_rows == 0) {
+            $error = 1;
+            $msg = "This file is not available.";
+        } else {
+            $data = $query->fetch_assoc();
+        }
+        break;
+    case "get_product_info_detail":
+        $id = $_POST['id'];
+        $query = $link->query("SELECT products.*, categories.*, image_library.* FROM `products` INNER JOIN categories ON categories.ctg_id = products.p_category_id INNER JOIN image_library ON image_library.img_p_id = products.p_id WHERE `p_id` = '$id'");
+        if ($query->num_rows == 0) {
+            $error = 1;
+            $msg = "This file is not available.";
+        } else {
+            $count = 0;
+            $count = $query->num_rows;
+            for ($i = 0; $i < $count; $i++) {
+                $data = $query->fetch_assoc();
+            }
+
+            // $datass = array();
+            // while ($datas = $query->fetch_assoc()) {
+            //     $datass[] = $datas;
+            // }
+        }
+
+        break;
+    case "get_oder_info_detail":
+        $id = $_POST['id'];
+        $query = $link->query("SELECT products.*, categories.*, image_library.* FROM `products` INNER JOIN categories ON categories.ctg_id = products.p_category_id INNER JOIN image_library ON image_library.img_p_id = products.p_id WHERE `p_id` = '$id'");
+        if ($query->num_rows == 0) {
+            $error = 1;
+            $msg = "This file is not available.";
+        } else {
+            $count = 0;
+            $count = $query->num_rows;
+            for ($i = 0; $i < $count; $i++) {
+                $data = $query->fetch_assoc();
+            }
+
+            // $datass = array();
+            // while ($datas = $query->fetch_assoc()) {
+            //     $datass[] = $datas;
+            // }
+        }
+
+        break;
     case "update_user_info":
+
         $id = $_POST['id'];
         $roleUser = $_POST['editRole'];
         $statusUser = $_POST['editStatus'];
@@ -55,32 +176,62 @@ switch ($action) {
             $error = 400;
             $msg = "Error updating record: " . $link->error;
         }
+
+
         break;
-    case "add_role_info":
-        $count = 0;
-        $sql_user = "SELECT * from role where role_name ='$_POST[nameRole]'";
-        $res = mysqli_query($link, $sql_user) or die(mysqli_error($link));
-        $count = mysqli_num_rows($res);
-        if ($count > 0) {
-
-            $msg = "Role name is already exist.";
-        } else {
-
-            $addRole = $link->query("INSERT INTO `role` (`role_id`,`role_name`,`role_description`, `role_status`,  `role_create_time`) VALUES(NULL,'$_POST[nameRole]','$_POST[descriptionRole]','1','" . time() . "')");
-
-            $msg = "Successfully added role.";
-        }
-        break;
-    case "get_role_info":
+    case "update_shop_info":
         $id = $_POST['id'];
-        $query = $conn->query("SELECT * FROM `role` WHERE `role_id` = $id");
-        if ($query->num_rows == 0) {
-            $error = 1;
-            $msg = "This role is not available.";
+        $statusShop = $_POST['editStatusShop'];
+        $rankShop = $_POST['editRankShop'];
+        $shopTimeUpdate = time();
+        $stmt = $link->prepare("UPDATE `shop` SET `shop_status`=?,`shop_rank`=?,`shop_update_time`=? WHERE `shop_id`=?");
+        $stmt->bind_param("sssi", $statusShop, $rankShop, $shopTimeUpdate, $id);
+        if ($stmt->execute()) {
+            $msg = "Record updated successfully";
         } else {
-            $data = $query->fetch_assoc();
+            $error = 400;
+            $msg = "Error delete record: " . $link->error;
         }
+        break;
+        // $update = $link->query("UPDATE `shop` SET `shop_status`= '$statusShop',`shop_rank`= '$rankShop',`shop_update_time`= '" . time() . "' WHERE `shop_id`=$id");
 
+        // if ($update) {
+        //     $msg = "Record updated successfully";
+        // } else {
+        //     $error = 400;
+        //     $msg = "Error updating record: " . $link->error;
+        // }
+        // break;
+
+    case "update_role_info":
+        $id = $_POST['id'];
+        $roleName = $_POST['editRoleName'];
+        $roleDescription = $_POST['editRoleDescription'];
+        $roleStatus = $_POST['editRoleStatus'];
+
+        $update = $link->query("UPDATE `role` SET `role_name`= '$roleName',`role_description`= '$roleDescription',`role_status`= '$roleStatus',`role_update_time`= '" . time() . "' WHERE `role_id`=$id");
+
+        if ($update) {
+            $msg = "Record updated successfully";
+        } else {
+            $error = 400;
+            $msg = "Error updating record: " . $link->error;
+        }
+        break;
+    case "update_categories_info":
+        $id = $_POST['id'];
+        $category = $_POST['editCategory'];
+        $ctgDescription = $_POST['editCtgDescription'];
+        $ctgStatus = $_POST['editCtgStatus'];
+        $ctgTimeUpdate = time();
+        $stmt = $link->prepare("UPDATE `categories` SET `ctg_name`=?,`ctg_description`=?,`ctg_status`=?,`ctg_update_time`=? WHERE `ctg_id`=?");
+        $stmt->bind_param("ssssi", $category, $ctgDescription, $ctgStatus, $ctgTimeUpdate, $id);
+        if ($stmt->execute()) {
+            $msg = "Record updated successfully";
+        } else {
+            $error = 400;
+            $msg = "Error delete record: " . $link->error;
+        }
         break;
 }
 

@@ -1,70 +1,15 @@
 <?php
 include "../config.php";
-
+$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 3;
+$currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
+$offest = ($currentPage - 1) * $pPerPage;
+$countCtg = mysqli_query($link, "SELECT * from `categories`");
+$result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
+$totalCtg = $countCtg->num_rows;
+$totalPage = ceil($totalCtg / $pPerPage);
 ?>
 
-<?php
 
-if (isset($_POST["addCategories"])) {
-    $count = 0;
-    $sql_user = "SELECT * from categories where ctg_name ='$_POST[nameCategories]'";
-    $res = mysqli_query($link, $sql_user) or die(mysqli_error($link));
-    $count = mysqli_num_rows($res);
-
-    if ($count > 0) {
-?>
-        <script type="text/javascript">
-            alert("Categories exits !");
-            window.location.replace("./manage_categories.php");
-        </script>
-        <?php
-    } else {
-
-        // File upload configuration 
-        $tm = md5(time());
-        $statusMsg = '';
-        $uploadPath = "./image_categories/";
-        if (!is_dir($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
-
-        $fileName =  $tm . basename($_FILES['imageCategories']['name']);
-        $targetFilePath = $uploadPath . $fileName;
-        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-        // Check whether file type is valid 
-        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-        if (!empty($fileName)) {
-
-            $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
-            if (in_array($fileType, $allowTypes)) {
-                if (move_uploaded_file($_FILES["imageCategories"]["tmp_name"], $targetFilePath)) {
-                    $addCategories = $link->query("INSERT INTO `categories` (`ctg_id`,`ctg_name`,`ctg_description`, `ctg_image`,  `ctg_status`,  `ctg_create_time`) VALUES(NULL,'$_POST[nameCategories]','$_POST[descriptionCategories]','$fileName','1','" . time() . "')");
-                }
-                if ($addCategories) {
-        ?>
-                    <script type="text/javascript">
-                        alert("add categories success !");
-                        window.location.replace("./manage_categories.php");
-                    </script>
-                <?php
-                } else {
-                ?>
-                    <script type="text/javascript">
-                        alert("error !");
-                        window.location.replace("./manage_categories.php");
-                    </script>
-<?php
-                }
-            } else {
-                $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
-            }
-        } else {
-            $statusMsg = 'Please select a file to upload.';
-        }
-    }
-}
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +32,7 @@ if (isset($_POST["addCategories"])) {
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h4> Manage User </h4>
+                                    <h4> Manage Categories </h4>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -99,10 +44,13 @@ if (isset($_POST["addCategories"])) {
                                         </div>
                                     </div>
                                     <div class="col-sm-6 ">
-                                        <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addRole"><i class="mdi mdi-clipboard-plus"></i> Add neu categories
+                                        <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addCategories"><i class="mdi mdi-clipboard-plus"></i> Add neu categories
                                         </a>
                                     </div>
                                 </div>
+                                <?php
+                                include('../pagination/pagination.php');
+                                ?>
                                 <div class="table-responsive p-t-10">
                                     <table class="table table-bordered table-striped">
                                         <thead>
@@ -120,7 +68,6 @@ if (isset($_POST["addCategories"])) {
                                         <tbody>
                                             <?php
                                             $i = 1;
-                                            $result = $link->query("select * from categories");
                                             while ($row = mysqli_fetch_array($result)) {
                                             ?>
                                                 <tr>
@@ -169,10 +116,10 @@ if (isset($_POST["addCategories"])) {
 
                                                     <td>
                                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                                            <a href="" class="btn btn-info  btn-edit-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
-                                                            <a href="" class="btn btn-danger btn-delete-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-delete"></i>
+                                                            <a href="" class="btn btn-info  btn-edit-categories" role="button" data-id="<?= $row['ctg_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
+                                                            <a href="" class="btn btn-danger btn-delete-categories" role="button" data-id="<?= $row['ctg_id'] ?>"><i class="mdi mdi-delete"></i>
                                                             </a>
-                                                            <a href="" class="btn btn-primary  btn-get-role-info" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
+                                                            <!-- <a href="" class="btn btn-primary  btn-detail-categories" role="button" data-id="<?= $row['ctg_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a> -->
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -183,16 +130,19 @@ if (isset($_POST["addCategories"])) {
                                         </tbody>
                                     </table>
                                 </div>
+                                <?php
+                                include('../pagination/pagination.php');
+                                ?>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Modal add role -->
-                <div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="addRole" aria-hidden="true">
+                <!-- Modal add  -->
+                <div class="modal fade" id="addCategories" tabindex="-1" role="dialog" aria-labelledby="addCategories" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="addRole">Add categories</h5>
+                                <h5 class="modal-title" id="addCategories">Add categories</h5>
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -219,12 +169,12 @@ if (isset($_POST["addCategories"])) {
                     </div>
                 </div>
                 <!-- Modal Detail -->
-                <div class="modal fade" id="roleDetailModal" tabindex="-1" role="dialog" aria-labelledby="detailRole" aria-hidden="true">
+                <div class="modal fade" id="detailCategories" tabindex="-1" role="dialog" aria-labelledby="detailCategories" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="detailRole">Detail
-                                    Information role
+                                <h5 class="modal-title" id="detailCategories">Detail
+                                    Information categories
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -235,24 +185,28 @@ if (isset($_POST["addCategories"])) {
                                     <table class="table table-striped">
                                         <tbody>
                                             <tr>
-                                                <td>Role Name</td>
-                                                <td id="roleNameDetail"></td>
+                                                <td>Category</td>
+                                                <td id="detailCategory"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role description</td>
-                                                <td id="roleDescriptionDetail"></td>
+                                                <td>Category description</td>
+                                                <td id="DetailCtgDescription"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role status</td>
-                                                <td id="roleStatusDetail"></td>
+                                                <td>Category image</td>
+                                                <td id="DetailCtgImage"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role create time</td>
-                                                <td id="roleCreateTime"></td>
+                                                <td>Category status</td>
+                                                <td id="DetailCtgStatus"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role update time</td>
-                                                <td id="roleUpdateTime"></td>
+                                                <td>Category create time</td>
+                                                <td id="DetailCtgCreateTime"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Category update time</td>
+                                                <td id="DetailCtgUpdateTime"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -269,11 +223,11 @@ if (isset($_POST["addCategories"])) {
                     </div>
                 </div>
 
-                <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editTopic" aria-hidden="true">
+                <div class="modal fade" id="editCategories" tabindex="-1" role="dialog" aria-labelledby="editCategories" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editTopic">Edit User Information</h5>
+                                <h5 class="modal-title" id="editCategories">Edit Categories Information</h5>
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -282,41 +236,29 @@ if (isset($_POST["addCategories"])) {
                             <div class="modal-body">
                                 <form action="" id="create-account-form">
                                     <div class="form-group">
-                                        <label for="inp-username">Username</label>
-                                        <input type="text" class="form-control" id="inp-username" required>
+                                        <label for="editCategory">Category</label>
+                                        <input type="text" class="form-control" id="editCategory" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inp-fullname">Full Name</label>
-                                        <input type="text" class="form-control" id="inp-fullname" required>
+                                        <label for="editCtgDescription">Description</label>
+                                        <input type="text" class="form-control" id="editCtgDescription" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inp-email">Email</label>
-                                        <input type="text" class="form-control" id="inp-email" required>
+                                        <label for="editCtgImage">Image</label>
+                                        <input type="file" class="form-control" id="editCtgImage" required>
+                                        <img src="" height="50" width="50" id="displayImageEdit" style="margin-left: 10px;">
                                     </div>
                                     <div class="form-group">
-                                        <label for="inp-status">Status</label>
-                                        <select id="inp-status" class="form-control">
+                                        <label for="editCtgStatus">Status</label>
+                                        <select id="editCtgStatus" class="form-control">
                                             <option value="1">Active</option>
                                             <option value="2">Blocked</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inp-role">Role</label>
-                                        <select id="inp-role" class="form-control">
-                                            <option value="student">Student</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="manager-coordinator">Coordinator Manager</option>
-                                            <option value="manager-marketing">Marketing Manager</option>
-                                        </select>
-                                    </div>
 
-                                    <div class="form-group">
-                                        <label for="inp-password">New Password (Leave blank for unchanged)</label>
-                                        <input type="password" placeholder="Leave blank for unchanged..." class="form-control" id="inp-password" required>
-                                    </div>
 
                                     <div class="model-footer">
-                                        <button type="button" class="btn btn-warning btn-save">
+                                        <button type="button" class="btn btn-warning btn-update-categories">
                                             Save Changes
                                         </button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -336,34 +278,56 @@ if (isset($_POST["addCategories"])) {
     <script>
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
-            $(document).on('click', ".btn-add-role", function(e) {
-                Utils.api("add_role_info", {
-                    roleName: $('#addNameRole').val(),
-                    roleDescription: $('#addDescriptionRole').val(),
-                }).then(response => {
+            $(document).on('click', ".btn-delete-categories", function(e) {
+                e.preventDefault();
+                swal({
+                    title: "Please confirm",
+                    text: 'Are sure you want to delete this categories?',
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        Utils.api('delete_categories_info', {
+                            id: $(this).data('id'),
+                        }).then(response => {
+                            swal("Notice", response.msg, "success").then(function(e) {
+                                location.reload();
+                            });
+                        }).catch(err => {})
+                    }
+                });
+            });
 
+            $(document).on('click', '.btn-edit-categories', function(e) {
+                e.preventDefault();
+                const ctgId = parseInt($(this).data("id"));
+                activeId = ctgId;
+                console.log(ctgId);
+                Utils.api("get_categories_info", {
+                    id: ctgId
+                }).then(ctg => {
+                    $("input#editCategory ").val(ctg.data.ctg_name)
+                    $("#editCtgDescription ").val(ctg.data.ctg_description)
 
-
+                    // $("img#displayImageEdit").attr('src', $("img#displayImageEdit").attr('src') + './image_categories/' + val(ctg.data.ctg_image));
+                    $("#editCtgStatus ").val(ctg.data.ctg_status)
+                    $('#editCategories').modal();
                 }).catch(err => {
 
-                })
+                });
             });
-            $(document).on('click', ".btn-get-role-info", function(e) {
-                e.preventDefault();
-                $('#roleDetailModal').modal();
-                const roleId = parseInt($(this).data("id"));
-                activeId = roleId;
-                console.log(roleId);
-                Utils.api("get_role_info", {
-                    id: roleId
+            $(document).on('click', '.btn-update-categories', function(e) {
+                Utils.api("update_categories_info", {
+                    id: activeId,
+                    editCategory: $("#editCategory").val(),
+                    editCtgDescription: $("#editCtgDescription").val(),
+                    editCtgStatus: $("#editCtgStatus").val(),
                 }).then(response => {
-                    console.log("name", response.data.role_name);
-                    $('#roleNameDetail').text(response.data.role_name);
-                    $('#roleDescription').text(response.data.role_description);
-                    $('#roelStatus').texy(response.data.role_status);
-                    $('#roelCreateTime').text(response.data.role_create_time);
-                    $('#roelUpdateTime').text(response.data.topic_update_time);
-                    $('#roleDetailModal').modal();
+                    $("#editCategories").modal("hide");
+                    swal("Notice", "Record is updated successfully!", "success").then(function(e) {
+                        location.replace("./manage_categories.php");
+                    });
                 }).catch(err => {
 
                 })
@@ -373,3 +337,67 @@ if (isset($_POST["addCategories"])) {
 </body>
 
 </html>
+<?php
+
+if (isset($_POST["addCategories"])) {
+    $count = 0;
+    $sql_user = "SELECT * from categories where ctg_name ='$_POST[nameCategories]'";
+    $res = mysqli_query($link, $sql_user) or die(mysqli_error($link));
+    $count = mysqli_num_rows($res);
+
+    if ($count > 0) {
+?>
+        <script type="text/javascript">
+            alert("Categories exits !");
+            window.location.replace("./manage_categories.php");
+        </script>
+        <?php
+    } else {
+
+        // File upload configuration 
+        $tm = md5(time());
+        $statusMsg = '';
+        $uploadPath = "./image_categories/";
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        $fileName =  $tm . basename($_FILES['imageCategories']['name']);
+        $targetFilePath = $uploadPath . $fileName;
+        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+        // Check whether file type is valid 
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+        if (!empty($fileName)) {
+
+            $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
+            if (in_array($fileType, $allowTypes)) {
+                if (move_uploaded_file($_FILES["imageCategories"]["tmp_name"], $targetFilePath)) {
+                    $addCategories = $link->query("INSERT INTO `categories` (`ctg_id`,`ctg_name`,`ctg_description`, `ctg_image`,  `ctg_status`,  `ctg_create_time`) VALUES(NULL,'$_POST[nameCategories]','$_POST[descriptionCategories]','$fileName','1','" . time() . "')");
+                }
+                if ($addCategories) {
+        ?>
+                    <script type="text/javascript">
+                        swal("Notice", "Add successfully!", "success").then(function(e) {
+                            location.replace("./manage_categories.php");
+                        });
+                    </script>
+                <?php
+                } else {
+                ?>
+                    <script type="text/javascript">
+                        swal("Notice", $statusMsg, "success").then(function(e) {
+                            location.replace("./manage_categories.php");
+                        });
+                    </script>
+<?php
+                }
+            } else {
+                $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
+            }
+        } else {
+            $statusMsg = 'Please select a file to upload.';
+        }
+    }
+}
+
+?>

@@ -1,12 +1,26 @@
-#order-form{
-    margin-top: 70px;;
+#order-form {
+  margin-top: 70px;
 }
-#cart-product-infor
-{
-    display: flex;
-    flex-flow: column;
+#cart-product-infor {
+  display: flex;
+  flex-flow: column;
 }
-#avatar-products
-{
-    margin: 10px 0px;
+#avatar-products {
+  margin: 10px 0px;
+}
+.checkout-cart {
+  /* height: 100%;
+  width: 25%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  margin-top: 100px;
+  background-color: honeydew;
+  overflow-x: hidden;
+  padding-top: 10px;
+  padding-left: 25px;
+  padding-right: 15px;
+  padding: 50px;
+  border-radius: 10px; */
 }
