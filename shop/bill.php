@@ -4,16 +4,29 @@ $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
 $idOrder = $_GET["id"];
 $idUserOrder = $_GET["idu"];
-$billDetail = "SELECT order_address.*, orders.*, order_items.*,user.*, products.p_name as order_product_name, products.p_image as order_product_image from orders INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN products ON products.p_id = order_items.order_product_id INNER JOIN user ON user.user_id = orders.order_user_id INNER JOIN order_address ON order_address.oda_order_id = orders.id WHERE orders.id = $idOrder AND order_user_id = $idUserOrder";
+$billDetail = "SELECT order_address.*, orders.*, order_items.*,user.*, products.p_name as order_product_name, products.p_image as order_product_image from orders INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN products ON products.p_id = order_items.order_product_id INNER JOIN user ON user.user_id = orders.order_user_id INNER JOIN order_address ON order_address.oda_order_id = orders.id WHERE orders.id  = $idOrder AND order_user_id = $idUserOrder";
 
+
+$res = mysqli_query($link, $billDetail);
+$bill = array();
+
+while ($row = mysqli_fetch_array($res)) {
+    $bill[] = $row;
+    $firstName = $row['oda_firstname'];
+    $lastName = $row['oda_lastname'];
+    $address = $row['oda_address'];
+    $city = $row['oda_city'];
+    $district = $row['oda_district'];
+    $phone = $row['oda_phone'];
+    $orderTime = $row['order_create_time'];
+}
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" href="./css/bill.css">
     <?php include "../partials/html_header.php"; ?>
 </head>
 
@@ -24,86 +37,121 @@ $billDetail = "SELECT order_address.*, orders.*, order_items.*,user.*, products.
 
         <!-- PLACE CODE INSIDE THIS AREA -->
 
-        <?php
-        $res = mysqli_query($link, $billDetail);
-        $bill = array();
-
-        while ($row = mysqli_fetch_array($res)) {
-            $bill[] = $row;
-            $nameRecipient = $row['fullname'];
-            $address = $row['oda_address'];
-            $phone = $row['oda_phone'];
-        }
-
-
-        ?>
-
-        <div id="order-detail-wrapper" style="margin-left: 300px;">
-            <div id="order-detail">
-                <h1>Bill Detail</h1>
-                <label>User name: &nbsp;</label><span><?= $nameRecipient ?></span><br>
-                <label>Address: &nbsp;</label><span><?= $address ?></span><br>
-                <label>Phone: &nbsp; </label><span><?= $phone ?></span><br>
-                <br>
-                <hr>
-                <h3>Product List</h3>
-                <ul>
-                    <?php
-                    $totalQuantity = 0;
-                    $totalMoney = 0;
-                    foreach ($bill as $order) {
-
-
-                    ?>
-                        <li>
-                            <span><?= $order['order_product_name'] ?></span><br>
-                            <span>
-                                <?php
-                                if ($res->num_rows > 0) {
-
-                                    $imageURL = '../shop/image_products/' . $order["order_product_image"];
-                                ?>
-                                    <div>
-                                        <a href="<?= $row['img_id'] ?>"> <img src="<?php echo $imageURL; ?>" alt="" width="70" height="70" class="img-fluid" id="img-view-details" />
-                                        </a>
-
+        <section class="manage-topic">
+            <div class="container m-t-30">
+                <div class="row ">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h1 class="bill-title"> <i> Bill Detail</i> </h1>
+                                </div>
+                                <div id="order-time">
+                                    <p class="bill-title">Time order, <?= date("Y-m-d H:i:s", $orderTime) ?> </p>
+                                </div>
+                            </div>
+                            <hr class="hr-line">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12 m-l-20">
+                                        <div class="card-title">
+                                            <h3 class=" bill-information">Receiver's information:</h3>
+                                        </div>
+                                        <div class="card-text">
+                                            <p class="infor"><b> Receiver name:</b> &nbsp;<span><?= $firstName, " ",  $lastName ?></span></p>
+                                            <p class="infor"><b> Address:</b> &nbsp;<span><?= $address ?></span><br></p>
+                                            <p class="infor"><b> Township / District:</b> &nbsp;<span><?= $district ?></span><br></p>
+                                            <p class="infor"><b> Province / City:</b> &nbsp;<span><?= $city ?></span><br></p>
+                                            <p class="infor"><b> Phone:</b> &nbsp; <span><?= $phone ?></span><br></p>
+                                        </div>
                                     </div>
+                                    <hr class="hr-line">
+                                    <div class="col-lg-12 ">
+                                        <div class="card-title m-l-20">
+                                            <h3 class=" bill-information"> Product list:</h3>
+                                        </div>
+                                        <div class="table-responsive p-t-30">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr style="text-align: center;">
+                                                        <th>No</th>
+                                                        <th>Product name</th>
+                                                        <th>Image</th>
+                                                        <th>Price</th>
+                                                        <th>Quantity</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    $total = 0;
+                                                    $totalMoney = 0;
+                                                    $count = 0;
+                                                    $totalQuantity = 0;
+                                                    $i = 1;
+                                                    foreach ($bill as $order) {
+                                                    ?>
+                                                        <tr>
+                                                            <td class="bill-product"><?= $i++ ?></td>
+                                                            <td class="bill-product"><?= $order["order_product_name"] ?></td>
+                                                            <?php
+                                                            if ($res->num_rows > 0) {
+                                                                $imageURL = "../shop/image_products/" . $order["order_product_image"];
+                                                            ?>
+                                                                <td class="bill-product">
+                                                                    <img src="<?php echo $imageURL; ?>" alt="" width="70" height="70" class="img-fluid" id="img-view-details" />
 
-                                <?php
-                                } else { ?>
-                                    <p>No image(s) found...</p>
-                                <?php } ?>
-                            </span>
-                            <span>SL: <?= $order['quantity'] ?></span><br>
-                            <span>cost: <?= $t = number_format($order['quantity'] * $order['price'], 0, ",", ".") ?>VNĐ </span><br>
-                            <span>Payment: Not yet </span><br>
-                            <br>
 
-                        </li>
-                    <?php
-                        $totalMoney = $order['order_total_cost'];
-                        $totalQuantity = $order['order_total_amount'];
-                    }
-                    ?>
-                    <form action="">
-                        <div class="form-group col-lg-4">
-                            <label for="inp-role">Ship status</label>
-                            <select id="inp-role" class="form-control">
-                                <option value="1" selected>No shipping</option>
-                                <option value="2">Cancle</option>
-                                <option value="3">Shipping</option>
-                            </select>
+                                                                </td>
+
+                                                            <?php
+                                                            } else {
+                                                            ?>
+                                                                <td class="bill-product">
+                                                                    <p>No image(s) found...</p>
+                                                                </td>
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                            <td class="bill-product"><?= number_format($order["price"], 0, ",", ".") ?>VNĐ</td>
+                                                            <td class="bill-product"><?= $order["quantity"] ?></td>
+                                                            <td class="bill-product"><?= number_format($cost = $order["quantity"] * $order["price"], 0, ",", ".") ?>VNĐ</td>
+                                                        </tr>
+                                                    <?php
+
+                                                        $count += $order["quantity"];
+                                                        $total += $cost;
+                                                    }
+                                                    $totalQuantity += $count;
+                                                    $totalMoney += $total;
+
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                            <div class="total-bill col-md-4 m-r-10 m-t-20 m-b-20">
+                                                <ul class="list-group mb-3">
+                                                    <li class="list-group-item d-flex justify-content-between">
+                                                        <span>Total Quantity</span>
+                                                        <strong><?= $totalQuantity ?></strong>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between">
+                                                        <span>Total Cost</span>
+                                                        <strong><?= number_format($totalMoney, 0, ",", ".") ?>VNĐ</strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <hr class="hr-line">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-warning">Update order</button>
-                    </form>
-                    <?php
-                    ?>
-                </ul>
-                <hr>
-                <label>Total quantity:&nbsp; </label><span><?= $totalQuantity ?></span> - <label>Total Cost:&nbsp; </label><span><?= number_format($totalMoney, 0, ",", ".") ?>VNĐ</span>
+                    </div>
+                </div>
             </div>
-        </div>
-
+            </div>
+            </div>
+        </section>
 
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
@@ -112,39 +160,14 @@ $billDetail = "SELECT order_address.*, orders.*, order_items.*,user.*, products.
     <script>
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
-            $(document).on('click', ".btn-add-role", function(e) {
-                Utils.api("add_role_info", {
-                    roleName: $('#addNameRole').val(),
-                    roleDescription: $('#addDescriptionRole').val(),
-                }).then(response => {
-
-
-
-                }).catch(err => {
-
-                })
-            });
-            $(document).on('click', ".btn-get-role-info", function(e) {
+            $(document).on('click', '.btn-edit-order', function(e) {
                 e.preventDefault();
-                $('#roleDetailModal').modal();
-                const roleId = parseInt($(this).data("id"));
-                activeId = roleId;
-                console.log(roleId);
-                Utils.api("get_role_info", {
-                    id: roleId
-                }).then(response => {
-                    console.log("name", response.data.role_name);
-                    $('#roleNameDetail').text(response.data.role_name);
-                    $('#roleDescription').text(response.data.role_description);
-                    $('#roelStatus').texy(response.data.role_status);
-                    $('#roelCreateTime').text(response.data.role_create_time);
-                    $('#roelUpdateTime').text(response.data.topic_update_time);
-                    $('#roleDetailModal').modal();
-                }).catch(err => {
 
-                })
-            });
-        })
+                const orderId = parseInt($(this).data("id"));
+                activeId = orderId;
+                console.log(orderId);
+            })
+        });
     </script>
 </body>
 

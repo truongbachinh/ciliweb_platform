@@ -84,7 +84,17 @@
                                         <span class="menu-name">Manage Order</span>
                                     </span>
                                     <span class="menu-icon">
-                                        <i class="mdi mdi-book-open-variant mdi-24px "></i>
+                                        <i class="mdi mdi-basket mdi-24px "></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="../shop/chart.php" class=" menu-link">
+                                    <span class="menu-label">
+                                        <span class="menu-name">Chart Analysis</span>
+                                    </span>
+                                    <span class="menu-icon">
+                                        <i class="mdi mdi-chart-bar mdi-24px "></i>
                                     </span>
                                 </a>
                             </li>

@@ -67,10 +67,10 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="updateAvatar">Shop avatar</label>
+                                                        <img src="<?php echo $imageURL; ?>" alt="" width="50" height="50" style="display: flex; flex-direction:row; margin:10px 20px" />
                                                         <input type="file" class="form-control" id="updateAvatar" name="updateAvatar">
-                                                        <img src="<?php echo $imageURL; ?>" alt="" width="50" height="50" style="display: flex; flex-direction:row" />
                                                     </div>
-                                                    <div class="form-group editRankShop">
+                                                    <!-- <div class="form-group editRankShop">
                                                         <label for="updateRankShop">Shop rank</label>
                                                         <select id="updateRankShop" class="form-control">
                                                             <option value="1">Silver</option>
@@ -78,11 +78,11 @@
                                                             <option value="3">Platinum</option>
                                                             <option value="4">Diamond</option>
                                                         </select>
-                                                    </div>
+                                                    </div> -->
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                                         Close
                                                     </button>
-                                                    <input type="submit" class="btn btn-primary btn-save-update-shop" name="updateShopProfile" value="Save changes">
+                                                    <input type="submit" class="btn btn-primary btn-save-update-shop" name="btnUpdateShopProfile" value="Save changes">
                                                 </form>
                                             </div>
 
@@ -266,7 +266,7 @@
                     $("#updateDescription").val(shop.data.shop_description)
                     $("#updateAddress").val(shop.data.shop_address)
                     $("#displayAvatarEdit").val(shop.data.shop_avatar)
-                    $("#updateRankShop").val(shop.data.shop_rank)
+                    // $("#updateRankShop").val(shop.data.shop_rank)
                     $('#updateShopProfile').modal();
                 }).catch(err => {
 
@@ -279,11 +279,12 @@
 </html>
 <?php
 
-if (isset($_POST["updateShopProfile"])) {
+if (isset($_POST["btnUpdateShopProfile"])) {
 
     $shopTimeUpdate = time();
     $updateImg = "";
     $id = $_POST['shopId'];
+
     // File upload configuration 
     $tm = md5(time());
     $statusMsg = '';
@@ -295,31 +296,37 @@ if (isset($_POST["updateShopProfile"])) {
     $fileUp =  $tm . $fileName;
     if (!empty($fileName)) {
         $updateImg  = $fileUp;
-    } else {
-        $updateImg = $rowShop["shop_avatar"];
-    }
-    $targetFilePath = $uploadPath . $updateImg;
-    $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-    // Check whether file type is valid 
-    $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-    if (!empty($updateImg)) {
-        $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
-        if (in_array($fileType, $allowTypes)) {
-            if (move_uploaded_file($_FILES["updateAvatar"]["tmp_name"], $targetFilePath)) {
-                $updateShopProfile = $link->query("UPDATE `shop` SET `shop_name`= '$_POST[updateName]' , `shop_description`= '$_POST[updateDescription]', `shop_address`= '$_POST[updateAddress]', `shop_avatar`= '$updateImg' , `shop_update_time`= $shopTimeUpdate WHERE `shop_id`= '$id' ");
+
+        $targetFilePath = $uploadPath . $updateImg;
+        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+        // Check whether file type is valid 
+        // var_dump("--------------------------------------", $updateImg);
+        // exit;
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+        if (!empty($updateImg)) {
+            $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
+            if (in_array($fileType, $allowTypes)) {
+                if (move_uploaded_file($_FILES["updateAvatar"]["tmp_name"], $targetFilePath)) {
+                    $updateShopProfile = $link->query("UPDATE `shop` SET `shop_name`= '$_POST[updateName]' , `shop_description`= '$_POST[updateDescription]', `shop_address`= '$_POST[updateAddress]', `shop_avatar`= '$updateImg' , `shop_update_time`= $shopTimeUpdate WHERE `shop_id`= '$id' ");
+                }
+                if ($updateShopProfile == true) {
 ?>
-                <script type="text/javascript">
-                    swal("Notice", "Update successfully!", "success").then(function(e) {
-                        location.replace("./index.php");
-                    });
-                </script>
+                    <script type="text/javascript">
+                        swal("Notice", $statusMsg, "success").then(function(e) {
+                            location.replace("./index.php");
+                        });
+                    </script>
 <?php
+                }
+            } else {
+                $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
             }
         } else {
-            $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
+            $statusMsg = 'Please select a file to upload.';
         }
     } else {
-        $statusMsg = 'Please select a file to upload.';
+        $updateImg = $rowShop["shop_avatar"];
+        $updateShopProfile = $link->query("UPDATE `shop` SET `shop_name`= '$_POST[updateName]' , `shop_description`= '$_POST[updateDescription]', `shop_address`= '$_POST[updateAddress]', `shop_avatar`= '$updateImg' , `shop_update_time`= $shopTimeUpdate WHERE `shop_id`= '$id' ");
     }
 }
 

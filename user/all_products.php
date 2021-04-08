@@ -64,13 +64,8 @@ $totalPage = ceil($totalProduct / $pPerPage);
                     <?php
                     }
                     ?>
-
                 </div>
-
-
             </div>
-
-
         <?php } ?>
     </div>
 </div>

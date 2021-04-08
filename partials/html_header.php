@@ -13,6 +13,10 @@
 <link rel="stylesheet" type="text/css" href="../assets/vendor/jquery-scrollbar/jquery.scrollbar.css">
 <link rel="stylesheet" href="../assets/vendor/select2/css/select2.min.css">
 <link rel="stylesheet" href="../assets/vendor/jquery-ui/jquery-ui.min.css">
+<!-- error -->
+<link rel="stylesheet" href="../assets/css/error.css">
+<!--Fancybox-->
+<link rel="stylesheet" href="../assets/fancybox/jquery.fancybox.min.css">
 <link rel="stylesheet" href="../assets/vendor/daterangepicker/daterangepicker.css">
 <link rel="stylesheet" href="../assets/vendor/timepicker/bootstrap-timepicker.min.css">
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,600" rel="stylesheet">

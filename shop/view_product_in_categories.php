@@ -321,7 +321,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
             });
             $(document).on('click', '.btn-detail-product', function(e) {
                 e.preventDefault();
-                var pathFile = "../shop/image_library/";
+                var pathFile = "../shop/image_products/";
                 const productId = parseInt($(this).data("id"));
                 console.log(productId)
                 Utils.api('get_product_info_detail', {
@@ -391,10 +391,10 @@ if (isset($_POST["addProduct"])) {
 
         // File upload configuration 
         $tm = md5(time());
-        $uploadPath = "./image_library/";
+        $uploadPathImgLib = "./image_library/";
 
-        if (!is_dir($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
+        if (!is_dir($uploadPathImgLib)) {
+            mkdir($uploadPathImgLib, 0777, true);
         }
 
         $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
@@ -406,7 +406,7 @@ if (isset($_POST["addProduct"])) {
             foreach ($_FILES['imageProductLibrary']['name'] as $key => $val) {
                 // File upload path 
                 $fileName =  $tm . basename($_FILES['imageProductLibrary']['name'][$key]);
-                $targetFilePath = $uploadPath . $fileName;
+                $targetFilePath = $uploadPathImgLib . $fileName;
 
                 // Check whether file type is valid 
                 $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);

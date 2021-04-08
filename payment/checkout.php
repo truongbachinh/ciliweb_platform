@@ -40,6 +40,7 @@ while ($rowShop = mysqli_fetch_array($result)) {
     <!-- jquery 4 cdn -->
     <link src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
     <link rel="stylesheet" href="./css/checkout.css">
+    <link rel="stylesheet" href="../assets/css/error.css">
 </head>
 
 <body>
@@ -164,21 +165,15 @@ while ($rowShop = mysqli_fetch_array($result)) {
                 </div>
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Billing address</h4>
-                    <form method="post" name="formCheckout" action="" class="needs-validation" enctype="multipart/form-data" novalidate>
+                    <form method="post" name="formCheckout" id="formCheckoutProduct" action="" class="needs-validation" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
                                 <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" value="" required>
-                                <div class="invalid-feedback">
-                                    Valid first name is required.
-                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control" id="lastName" name="lastName" placeholder="" value="" required>
-                                <div class="invalid-feedback">
-                                    Valid last name is required.
-                                </div>
                             </div>
                         </div>
 
@@ -189,10 +184,8 @@ while ($rowShop = mysqli_fetch_array($result)) {
                                     <span class="input-group-text"><i style="color:#f9b34c;" class="fas fa-phone-alt"></i></span>
                                 </div>
                                 <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="phoneNumber" required>
-                                <div class="invalid-feedback" style="width: 100%;">
-                                    Phone number is required.
-                                </div>
                             </div>
+                            <label for="phoneNumber" class="error"></label>
                         </div>
 
                         <div class="mb-3">
@@ -202,9 +195,6 @@ while ($rowShop = mysqli_fetch_array($result)) {
                                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                 </div>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">
-                                <div class="invalid-feedback">
-                                    Please enter a valid email address for shipping updates.
-                                </div>
                             </div>
 
                         </div>
@@ -215,28 +205,17 @@ while ($rowShop = mysqli_fetch_array($result)) {
                                     <option value="">Province / City</option>
                                 </select>
                                 <input class="billing_address_1" name="" type="hidden" value="">
-                                <div class="invalid-feedback">
-                                    Please select a valid country.
-                                </div>
                             </div>
-
-
                             <div class="col-md-4 mb-3">
                                 <label for="state">District</label>
                                 <select class="custom-select d-block w-100" name="calc_shipping_district" required>
                                     <option value="">Township / District</option>
                                 </select>
                                 <input class="billing_address_2" name="" type="hidden" value="">
-                                <div class="invalid-feedback">
-                                    Please provide a valid state.
-                                </div>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="zip">Zip</label>
                                 <input type="text" class="form-control" id="zip" name="zipCode" placeholder="" required>
-                                <div class="invalid-feedback">
-                                    Zip code required.
-                                </div>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -246,10 +225,8 @@ while ($rowShop = mysqli_fetch_array($result)) {
                                     <span class="input-group-text"><i style="color:#f9b34c;" class="fas fa-map-marked-alt"></i></span>
                                 </div>
                                 <input type="text" class="form-control" id="address" name="address1" placeholder="1234 Main St" required>
-                                <div class="invalid-feedback">
-                                    Please enter your shipping address.
-                                </div>
                             </div>
+                            <label for="address" class="error"></label>
                         </div>
 
                         <div class="mb-3">
@@ -260,6 +237,7 @@ while ($rowShop = mysqli_fetch_array($result)) {
                                 </div>
                                 <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment or suite">
                             </div>
+                            <label for="address2" class="error"></label>
                         </div>
 
 
@@ -271,6 +249,7 @@ while ($rowShop = mysqli_fetch_array($result)) {
                                 </div>
                                 <textarea type="text" name="noteCheckout" class="form-control" id="noteCheckout" placeholder="Apartment or suite"></textarea>
                             </div>
+                            <label for="noteCheckout" class="error"></label>
                         </div>
                         <hr class="mb-4">
                         <div class="custom-control custom-checkbox">
@@ -325,7 +304,45 @@ while ($rowShop = mysqli_fetch_array($result)) {
     <!-- <script type="text/javascript" src="./library/fancybox/jquery.fancybox.min.js"></script> -->
     <?php include "../partials/js_libs.php"; ?>
     <script src="./js/checkout.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.validator.addMethod("lettersOnly", function(value, element) {
+                return this.optional(element) || /^[a-z," "]+$/i.test(value);
+            }, "Letters and spaces only please");
+            $('#formCheckoutProduct').validate({
+                rules: {
+                    firstName: {
+                        required: true,
+                        lettersOnly: true,
+                    },
+                    lastName: {
+                        required: true,
+                        lettersOnly: true,
+                    },
+                    phoneNumber: {
+                        required: true,
+                        minlength: 6,
+                        number: true
+                    }
 
+                },
+                messages: {
+                    firstName: {
+                        required: "Please provide information!",
+                        lettersOnly: "Please provide only character in alphabet!",
+                    },
+                    lastName: {
+                        required: "Please provide information!",
+                    },
+                    phoneNumber: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                    }
+
+                },
+            })
+        })
+    </script>
 </body>
 
 </html>
@@ -354,7 +371,7 @@ if (isset($_POST["buttonCheckout"])) {
     $insertOrderString = "";
     foreach ($cartInforOrder  as $keys => $carts) {
 
-        $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" . time() . "','1')");
+        $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" . time() . "','1','1')");
         $orderId = ($link->insert_id);
         $shopIdProduct = $carts['shop_id'];
 

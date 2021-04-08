@@ -135,32 +135,77 @@ switch ($action) {
             for ($i = 0; $i < $count; $i++) {
                 $data = $query->fetch_assoc();
             }
-
-            // $datass = array();
-            // while ($datas = $query->fetch_assoc()) {
-            //     $datass[] = $datas;
-            // }
         }
-
         break;
-    case "get_oder_info_detail":
+    case "get_order_shipping_info":
         $id = $_POST['id'];
-        $query = $link->query("SELECT products.*, categories.*, image_library.* FROM `products` INNER JOIN categories ON categories.ctg_id = products.p_category_id INNER JOIN image_library ON image_library.img_p_id = products.p_id WHERE `p_id` = '$id'");
+        $query = $link->query("SELECT orders.*, user.* from `orders` inner join user on user.user_id = orders.order_user_id where `id` = '$id'");
         if ($query->num_rows == 0) {
             $error = 1;
             $msg = "This file is not available.";
         } else {
-            $count = 0;
-            $count = $query->num_rows;
-            for ($i = 0; $i < $count; $i++) {
-                $data = $query->fetch_assoc();
-            }
-
-            // $datass = array();
-            // while ($datas = $query->fetch_assoc()) {
-            //     $datass[] = $datas;
-            // }
+            $data = $query->fetch_assoc();
         }
+        break;
+    case "get_order_user_shipping_info":
+        $id = $_POST['id'];
+        $query = $link->query("SELECT orders.*, user.* from `orders` inner join user on user.user_id = orders.order_user_id where `id` = '$id'");
+        if ($query->num_rows == 0) {
+            $error = 1;
+            $msg = "This file is not available.";
+        } else {
+            $data = $query->fetch_assoc();
+        }
+        break;
+    case "get_order_info_detail":
+        $id = $_POST['id'];
+        $query = $link->query("SELECT order_address.*, orders.*, order_items.*,user.*, products.p_name as order_product_name, products.p_image as order_product_image from orders INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN products ON products.p_id = order_items.order_product_id INNER JOIN user ON user.user_id = orders.order_user_id INNER JOIN order_address ON order_address.oda_order_id = orders.id WHERE orders.id  = '$id'");
+        if ($query->num_rows == 0) {
+            $error = 1;
+            $msg = "This file is not available.";
+        } else {
+
+            // $data = $query->fetch_assoc();
+            $bill = array();
+            while ($dataOrder = $query->fetch_assoc()) {
+                $bill[] = $dataOrder;
+            }
+            foreach ($bill as $order) {
+
+?>
+                <div id="view-order-detail">
+
+                    <li>
+                        <span><?= $order['order_product_name'] ?></span><br>
+                        <span>
+                            <?php
+                            if ($query->num_rows > 0) {
+
+                                $imageURL = '../shop/image_products/' . $order["order_product_image"];
+                            ?>
+                                <div>
+                                    <img src="<?php echo $imageURL; ?>" alt="" width="70" height="70" class="img-fluid" id="img-view-details" />
+
+
+                                </div>
+
+                            <?php
+                            } else { ?>
+                                <p>No image(s) found...</p>
+                            <?php } ?>
+                        </span>
+                        <span>SL: <?= $order['quantity'] ?></span><br>
+                        <span>cost: <?= $t = number_format($order['quantity'] * $order['price'], 0, ",", ".") ?>VNĐ </span><br>
+                        <span>Payment: Not yet </span><br>
+                        <br>
+                    </li>
+                </div>
+<?php
+                $totalMoney = $order['order_total_cost'];
+                $totalQuantity = $order['order_total_amount'];
+            }
+        }
+
 
         break;
     case "update_user_info":
@@ -210,6 +255,38 @@ switch ($action) {
         $roleStatus = $_POST['editRoleStatus'];
 
         $update = $link->query("UPDATE `role` SET `role_name`= '$roleName',`role_description`= '$roleDescription',`role_status`= '$roleStatus',`role_update_time`= '" . time() . "' WHERE `role_id`=$id");
+
+        if ($update) {
+            $msg = "Record updated successfully";
+        } else {
+            $error = 400;
+            $msg = "Error updating record: " . $link->error;
+        }
+        break;
+    case "update_order_shipping_infor":
+        $id = $_POST['id'];
+        $shippingCreateTime = time();
+        $orderShipping = $_POST['updateOrderShipping'];
+        $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping', `shipping_create_time` = '$shippingCreateTime' WHERE `id` = $id");
+
+        if ($update) {
+            $msg = "Record updated successfully";
+        } else {
+            $error = 400;
+            $msg = "Error updating record: " . $link->error;
+        }
+        break;
+
+    case "update_order_user_shipping_infor":
+        $id = $_POST['id'];
+        $shippingReceiveTime = time();
+        $orderShipping = $_POST['updateShippingStatus'];
+        if ($orderShipping == 3 or $orderShipping == 4) {
+            $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping', `shipping_receive_time` = '$shippingReceiveTime' WHERE `id` = $id");
+        } else {
+            $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping' WHERE `id` = $id");
+        }
+
 
         if ($update) {
             $msg = "Record updated successfully";
