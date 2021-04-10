@@ -79,11 +79,11 @@ $orderProduct = $link->query(" ");
                                                     <?php
                                                     } elseif ($rowMyOrderProduct['shipping_order_status'] == 2) {
                                                     ?>
-                                                        <td>Shipping</td>
+                                                        <td style="color:green">Shipping</td>
                                                     <?php
                                                     } elseif ($rowMyOrderProduct['shipping_order_status'] == 3) {
                                                     ?>
-                                                        <td>Received</td>
+                                                        <td style="color:red">Received</td>
                                                     <?php
                                                     } elseif ($rowMyOrderProduct['shipping_order_status'] == 4) {
                                                     ?>
@@ -98,11 +98,11 @@ $orderProduct = $link->query(" ");
                                                     <?php
                                                     } elseif ($rowMyOrderProduct['shipping_order_status'] == 2) {
                                                     ?>
-                                                        <td> <?= date("Y-d-M H:i:s", $rowMyOrderProduct['shipping_create_time']) ?></td>
+                                                        <td style="color:green"> <?= date("Y-d-M H:i:s", $rowMyOrderProduct['shipping_create_time']) ?></td>
                                                     <?php
                                                     } elseif ($rowMyOrderProduct['shipping_order_status'] == 3) {
                                                     ?>
-                                                        <td> <?= date("Y-d-M H:i:s", $rowMyOrderProduct['shipping_receive_time']) ?> </td>
+                                                        <td style="color:red"> <?= date("Y-d-M H:i:s", $rowMyOrderProduct['shipping_receive_time']) ?> </td>
                                                     <?php
                                                     } elseif ($rowMyOrderProduct['shipping_order_status'] == 4) {
                                                     ?>

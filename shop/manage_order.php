@@ -160,10 +160,10 @@ if (!empty($where)) {
                                                         <td>Not yet</td>
                                                     <?php
                                                     } elseif (!empty($row['shipping_order_status'] == 2)) {  ?>
-                                                        <td>Shipped</td>
+                                                        <td style="color:green">Shipped</td>
                                                     <?php
                                                     } elseif (!empty($row['shipping_order_status'] == 3)) {  ?>
-                                                        <td>Order Received</td>
+                                                        <td style="color:red">Order Received</td>
                                                     <?php
                                                     } elseif (!empty($row['shipping_order_status'] == 4)) {  ?>
                                                         <td>Order canceled</td>
@@ -176,10 +176,10 @@ if (!empty($where)) {
                                                         <td>Not start</td>
                                                     <?php
                                                     } elseif (!empty($row['shipping_order_status'] == 2)) {  ?>
-                                                        <td><?= date("Y-d-M H:i:s", $row['shipping_create_time']) ?></td>
+                                                        <td style="color:green"><?= date("Y-d-M H:i:s", $row['shipping_create_time']) ?></td>
                                                     <?php
                                                     } elseif (!empty($row['shipping_order_status'] == 3)) {  ?>
-                                                        <td>Order Received</td>
+                                                        <td style="color:red"><?= date("Y-d-M H:i:s", $row['shipping_receive_time']) ?></td>
                                                     <?php
                                                     } elseif (!empty($row['shipping_order_status'] == 4)) {  ?>
                                                         <td>Order canceled</td>
