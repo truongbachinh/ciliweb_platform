@@ -1,6 +1,8 @@
 <?php
 header('Content-Type: application/json');
 include "./config.php";
+include "./mailer/class.phpmailer.php";
+include "./mail_process.php";
 
 $response = array();
 $data = [];
@@ -271,6 +273,13 @@ switch ($action) {
 
         if ($update) {
             $msg = "Record updated successfully";
+            $queryEmail = $link->query("SELECT orders.*, user.* FROM orders INNER JOIN `user` ON user.user_id = orders.order_user_id where orders.id = '$id'");
+            $userMail = $queryEmail->fetch_assoc();
+            $email = $userMail["email"];
+            $message = "Shop has sent seafood for you";
+            $subject = "Notification from Cili website";
+            $text_message    =   "hello";
+            send_mail($email, $subject, $message, $text_message);
         } else {
             $error = 400;
             $msg = "Error updating record: " . $link->error;

@@ -78,6 +78,34 @@
 
 
     })
+    $(".buy-now-form").submit(function(event) {
+        event.preventDefault();
+        console.log("data", $(this).serializeArray());
+
+        $.ajax({
+            type: "POST",
+            url: '../cart/process_cart.php?view=add_to_cart',
+            data: $(this).serializeArray(),
+            success: function(response) {
+                response = JSON.parse(response);
+                if (response.status == 0) {
+
+                } else {
+
+                    swal("Notice", response.message, "success");
+                    // alert(response.message);
+                    $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
+                        cartCountHTML) {
+                        console.log("cart-count", cartCountHTML);
+                        $('#cartCountHeader').html(cartCountHTML);
+                    })
+                }
+            }
+
+        })
+
+
+    })
 
     function updateQuantity(quantity) {
         if (quantity != "") {

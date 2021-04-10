@@ -1,6 +1,7 @@
 <?php
 include "../config.php";
-
+include "../mailer/class.phpmailer.php";
+include "../mail_process.php";
 
 if (!empty($_SESSION["current_user"]['username'])) {
 
@@ -56,6 +57,7 @@ while ($rowShop = mysqli_fetch_array($result)) {
                 <h2>Checkout form</h2>
                 <p class="lead">Below is form checkout of seafoodweb please field information bellow to order.</p>
             </div>
+
             <div class="row">
                 <div class="col-md-4 order-md-2 mb-4 checkout-cart">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -139,11 +141,9 @@ while ($rowShop = mysqli_fetch_array($result)) {
 
                             </div>
                     </ul>
-
                     <hr>
-                    <h3>Total</h3>
-                    <div class="card">
-
+                    <div class="card" id="cartTotal">
+                        <h3>Total</h3>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item  d-flex justify-content-between"> <span>Total All</span>
                                 <strong><?= number_format($totalCostCheckout, 0, ",", ".")  ?>VNĐ</strong>
@@ -163,6 +163,7 @@ while ($rowShop = mysqli_fetch_array($result)) {
                         </div>
                     </form> -->
                 </div>
+
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Billing address</h4>
                     <form method="post" name="formCheckout" id="formCheckoutProduct" action="" class="needs-validation" enctype="multipart/form-data">
@@ -275,20 +276,22 @@ while ($rowShop = mysqli_fetch_array($result)) {
 
 
                         </div>
-
                     </form>
                 </div>
+
             </div>
 
-            <footer class="my-5 pt-5 text-muted text-center text-small">
-                <p class="mb-1">&copy; 2020-2021 Chinh TB</p>
-                <ul class="list-inline">
-                    <li class="list-inline-item"><a href="#">Privacy</a></li>
-                    <li class="list-inline-item"><a href="#">Terms</a></li>
-                    <li class="list-inline-item"><a href="#">Support</a></li>
-                </ul>
-            </footer>
         </div>
+
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="mb-1">&copy; 2020-2021 Chinh TB</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
+    </div>
     </div>
 
 
@@ -305,43 +308,47 @@ while ($rowShop = mysqli_fetch_array($result)) {
     <?php include "../partials/js_libs.php"; ?>
     <script src="./js/checkout.js"></script>
     <script>
-        $(document).ready(function() {
-            $.validator.addMethod("lettersOnly", function(value, element) {
-                return this.optional(element) || /^[a-z," "]+$/i.test(value);
-            }, "Letters and spaces only please");
-            $('#formCheckoutProduct').validate({
-                rules: {
-                    firstName: {
-                        required: true,
-                        lettersOnly: true,
-                    },
-                    lastName: {
-                        required: true,
-                        lettersOnly: true,
-                    },
-                    phoneNumber: {
-                        required: true,
-                        minlength: 6,
-                        number: true
-                    }
+        // $(document).ready(function() {
+        //     $.validator.addMethod("lettersOnly", function(value, element) {
+        //         return this.optional(element) || /^[a-z," "]+$/i.test(value);
+        //     }, "Letters and spaces only please");
+        //     $('#formCheckoutProduct').validate({
+        //         rules: {
+        //             firstName: {
+        //                 required: true,
+        //                 lettersOnly: true,
+        //             },
+        //             lastName: {
+        //                 required: true,
+        //                 lettersOnly: true,
+        //             },
+        //             phoneNumber: {
+        //                 required: true,
+        //                 minlength: 6,
+        //                 number: true
+        //             }
 
-                },
-                messages: {
-                    firstName: {
-                        required: "Please provide information!",
-                        lettersOnly: "Please provide only character in alphabet!",
-                    },
-                    lastName: {
-                        required: "Please provide information!",
-                    },
-                    phoneNumber: {
-                        required: "Please provide information!",
-                        minlength: "Please provide at least 6 characters.",
-                    }
+        //         },
+        //         messages: {
+        //             firstName: {
+        //                 required: "Please provide information!",
+        //                 lettersOnly: "Please provide only character in alphabet!",
+        //             },
+        //             lastName: {
+        //                 required: "Please provide information!",
+        //             },
+        //             phoneNumber: {
+        //                 required: "Please provide information!",
+        //                 minlength: "Please provide at least 6 characters.",
+        //             }
 
-                },
-            })
-        })
+        //         },
+        //     })
+        // })
+        $(document).on('click', '.buttonOnlinePayment', function(e) {
+            e.preventDefault();
+            console.log("data", $(this).serializeArray());
+        });
     </script>
 </body>
 
@@ -349,7 +356,9 @@ while ($rowShop = mysqli_fetch_array($result)) {
 
 <?php
 
+
 if (isset($_POST["buttonOnlinePayment"])) {
+    $_SESSION["checkout_infor"] = $_POST;
 ?>
     <script type="text/javascript">
         window.location = "../vnpay_php/index.php";
@@ -357,9 +366,9 @@ if (isset($_POST["buttonOnlinePayment"])) {
     <?php
 }
 
-
-
 if (isset($_POST["buttonCheckout"])) {
+
+
 
     // // xủ lý giỏ hàng lưu vào db
 
@@ -395,7 +404,7 @@ if (isset($_POST["buttonCheckout"])) {
 
 
         $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_city`, `oda_district`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $_POST[firstName]','$_POST[lastName]','$_POST[address1]','$_POST[address2]','$_POST[phoneNumber]','$_POST[email]','$_POST[calc_shipping_provinces]','$_POST[calc_shipping_district]','$_POST[zipCode]','$_POST[noteCheckout]', '" . time() . "')");
-        echo $success = "order thành công";
+        // echo $success = "order thành công";
 
         // var_dump($order);
         // var_dump($orderDetail);
@@ -404,10 +413,20 @@ if (isset($_POST["buttonCheckout"])) {
 
     if (isset($order) && isset($orderDetail) && isset($orderAddress)) {
     ?>
-        <script type="text/javascript">
-            swal("Notice", "Order successfully!", "success");
+        <script>
+            document.getElementById("cartTotal").style.display = "none";
+            swal("Notice", "Order successfully!", "success").then(function(e) {
+
+                location.replace("../user/index.php");
+            });
         </script>
+
 <?php
+        $email = $_SESSION["current_user"]["email"];
+        $message = "You are buy seafood from cili website";
+        $subject = "Notification from Cili website";
+        $text_message    =   "hello";
+        send_mail($email, $subject, $message, $text_message);
         $link->query("DELETE FROM cart WHERE `cart_user_id` = '$cartUserId'");
     }
 }

@@ -1,8 +1,10 @@
 <?php
 include "../config_user.php";
-// var_dump($_POST);
-// var_dump($_SESSION);
-// var_dump($userId);
+
+$GLOBALS['checkout_infor'] = ($_SESSION["checkout_infor"]);
+
+var_dump($userId);
+exit;
 if (!isset($resultUserInfor)) {
     $resultUserInfor = mysqli_query($link, "SELECT  user.*, user_infor.*  from user_infor INNER JOIN user ON user.user_id = user_infor.ui_user_id WHERE `user_id` = '$userId'");
 }
@@ -22,12 +24,9 @@ if (isset($resultUserInfor)) {
     <meta name="author" content="">
     <title>Tạo mới đơn hàng</title>
     <!-- font-cdn -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
-        integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
     <!-- bootstrap 4 cdn -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- jquery 4 cdn -->
     <L src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></L>
 
@@ -60,8 +59,7 @@ if (isset($resultUserInfor)) {
                 </div>
                 <div class="form-group">
                     <label for="order_id">Mã hóa đơn</label>
-                    <input class="form-control" id="order_id" name="order_id" type="text"
-                        value="<?php echo date("YmdHis") ?>" />
+                    <input class="form-control" id="order_id" name="order_id" type="text" value="<?php echo date("YmdHis") ?>" />
                 </div>
                 <div class="form-group">
                     <label for="amount">Số tiền</label>
@@ -69,8 +67,7 @@ if (isset($resultUserInfor)) {
                 </div>
                 <div class="form-group">
                     <label for="order_desc">Nội dung thanh toán</label>
-                    <textarea class="form-control" cols="20" id="order_desc" name="order_desc"
-                        rows="2">Noi dung thanh toan</textarea>
+                    <textarea class="form-control" cols="20" id="order_desc" name="order_desc" rows="2">Noi dung thanh toan</textarea>
                 </div>
                 <div class="form-group">
                     <label for="bank_code">Ngân hàng</label>
@@ -120,36 +117,38 @@ if (isset($resultUserInfor)) {
             <p>&copy; VNPAY 2015</p>
         </footer>
     </div>
+
     <link href="https://sandbox.vnpayment.vn/paymentv2/lib/vnpay/vnpay.css" rel="stylesheet" />
     <script src="https://sandbox.vnpayment.vn/paymentv2/lib/vnpay/vnpay.js"></script>
+
     <script type="text/javascript">
-    $("#btnPopup").click(function() {
-        var postData = $("#create_form").serialize();
-        var submitUrl = $("#create_form").attr("action");
-        $.ajax({
-            type: "POST",
-            url: submitUrl,
-            data: postData,
-            dataType: 'JSON',
-            success: function(x) {
-                if (x.code === '00') {
-                    if (window.vnpay) {
-                        vnpay.open({
-                            width: 768,
-                            height: 600,
-                            url: x.data
-                        });
+        $("#btnPopup").click(function() {
+            var postData = $("#create_form").serialize();
+            var submitUrl = $("#create_form").attr("action");
+            $.ajax({
+                type: "POST",
+                url: submitUrl,
+                data: postData,
+                dataType: 'JSON',
+                success: function(x) {
+                    if (x.code === '00') {
+                        if (window.vnpay) {
+                            vnpay.open({
+                                width: 768,
+                                height: 600,
+                                url: x.data
+                            });
+                        } else {
+                            location.href = x.data;
+                        }
+                        return false;
                     } else {
-                        location.href = x.data;
+                        alert(x.Message);
                     }
-                    return false;
-                } else {
-                    alert(x.Message);
                 }
-            }
+            });
+            return false;
         });
-        return false;
-    });
     </script>
 
 

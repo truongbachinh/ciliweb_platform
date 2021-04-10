@@ -7,6 +7,8 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
  * @author xonv
  */
 require_once("./config.php");
+require_once("../config_user.php");
+$GLOBALS['checkout_infor'] = ($_SESSION["checkout_infor"]);
 
 $vnp_TxnRef = $_POST['order_id']; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
 $vnp_OrderInfo = $_POST['order_desc'];

@@ -1,6 +1,9 @@
 <?php
 include "connect_db.php";
-session_start();
+if (!isset($_SESSION)) {
+    session_start();
+}
+
 
 
 $isLoggedInUser = isset($_SESSION['current_user']);
