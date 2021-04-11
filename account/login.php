@@ -13,15 +13,15 @@ include "header.php";
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
-    <link rel="stylesheet" href="./library/fonts/icomoon/style.css">
+    <link rel="stylesheet" href="../account/library/fonts/icomoon/style.css">
 
-    <link rel="stylesheet" href="./library/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../account/library/css/owl.carousel.min.css">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="./library/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../account/library/css/bootstrap.min.css">
 
     <!-- Style -->
-    <link rel="stylesheet" href="./library/css/style.css">
+    <link rel="stylesheet" href="../account/library/css/style.css">
 
     <!-- Add icon library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -111,26 +111,28 @@ include "header.php";
         </div>
 
 
-        <script src="library/js/jquery-3.3.1.min.js"></script>
-        <script src="library/js/popper.min.js"></script>
-        <script src="library/js/bootstrap.min.js"></script>
-        <script src="library/js/main.js"></script>
+
     <?php
     }
     ?>
 </body>
+<script src="../account/library/js/jquery-3.3.1.min.js"></script>
+<script src="../account/library/js/popper.min.js"></script>
+<script src="../account/library/js/bootstrap.min.js"></script>
+<script src="../account/library/js/main.js"></script>
 
 </html>
 
 <?php
 if (isset($_POST["login"])) {
-
+    $sessionStatus = "Active now";
     $username = mysqli_real_escape_string($link, $_POST["username"]);
     $password = mysqli_real_escape_string($link, $_POST["password"]);
 
     $count = 0;
     $res = mysqli_query($link, "select * from user where username='$username' && password='$password'");
     $result = mysqli_query($link, "select * from user where username='$username' && password='$password'");
+    $updateSessionStatus = $link->query("UPDATE `user` SET `session_status` = '$sessionStatus'  where username='$username' && password='$password'");
 
     $count = mysqli_num_rows($res);
     while ($row = mysqli_fetch_array($result)) {
@@ -138,9 +140,7 @@ if (isset($_POST["login"])) {
         $role = $row["user_role_id"];
         $status = $row["user_status"];
     }
-    var_dump($role);
-    var_dump($status);
-    // exit;
+
 
     if ($count == 0) {
 ?>

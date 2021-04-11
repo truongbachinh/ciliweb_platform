@@ -15,6 +15,8 @@
 <link rel="stylesheet" href="../assets/vendor/jquery-ui/jquery-ui.min.css">
 <!-- error -->
 <link rel="stylesheet" href="../assets/css/error.css">
+<!--chat-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
 <!--Fancybox-->
 <link rel="stylesheet" href="../assets/fancybox/jquery.fancybox.min.css">
 <link rel="stylesheet" href="../assets/vendor/daterangepicker/daterangepicker.css">
