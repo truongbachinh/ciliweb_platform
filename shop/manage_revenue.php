@@ -3,45 +3,135 @@ include "../config_shop.php";
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
 
-// if (isset($submitSearch)) {
-//     $_SESSION['product_filter'] = $_POST;
-//     var_dump("---------------------------------------------------------", $_POST);
-// } else {
-//     unset($_SESSION['product_filter']);
-// }
-// if (!empty($_SESSION['product_filter'])) {
-//     $where = "";
-//     foreach ($_SESSION['product_filter'] as $field => $value) {
-//         if (!empty($value)) {
-//             switch ($field) {
-//                 case 'id':
-//                     $where .= (!empty($where)) ? "AND" .  "`" . $field . "` LIKE '%" . $value . "%' " : "`" . $field . "` LIKE '%" . $value . "%' ";
-//                     break;
-//                 default:
-//                     $where .= (!empty($where)) ? "AND" .   "`" . $field . "` = '%" . $value . "%' " : "`" . $field . "` = '%" . $value . "%' ";
-//                     break;
-//             }
-//         }
-//     }
-// }
-// var_dump("result-------------------------------------------", $where);
 
 
-$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 3;
-$currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
-$offest = ($currentPage - 1) * $pPerPage;
-$countOrder = $link->query("SELECT * from orders where order_shop_id = $shopId");
-$totalOrder = $countOrder->num_rows;
-$totalPage = ceil($totalOrder / $pPerPage);
 
-if (!empty($where)) {
-    $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId  AND (" . $where . ") order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
-} else {
-    $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
+
+$offlineQuery = $link->query("SELECT orders.order_shop_id, SUM(payments.money) as MoneyOfDay ,shop.shop_name, day(payments.time) as DayOfMonth FROM orders INNER JOIN payments ON payments.payment_order_id = orders.id INNER JOIN shop ON shop.shop_id = orders.order_shop_id WHERE orders.order_shop_id = '$shopId'AND orders.shipping_order_status = 3 AND orders.payment_order_status = 1 GROUP BY day(payments.time)");
+$onlineQuery = $link->query("SELECT orders.order_shop_id, SUM(payments.money) as MoneyOfDay ,shop.shop_name, day(payments.time) as DayOfMonth FROM orders INNER JOIN payments ON payments.payment_order_id = orders.id INNER JOIN shop ON shop.shop_id = orders.order_shop_id WHERE orders.order_shop_id = '$shopId'AND orders.shipping_order_status = 3 AND orders.payment_order_status = 2 GROUP BY day(payments.time)");
+$paymentOnline = array();
+$paymentOffLine = array();
+while ($rowOffline = mysqli_fetch_array($offlineQuery)) {
+    $paymentOffLine[] =  $rowOffline;
 }
-// var_dump("result-------------------------------------------", $res);
+while ($rowOnline = mysqli_fetch_array($onlineQuery)) {
+    $paymentOnline[] =  $rowOnline;
+}
+
+$dataPoints1 = array();
+$dataPoints2 = array();
+foreach ($paymentOffLine as $value) {
+    list($dataPoints1[])  = array(
+
+        array("label" => $value['DayOfMonth'], "y" => $value['MoneyOfDay']),
+    );
+}
+foreach ($paymentOnline as $value) {
+    list($dataPoints2[])  = array(
+        array("label" => $value['DayOfMonth'], "y" => $value['MoneyOfDay']),
+    );
+}
 
 
+
+$dataPoints1s = array(
+    array("x" => 2,    "y" => 1.6735),
+    array("x" => 3,    "y" => 1.619),
+    array("x" => 4,    "y" => 1.5673),
+    array("x" => 5,    "y" => 1.5182),
+    array("x" => 6,    "y" => 1.4715),
+    array("x" => 7,    "y" => 1.4271),
+    array("x" => 8,    "y" => 1.3847),
+    array("x" => 9,    "y" => 1.3444),
+    array("x" => 10,    "y" => 1.3059),
+    array("x" => 11,    "y" => 1.2692),
+    array("x" => 12,    "y" => 1.234),
+    array("x" => 13,    "y" => 1.2005),
+    array("x" => 14,    "y" => 1.1683),
+    array("x" => 15,    "y" => 1.1375),
+    array("x" => 16,    "y" => 1.1081),
+    array("x" => 17,    "y" => 1.0798),
+    array("x" => 18,    "y" => 1.0526),
+    array("x" => 19,    "y" => 1.0266),
+    array("x" => 20,    "y" => 1.0016),
+    array("x" => 21,    "y" => 0.9775),
+    array("x" => 22,    "y" => 0.9544),
+    array("x" => 23,    "y" => 0.9321),
+    array("x" => 24,    "y" => 0.9107),
+    array("x" => 25,    "y" => 0.89),
+    array("x" => 26,    "y" => 0.8701),
+    array("x" => 27,    "y" => 0.8509),
+    array("x" => 28,    "y" => 0.8324),
+    array("x" => 29,    "y" => 0.8145),
+    array("x" => 30,    "y" => 0.7972),
+    array("x" => 31,    "y" => 0.7805),
+    array("x" => 32,    "y" => 0.7644),
+    array("x" => 33,    "y" => 0.7488),
+    array("x" => 34,    "y" => 0.7337),
+    array("x" => 35,    "y" => 0.7191),
+    array("x" => 36,    "y" => 0.705),
+    array("x" => 37,    "y" => 0.6913),
+    array("x" => 38,    "y" => 4.678),
+    array("x" => 39,    "y" => 2.6652),
+    array("x" => 40,    "y" => 3.6527),
+    array("x" => 45,    "y" => 1.5958),
+    array("x" => 50,    "y" => 2.5465),
+    array("x" => 55,    "y" => 0.5036),
+    array("x" => 60,    "y" => 1.466),
+    array("x" => 65,    "y" => 1.4329),
+    array("x" => 70,    "y" => 2.4035),
+    array("x" => 75,    "y" => 8.3774),
+    array("x" => 80,    "y" => 7.354)
+);
+$dataPoints2s = array(
+    array("x" => 2,    "y" => 0.9999),
+    array("x" => 3,    "y" => 1),
+    array("x" => 4,    "y" => 1),
+    array("x" => 5,    "y" => 1),
+    array("x" => 6,    "y" => 1.9999),
+    array("x" => 7,    "y" => 0.9999),
+    array("x" => 8,    "y" => 2.9999),
+    array("x" => 9,    "y" => 0.2),
+    array("x" => 10,    "y" => 0.3997),
+    array("x" => 11,    "y" => 0.5996),
+    array("x" => 12,    "y" => 4.9995),
+    array("x" => 13,    "y" => 2.9994),
+    array("x" => 14,    "y" => 1.9992),
+    array("x" => 15,    "y" => 0.9991),
+    array("x" => 16,    "y" => 0.9989),
+    array("x" => 17,    "y" => 0.9988),
+    array("x" => 18,    "y" => 0.9986),
+    array("x" => 19,    "y" => 0.9984),
+    array("x" => 20,    "y" => 0.9982),
+    array("x" => 21,    "y" => 0.998),
+    array("x" => 22,    "y" => 0.9978),
+    array("x" => 23,    "y" => 0.9975),
+    array("x" => 24,    "y" => 0.9973),
+    array("x" => 25,    "y" => 0.997),
+    array("x" => 26,    "y" => 0.9968),
+    array("x" => 27,    "y" => 0.9965),
+    array("x" => 28,    "y" => 0.9962),
+    array("x" => 29,    "y" => 0.9959),
+    array("x" => 30,    "y" => 0.9956),
+    array("x" => 31,    "y" => 0.9953),
+    array("x" => 32,    "y" => 0.995),
+    array("x" => 33,    "y" => 7.9947),
+    array("x" => 34,    "y" => 6.9944),
+    array("x" => 35,    "y" => 2.994),
+    array("x" => 36,    "y" => 3.9937),
+    array("x" => 37,    "y" => 1.9933),
+    array("x" => 38,    "y" => 6.993),
+    array("x" => 39,    "y" => 5.9926),
+    array("x" => 40,    "y" => 1.9922),
+    array("x" => 45,    "y" => 2.9902),
+    array("x" => 50,    "y" => 4.988),
+    array("x" => 55,    "y" => 3.9857),
+    array("x" => 60,    "y" => 2.9832),
+    array("x" => 65,    "y" => 2.9806),
+    array("x" => 70,    "y" => 1.9778),
+    array("x" => 75,    "y" => 2.9748),
+    array("x" => 80,    "y" => 3.9718)
+);
 
 
 ?>
@@ -76,231 +166,18 @@ if (!empty($where)) {
 
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group has-search">
-                                            <form action="" method="POST">
-                                                <fieldset>
-                                                    <legend>Search Order:</legend>
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-3">
-                                                            <span class="fa fa-search form-control-feedback"></span>
-                                                            <input type="text" name="id" id="inputSearchOrderId" class="form-control" placeholder="Search">
-                                                        </div>
-                                                        <!-- <div class="col-md-4 mb-3">
-                                                            <select id="shipping_order_status" name="shipping_order_status" class="form-control">
-                                                                <option value="" selected>Shipping Status</option>
-                                                                <option value="1">Not yet</option>
-                                                                <option value="2">Shipped</option>
-                                                                <option value="3">Order Received</option>
-                                                                <option value="4">Order canceled</option>
-                                                            </select>
-                                                        </div> -->
-                                                        <div class="search">
-
-                                                            <input type="submit" name="submitSearch" id="submitSearch" value="Search" class="btn btn-info">
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
-                                            </form>
-                                        </div>
+                                    <div class="col-sm-12">
+                                        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
                                     </div>
-                                </div>
-                                <?php
-                                include("../pagination/pagination.php");
-                                ?>
-                                <div class="table-responsive p-t-10">
-                                    <table class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr style="text-align: center;">
-                                                <th>Order Id</th>
-                                                <th>User account</th>
-                                                <th>Fullname</th>
-                                                <th>Phone</th>
-                                                <!-- <th>Address</th> -->
-                                                <th>Total Cost</th>
-                                                <!--  <th>Quantity</th> -->
-                                                <th>Payment status</th>
-                                                <th>Shipping status</th>
-                                                <th>Shipping start time</th>
-                                                <th>Action</th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody id="result">
-                                            <?php
-                                            $i = 1;
-                                            while ($row = mysqli_fetch_array($res)) {
-                                                // var_dump($row);
-                                                // exit;
-                                            ?>
-                                                <tr>
-                                                    <td><?= $i++ ?></td>
-                                                    <td><?= $row['username'] ?></td>
-                                                    <td><?= $row['oda_firstname'], " ", $row['oda_lastname'] ?></td>
-                                                    <td><?= $row['oda_phone'] ?></td>
-                                                    <!-- <td><?= $row['oda_address'] ?></td> -->
-                                                    <td><?= number_format($row['order_total_cost'], 0, ",", ".") ?> VNĐ</td>
-                                                    <!--  <td><?= $row['order_total_amount'] ?></td> -->
-
-                                                    <?php
-                                                    if (!empty($row['payment_order_status'] == 1)) {
-                                                    ?>
-                                                        <td>Payment on delivery </td>
-
-                                                    <?php
-                                                    } elseif (!empty($row['payment_order_status'] == 2)) {  ?>
-                                                        <td>Payment online</td>
-                                                    <?php
-                                                    }
-                                                    ?>
-
-                                                    <?php
-                                                    if (!empty($row['shipping_order_status'] == 1)) {
-                                                    ?>
-                                                        <td>Not yet</td>
-                                                    <?php
-                                                    } elseif (!empty($row['shipping_order_status'] == 2)) {  ?>
-                                                        <td style="color:green">Shipped</td>
-                                                    <?php
-                                                    } elseif (!empty($row['shipping_order_status'] == 3)) {  ?>
-                                                        <td style="color:red">Order Received</td>
-                                                    <?php
-                                                    } elseif (!empty($row['shipping_order_status'] == 4)) {  ?>
-                                                        <td>Order canceled</td>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                    <?php
-                                                    if (!empty($row['shipping_order_status'] == 1)) {
-                                                    ?>
-                                                        <td>Not start</td>
-                                                    <?php
-                                                    } elseif (!empty($row['shipping_order_status'] == 2)) {  ?>
-                                                        <td style="color:green"><?= date("Y-d-M H:i:s", $row['shipping_create_time']) ?></td>
-                                                    <?php
-                                                    } elseif (!empty($row['shipping_order_status'] == 3)) {  ?>
-                                                        <td style="color:red"><?= date("Y-d-M H:i:s", $row['shipping_receive_time']) ?></td>
-                                                    <?php
-                                                    } elseif (!empty($row['shipping_order_status'] == 4)) {  ?>
-                                                        <td style="color:red"><?= date("Y-d-M H:i:s", $row['shipping_cancle_time']) ?></td>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                    <td>
-                                                        <div class="btn-group" role="group" aria-label="Basic example">
-                                                            <a href="" class="btn btn-info  btn-edit-order" role="button" data-id="<?= $row["id"] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
-                                                            <a href="" class="btn btn-danger btn-delete-order" role="button" data-id="<?= $row["id"] ?>"><i class="mdi mdi-delete"></i>
-                                                            </a>
-                                                            <a href="./bill.php?id=<?= $row['id'] ?>&idu=<?= $row['user_id'] ?>" class="btn btn-primary" role="button" data-id="<?= $row["id"] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
-                                                            <!-- <a data-fancybox data-type="ajax" data-src="./bill.php?id=<?= $row['id'] ?>&idu=<?= $row['user_id'] ?>" href="javascript:;">Ajax content</a> -->
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            <?php
-
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <?php
-                                include("../pagination/pagination.php");
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal Detail -->
-                <div class="modal fade" id="roleDetailModal" tabindex="-1" role="dialog" aria-labelledby="detailRole" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="detailRole">Detail order
-                                    Information
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="detail">
-                                    <table class="table table-striped">
-                                        <tbody>
-                                            <tr>
-                                                <td>Order Id</td>
-                                                <td id="roleNameDetail"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Người nhận</td>
-                                                <td id="roleDescriptionDetail"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Address</td>
-                                                <td id="roleStatusDetail"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Phone</td>
-                                                <td id="roleCreateTime"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sản phẩm</td>
-                                                <td id="roleUpdateTime"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="button-close float-right">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                        Close
-                                    </button>
+                                    <div class="col-sm-12">
+                                        <div id="chartContainers" style="height: 370px; width: 100%;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="modal fade" id="editOrder" tabindex="-1" role="dialog" aria-labelledby="editOrder" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editOrder">Update Oder Information</h5>
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" id="edit-order-form">
-                                    <div class="form-group">
-                                        <label for=""> Order id:</label>
-                                        <label for="updateOrderId" id="updateOrderId"></label>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="">Account ordered:</label>
-                                        <label for="updateOrderAccount" id="updateOrderAccount"></label>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="updateShippingStatus">Shipping Status</label>
-                                        <select id="updateShippingStatus" class="form-control">
-                                            <option value="1">Not yet</option>
-                                            <option value="2">Shipped</option>
-                                            <option value="3">Order Received</option>
-                                            <option value="4">Order canceled</option>
-                                        </select>
-                                    </div>
-                                    <div class="model-footer">
-                                        <button type="button" class="btn btn-warning btn-update-order">
-                                            Save Changes
-                                        </button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
         </section>
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
@@ -340,6 +217,109 @@ if (!empty($where)) {
                 })
             });
         });
+
+        window.onload = function() {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light3",
+                title: {
+                    text: "Payment amount in one day."
+                },
+                axisY: {
+                    includeZero: true
+                },
+                legend: {
+                    cursor: "pointer",
+                    verticalAlign: "center",
+                    horizontalAlign: "right",
+                    itemclick: toggleDataSeries
+                },
+                data: [{
+                    type: "column",
+                    name: "Offline payment",
+                    indexLabel: "{y}",
+                    yValueFormatString: "#0.## VNĐ",
+                    showInLegend: true,
+                    dataPoints: <?php echo json_encode($dataPoints1, JSON_NUMERIC_CHECK); ?>
+                }, {
+                    type: "column",
+                    name: "Online payment",
+                    indexLabel: "{y}",
+                    yValueFormatString: "#0.## VNĐ",
+                    showInLegend: true,
+                    dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
+                }]
+            });
+            chart.render();
+
+            function toggleDataSeries(e) {
+                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                } else {
+                    e.dataSeries.visible = true;
+                }
+                chart.render();
+            }
+
+
+
+
+            var chart = new CanvasJS.Chart("chartContainers", {
+                animationEnabled: true,
+                title: {
+                    text: "User payment trend when buying products at the shop"
+                },
+                axisX: {
+                    title: "Days"
+                },
+                axisY: {
+                    title: "Offlines payment [Off/P]",
+                    titleFontColor: "#4F81BC",
+                    lineColor: "#4F81BC",
+                    labelFontColor: "#4F81BC",
+                    tickColor: "#4F81BC"
+                },
+                axisY2: {
+                    title: "Online payment [On/P]",
+                    titleFontColor: "#C0504E",
+                    lineColor: "#C0504E",
+                    labelFontColor: "#C0504E",
+                    tickColor: "#C0504E"
+                },
+                legend: {
+                    cursor: "pointer",
+                    dockInsidePlotArea: true,
+                    itemclick: toggleDataSeries
+                },
+                data: [{
+                    type: "line",
+                    name: "Offlines payment",
+                    markerSize: 0,
+                    toolTipContent: "Day: {x} Days <br>{name}: {y} Off/P",
+                    showInLegend: true,
+                    dataPoints: <?php echo json_encode($dataPoints1s, JSON_NUMERIC_CHECK); ?>
+                }, {
+                    type: "line",
+                    axisYType: "secondary",
+                    name: "Online payment",
+                    markerSize: 0,
+                    toolTipContent: "Day: {x} Days <br>{name}: {y} On/P",
+                    showInLegend: true,
+                    dataPoints: <?php echo json_encode($dataPoints2s, JSON_NUMERIC_CHECK); ?>
+                }]
+            });
+            chart.render();
+
+            function toggleDataSeries(e) {
+                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                } else {
+                    e.dataSeries.visible = true;
+                }
+                chart.render();
+            }
+
+        }
     </script>
 </body>
 
