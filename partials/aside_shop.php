@@ -89,6 +89,16 @@
                                 </a>
                             </li>
                             <li class="menu-item">
+                                <a href="../shop/manage_revenue.php" class=" menu-link">
+                                    <span class="menu-label">
+                                        <span class="menu-name">Manage Revenue</span>
+                                    </span>
+                                    <span class="menu-icon">
+                                        <i class="mdi mdi-basket mdi-24px "></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
                                 <a href="../shop/chart.php" class=" menu-link">
                                     <span class="menu-label">
                                         <span class="menu-name">Chart Analysis</span>

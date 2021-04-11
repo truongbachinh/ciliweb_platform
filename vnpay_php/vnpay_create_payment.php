@@ -13,7 +13,13 @@ $GLOBALS['checkout_infor'] = ($_SESSION["checkout_infor"]);
 $vnp_TxnRef = $_POST['order_id']; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
 $vnp_OrderInfo = $_POST['order_desc'];
 $vnp_OrderType = $_POST['order_type'];
-$vnp_Amount = str_replace(',', '', $_POST['amount']) * 100;
+//$vnp_Amount = str_replace(',', '', $_POST['amount']) * 100;
+// $vnp_Amount = str_replace(',', '', $_POST['amount']);
+$vnp_Amount = preg_replace('/[^0-9]/', '', $_POST['amount']) * 100;
+
+// var_dump($numbers);
+var_dump($vnp_Amount);
+// exit;
 $vnp_Locale = $_POST['language'];
 $vnp_BankCode = $_POST['bank_code'];
 $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];

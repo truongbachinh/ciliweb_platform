@@ -12,13 +12,13 @@ $line_food = mysqli_fetch_array($query_food, MYSQLI_ASSOC);
 $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
 
 ?>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
 <link rel="stylesheet" href="./css/sea_food_infor.css">
 <div class="seafood-infor" style="margin-top: 100px; ">
     <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Sản phẩm của shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $line_food["shop_name"] . "</font>" ?></a></i>
     </div>
     <div class="infor">
-        <form action="../cart/cart.php?view=add_to_cart" method="post" enctype="multipart/form-data">
+        <form action="../cart/cart.php?view=add_to_cart" class="buy-form" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6 col-lg-6 " style="text-align: center;">
                     <div class="row-lg-5 row-md-5 row-5 list-imglist">
@@ -92,31 +92,31 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
                                 <td width="70%"><?= (!empty($line_food['p_date_create']) ? date("Y-m-d H:i:s", $line_food['p_date_create']) : "Null") ?></td>
                             </tr>
 
-                            <tr>
+                            <!-- <tr>
                                 <td class="td-name">Product Amount :</td>
                                 <td width="70%"> <input type="number" value="1" name="quantity[<?= $line_food['p_id'] ?>]">
                                     <span>Số lượng sẵn có <?php echo $line_food['p_quantity'] ?></span>
                                 </td>
-                            </tr>
-                            <!-- <tr>
+                            </tr> -->
+                            <tr>
                                 <td class="td-name">Product Count :</td>
                                 <td>
-                                    <div class="input-group">
+                                    <div class="input-group" id="quantity-product">
                                         <span class="input-group-btn">
-                                            <button type="button" class="btn btn-danger btn-number" data-type="minus" data-field="quant[<?= $line_food['p_id'] ?>]">
+                                            <button type="button" class="btn btn-danger btn-number" data-type="minus" data-field="quantity[<?= $line_food['p_id'] ?>]">
                                                 <span><i class="fas fa-minus"></i></span>
                                             </button>
                                         </span>
-                                        <input type="text" name="quant[<?= $line_food['p_id'] ?>]" class="form-control input-number" value="1" min="1" max="100">
+                                        <input type="text" name="quantity[<?= $line_food['p_id'] ?>]" class="form-control input-number" value="1" min="1" max="<?= $line_food['p_quantity'] ?>">
                                         <span class="input-group-btn">
-                                            <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quant[<?= $line_food['p_id'] ?>]">
+                                            <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quantity[<?= $line_food['p_id'] ?>]">
                                                 <span><i class="fas fa-plus"></i></span>
                                             </button>
                                         </span>
                                     </div>
 
                                 </td>
-                            </tr> -->
+                            </tr>
                         </tbody>
                     </table>
                     <?php

@@ -51,8 +51,8 @@ $orderProduct = $link->query(" ");
                                                 <th> Id</th>
                                                 <th>Order Id</th>
                                                 <th>Order create time</th>
-                                                <!-- <th>Order total Cost</th>
-                                            <th>Order total quantity</th> -->
+                                                <th>Order total Cost</th>
+                                                <th>Order total quantity</th>
                                                 <th>Order shipping satus</th>
                                                 <th>Order shipping time</th>
                                                 <th>Action</th>
@@ -71,8 +71,8 @@ $orderProduct = $link->query(" ");
                                                     <td>
                                                         <?= "Start: ", date("Y-m-d H:i:s", $rowMyOrderProduct["order_create_time"]) ?>
                                                     </td>
-                                                    <!-- <td><?= $rowMyOrderProduct['order_total_cost'] ?></td>
-                                                <td><?= $rowMyOrderProduct['order_total_amount'] ?></td> -->
+                                                    <td><?= number_format($rowMyOrderProduct['order_total_cost'], 0, ",", ".") ?> VNĐ</td>
+                                                    <td><?= $rowMyOrderProduct['order_total_amount'] ?></td>
                                                     <?php if ($rowMyOrderProduct['shipping_order_status'] == 1) {
                                                     ?>
                                                         <td>Ordered</td>

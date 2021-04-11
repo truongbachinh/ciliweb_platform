@@ -70,7 +70,7 @@ if (!empty($where)) {
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h2 style="text-align:center"> Manage order </h2>
+                                    <h2 style="text-align:center"> Manage Revenue</h2>
                                 </div>
                             </div>
 
@@ -339,113 +339,7 @@ if (!empty($where)) {
 
                 })
             });
-
-            // $(document).on('click', 'btn-update-order', function(e) {
-            //     Utils.api("update_order_shipping_infor", {
-            //         id: activeId,
-            //         updateOrderShipping: $("#updateShippingStatus").val(),
-            //     }).then(response => {
-            //         $("#editOrder").hide(),
-            //             swal("Notice", response.msg, "success").then(function(e) {
-            //                 location.replace("./manage_order.php");
-            //             });
-            //     }).catch(err => {
-
-            //     })
-            // });
-
-
-            // $(document).on('click', '.btn-edit-order', function(e) {
-            //     e.preventDefault();
-
-            //     const orderId = parseInt($(this).data("id"));
-            //     activeId = orderId;
-            //     console.log(orderId);
-            //     Utils.api("get_order_info_detail", {
-            //         id: orderId
-            //     }).then(response => {
-            //         $.get("../api.php", function(orderDetailContentHtml) {
-            //             console.log("order-count", orderDetailContentHtml);
-            //             // $('#editOrder').modal();
-
-            //         }).catch(err => {
-
-            //         });
-            //     });
-            // });
-            // $(document).on('click', '.btn-detail-order', function(e) {
-            //     e.preventDefault();
-            //     const orderId = parseInt($(this).data("id"));
-            //     activeId = orderId;
-            //     console.log(orderId);
-            //     $.fancybox({
-            //         'width': '60%',
-            //         'height': '80%',
-            //         'autoScale': true,
-            //         'transitionIn': 'fade',
-            //         'transitionOut': 'fade',
-            //         'href': './bill.php',
-            //         'type': 'iframe',
-            //         'onClosed': function() {
-            //             window.location.href = "./manage_order.php";
-            //         }
-
-
-            //     });
-            //     return false;
-            // });
-            // $(document).on('click', '.btn-edit-order', function(e) {
-            //     e.preventDefault();
-            //     const orderId = parseInt($(this).data("id"));
-            //     activeId = orderId;
-            //     console.log(orderId);
-            //     $.ajax({
-            //         type: "POST",
-            //         url: Utils.api("get_order_info_detail"),
-            //         data: {
-            //             "id": orderId
-            //         },
-            //         success: function(res) {
-            //             if (res) {
-            //                 var response = JSON.parse(res);
-            //                 if (response.status == 0) {
-
-            //                 } else {
-            //                     $.get('../shop/bill.php', function(cartContentHTML) {
-            //                         console.log("cart-count", cartContentHTML);
-            //                         $('#viewDetailOrder').html(cartContentHTML);
-            //                         $('#editOrder').modal();
-            //                     })
-            //                 }
-            //             }
-            //         }
-            //     });
-            // });
-
-
         });
-
-        // $(document).ready(function() {
-        //     $('#inputSearchOrder').keyup(function() {
-        //         var txt = $(this).val();
-        //         if (txt != '') {
-
-        //         } else {
-        //             $('#result').html('');
-        //             $.ajax({
-        //                 url: "search_order.php",
-        //                 method: "post",
-        //                 data: {
-        //                     search: txt
-        //                 },
-        //                 dataType: "text",
-        //                 success: function(data) {
-        //                     $('#result').html(data)
-        //                 }
-        //             })
-        //         }
-        //     })
-        // })
     </script>
 </body>
 

@@ -2,15 +2,17 @@
 include "../config_user.php";
 
 $GLOBALS['checkout_infor'] = ($_SESSION["checkout_infor"]);
+$GLOBALS['cost_online'] = ($_SESSION["cost-online"]);
 
-var_dump($userId);
-exit;
 if (!isset($resultUserInfor)) {
     $resultUserInfor = mysqli_query($link, "SELECT  user.*, user_infor.*  from user_infor INNER JOIN user ON user.user_id = user_infor.ui_user_id WHERE `user_id` = '$userId'");
 }
 if (isset($resultUserInfor)) {
     $rowUser = mysqli_fetch_array($resultUserInfor, MYSQLI_ASSOC);
 }
+
+// var_dump($GLOBALS['cost_online']);
+// exit;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,29 +43,27 @@ if (isset($resultUserInfor)) {
     // include "../payment/header_payment.php"    
     ?>
     <div class="container">
-        <div class="header clearfix">
-            <h3 class="text-muted">VNPAY DEMO</h3>
+        <div class="header clearfix m-t-50">
+            <h3 class="text-muted text-center ">Proceed to pay for your order.</h3>
         </div>
-        <h3>Tạo mới đơn hàng</h3>
+
         <div class="table-responsive">
             <form action="../vnpay_php/vnpay_create_payment.php" id="create_form" method="post">
 
                 <div class="form-group">
                     <label for="language">Loại hàng hóa </label>
                     <select name="order_type" id="order_type" class="form-control">
-                        <option value="topup">Nạp tiền điện thoại</option>
                         <option value="billpayment">Thanh toán hóa đơn</option>
-                        <option value="fashion">Thời trang</option>
                         <option value="other">Khác - Xem thêm tại VNPAY</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="order_id">Mã hóa đơn</label>
-                    <input class="form-control" id="order_id" name="order_id" type="text" value="<?php echo date("YmdHis") ?>" />
+                    <input class="form-control" id="order_id" name="order_id" type="text" value="<?php echo date("YmdHis") ?>" readonly />
                 </div>
                 <div class="form-group">
                     <label for="amount">Số tiền</label>
-                    <input class="form-control" id="amount" name="amount" type="number" value="10000" />
+                    <input class="form-control" id="amount" name="amount" type="text" value="<?php echo $GLOBALS['cost_online'], " VNĐ" ?>" readonly />
                 </div>
                 <div class="form-group">
                     <label for="order_desc">Nội dung thanh toán</label>
@@ -104,18 +104,18 @@ if (isset($resultUserInfor)) {
                         <option value="en">English</option>
                     </select>
                 </div>
-
-                <button type="submit" class="btn btn-primary" id="btnPopup">Thanh toán Popup</button>
-
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary text-center" id="btnPopup">Thanh toán Popup</button>
+                </div>
 
             </form>
         </div>
         <p>
             &nbsp;
         </p>
-        <footer class="footer">
+        <!-- <footer class="footer">
             <p>&copy; VNPAY 2015</p>
-        </footer>
+        </footer> -->
     </div>
 
     <link href="https://sandbox.vnpayment.vn/paymentv2/lib/vnpay/vnpay.css" rel="stylesheet" />

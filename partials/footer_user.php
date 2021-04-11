@@ -50,7 +50,7 @@
     //         })
     //     }
     // }
-    $(".buy-now-form").submit(function(event) {
+    $(".buy-form").submit(function(event) {
         event.preventDefault();
         console.log("data", $(this).serializeArray());
 
@@ -65,12 +65,22 @@
                 } else {
 
                     swal("Notice", response.message, "success");
+
+
+                    setInterval(function() {
+                        window.location.replace("../cart/cart.php");
+                    }, 1000);
+
+
                     // alert(response.message);
                     $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
                         cartCountHTML) {
                         console.log("cart-count", cartCountHTML);
                         $('#cartCountHeader').html(cartCountHTML);
+
                     })
+
+
                 }
             }
 

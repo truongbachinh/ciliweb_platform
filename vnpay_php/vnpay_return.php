@@ -1,6 +1,8 @@
 <?php
 ob_start();
 require_once("../config_user.php");
+include "../mailer/class.phpmailer.php";
+include "../mail_process.php";
 $GLOBALS['checkout_infor'] = ($_SESSION["checkout_infor"]);
 
 if (!empty($_SESSION["current_user"]['username'])) {
@@ -123,6 +125,18 @@ $noteCheckout = $GLOBALS['checkout_infor']["noteCheckout"];
                     if ($secureHash == $vnp_SecureHash) {
                         if ($_GET['vnp_ResponseCode'] == '00') {
 
+                            $order_id = $_GET['vnp_TxnRef'];
+
+                            $note = $_GET['vnp_OrderInfo'];
+                            $vnp_response_code = $_GET['vnp_ResponseCode'];
+                            $code_vnpay = $_GET['vnp_TransactionNo'];
+                            $code_bank = $_GET['vnp_BankCode'];
+                            $time = $_GET['vnp_PayDate'];
+                            $date_time = substr($time, 0, 4) . '-' . substr($time, 4, 2) . '-' . substr($time, 6, 2) . ' ' . substr($time, 8, 2) . ' ' . substr($time, 10, 2) . ' ' . substr($time, 12, 2);
+                            // var_dump($date_time);
+                            // exit;
+                            include("./index.php");
+                            $taikhoan = $_SESSION["current_user"]['username'];
 
                             $cartOrder = $link->query("SELECT shop.*, c.cart_id, SUM(c.cart_quantity) as total_amount, c.cart_user_id, c.cart_product_id, p.p_name, SUM(p.p_price) as total_price, p_fresh, p.p_image from cart as c inner join products as p on. c.cart_product_id = p.p_id inner join shop on p.p_shop_id = shop.shop_id where cart_user_id = '$cartUserId' GROUP BY shop.shop_id");
                             $cartInforOrder = array();
@@ -135,6 +149,20 @@ $noteCheckout = $GLOBALS['checkout_infor']["noteCheckout"];
                                 $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" . time() . "','2','1')");
                                 $orderId = ($link->insert_id);
                                 $shopIdProduct = $carts['shop_id'];
+
+                                $cartProduct = $link->query("SELECT cart.*, products.*, shop.* from cart INNER JOIN products on cart.cart_product_id = products.p_id INNER JOIN shop ON shop.shop_id = products.p_shop_id where cart_user_id ='$cartUserId' and shop_id = '$shopIdProduct'");
+                                $myCartProduct = array();
+                                while ($rowCartProduct = mysqli_fetch_array($cartProduct)) {
+                                    $myCartProduct[] =  $rowCartProduct;
+                                }
+                                $total = 0;
+                                $totalCost = 0;
+                                foreach ($myCartProduct  as $rowMyCartProduct) {
+                                    $total += $rowMyCartProduct["cart_quantity"] *  $rowMyCartProduct["p_price"];
+                                }
+                                $totalCost += $total;
+
+                                // var_dump("total cost", $totalCost);
 
 
                                 $cartCheckoutProduct  = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id = '$cartUserId' AND shop.shop_id = '$shopIdProduct' ");
@@ -159,27 +187,21 @@ $noteCheckout = $GLOBALS['checkout_infor']["noteCheckout"];
                                 // echo $success = "order thành công";
 
 
+                                $orderPayment = $link->query("INSERT INTO `payments` (`order_id`,`payment_order_id`, `user_order`, `money`, `note`, `vnp_response_code`,`code_vnpay`, `code_bank`, `time`) VALUES ('$order_id','$orderId', '$taikhoan', '  $totalCost', '$note', '$vnp_response_code', '$code_vnpay', '$code_bank','$date_time')");
 
 
-                                $order_id = $_GET['vnp_TxnRef'];
-                                $money = $_GET['vnp_Amount'] / 100;
-                                $note = $_GET['vnp_OrderInfo'];
-                                $vnp_response_code = $_GET['vnp_ResponseCode'];
-                                $code_vnpay = $_GET['vnp_TransactionNo'];
-                                $code_bank = $_GET['vnp_BankCode'];
-                                $time = $_GET['vnp_PayDate'];
-                                $date_time = substr($time, 0, 4) . '-' . substr($time, 4, 2) . '-' . substr($time, 6, 2) . ' ' . substr($time, 8, 2) . ' ' . substr($time, 10, 2) . ' ' . substr($time, 12, 2);
-                                include("./index.php");
-                                $taikhoan = "";
-                                if (isset($_SESSION['tk'])) {
-                                    $taikhoan = $_SESSION['tk'];
-                                }
+                                var_dump($order);
+                                var_dump($orderDetail);
+                                var_dump($orderAddress);
+                                var_dump($orderPayment);
 
-                                $sql = "SELECT * FROM payments WHERE order_id = '$order_id'";
-                                if (isset($sql)) {
-                                    $query = mysqli_query($link, $sql);
-                                    $row = mysqli_num_rows($query);
-                                }
+
+                                // echo "Order successfully";
+                                // $sql = "SELECT * FROM payments WHERE order_id = '$order_id'";
+                                // if (isset($sql)) {
+                                //     $query = mysqli_query($link, $sql);
+                                //     $row = mysqli_num_rows($query);
+                                // }
 
 
 
@@ -187,22 +209,32 @@ $noteCheckout = $GLOBALS['checkout_infor']["noteCheckout"];
 
 
 
-                                if ($row > 0) {
-                                    $sql = "UPDATE payments SET order_id = '$order_id', money = '$money', note = '$note', vnp_response_code = '$vnp_response_code', code_vnpay = '$code_vnpay', code_bank = '$code_bank' WHERE order_id = '$order_id' and payment_order_id = '$orderId'";
+                                // if ($row > 0) {
+                                //     $sql = "UPDATE payments SET order_id = '$order_id', money = '$money', note = '$note', vnp_response_code = '$vnp_response_code', code_vnpay = '$code_vnpay', code_bank = '$code_bank' WHERE order_id = '$order_id' and payment_order_id = '$orderId'";
 
-                                    $updatePayment =  mysqli_query($link, $sql);
-                                } else {
+                                //     $updatePayment =  mysqli_query($link, $sql);
+                                // } else {
 
-                                    $sql = "INSERT INTO payments(order_id,payment_order_id, member, money, note, vnp_response_code, code_vnpay, code_bank, time) VALUES ('$order_id','$orderId', '$taikhoan', '$money', '$note', '$vnp_response_code', '$code_vnpay', '$code_bank','$date_time')";
-                                    $addPayment =  mysqli_query($link, $sql);
-                                }
-                                // var_dump($order);
-                                // var_dump($orderDetail);
-                                // var_dump($orderAddress);
-                                // var_dump($addPayment);
-                                // exit;
+                                //     $sql = "INSERT INTO payments(order_id,payment_order_id, member, money, note, vnp_response_code, code_vnpay, code_bank, time) VALUES ('$order_id','$orderId', '$taikhoan', '$money', '$note', '$vnp_response_code', '$code_vnpay', '$code_bank','$date_time')";
+                                //     $addPayment =  mysqli_query($link, $sql);
+                                // }
+                            }
+                            if (isset($order) && isset($orderDetail) && isset($orderAddress) && ($orderPayment)) {
+                    ?>
+                                <script>
+                                    swal("Notice", "Order successfully!", "success").then(function(e) {
 
-                                echo "Order successfully";
+                                        location.replace("../user/index.php");
+                                    });
+                                </script>
+
+                    <?php
+                                $email = $_SESSION["current_user"]["email"];
+                                $message = "You are buy seafood from cili website with payment online";
+                                $subject = "Notification from Cili website";
+                                $text_message    =   "hello";
+                                send_mail($email, $subject, $message, $text_message);
+                                $link->query("DELETE FROM cart WHERE `cart_user_id` = '$cartUserId'");
                             }
                         } else {
                             echo "Order un-successfully";

@@ -267,9 +267,22 @@ switch ($action) {
         break;
     case "update_order_shipping_infor":
         $id = $_POST['id'];
+        $queryOrder = $link->query("SELECT orders.*, user.* FROM `orders` INNER JOIN user ON user.user_id = orders.order_user_id where `id` = '$id'");
+        $orderInfor = mysqli_fetch_assoc($queryOrder);
+        $user_order = $orderInfor["username"];
+        $total_money_order = $orderInfor["order_total_cost"];
+        $order_id_paymeny = time();
         $shippingCreateTime = time();
+        $current = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh'));
+        $timePayment = $current->format('Y-m-d H:i:s');
         $orderShipping = $_POST['updateOrderShipping'];
-        $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping', `shipping_create_time` = '$shippingCreateTime' WHERE `id` = $id");
+        if ($orderShipping == 2) {
+            $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping', `shipping_create_time` = '$shippingCreateTime' WHERE `id` = $id");
+        } elseif ($orderShipping == 3) {
+            $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping', `shipping_receive_time` = '$shippingCreateTime' WHERE `id` = $id");
+        } elseif ($orderShipping == 4) {
+            $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping', `shipping_cancle_time` = '$shippingCreateTime' WHERE `id` = $id");
+        }
 
         if ($update) {
             $msg = "Record updated successfully";
@@ -280,6 +293,21 @@ switch ($action) {
             $subject = "Notification from Cili website";
             $text_message    =   "hello";
             send_mail($email, $subject, $message, $text_message);
+            if ($orderInfor["payment_order_status"] == 1 && $orderShipping == 3) {
+                $sql = "SELECT * FROM payments WHERE payment_order_id = '$id'";
+                if (isset($sql)) {
+                    $query = mysqli_query($link, $sql);
+                    $row = mysqli_num_rows($query);
+                }
+                if ($row > 0) {
+                    $updatePayment  = $link->query("UPDATE `payments` SET  `money` = '$total_money_order', `time` = '$timePayment' WHERE  `payment_order_id` = '$id'");
+                } else {
+                    $addPayment = $link->query("INSERT INTO `payments` (`id`, `payment_order_id`, `order_id`, `user_order`, `money`, `time`) VALUES (NULL, '$id', '$order_id_paymeny', '$user_order', ' $total_money_order',  '$timePayment');");
+                }
+            }
+            if ($update) {
+                $msg = "Record updated successfully";
+            }
         } else {
             $error = 400;
             $msg = "Error updating record: " . $link->error;
@@ -290,7 +318,9 @@ switch ($action) {
         $id = $_POST['id'];
         $shippingReceiveTime = time();
         $orderShipping = $_POST['updateShippingStatus'];
-        if ($orderShipping == 3 or $orderShipping == 4) {
+        if ($orderShipping == 3) {
+            $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping', `shipping_receive_time` = '$shippingReceiveTime' WHERE `id` = $id");
+        } elseif ($orderShipping == 4) {
             $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping', `shipping_receive_time` = '$shippingReceiveTime' WHERE `id` = $id");
         } else {
             $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping' WHERE `id` = $id");

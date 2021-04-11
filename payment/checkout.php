@@ -146,7 +146,7 @@ while ($rowShop = mysqli_fetch_array($result)) {
                         <h3>Total</h3>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item  d-flex justify-content-between"> <span>Total All</span>
-                                <strong><?= number_format($totalCostCheckout, 0, ",", ".")  ?>VNĐ</strong>
+                                <strong><?= $costOnline = number_format($totalCostCheckout, 0, ",", ".")  ?>VNĐ</strong>
                             </li>
                             <li class="list-group-item  d-flex justify-content-between"> <span>Total Quantity</span>
                                 <strong><?= $totalCountCheckout ?></strong>
@@ -359,6 +359,7 @@ while ($rowShop = mysqli_fetch_array($result)) {
 
 if (isset($_POST["buttonOnlinePayment"])) {
     $_SESSION["checkout_infor"] = $_POST;
+    $_SESSION["cost-online"] = $costOnline;
 ?>
     <script type="text/javascript">
         window.location = "../vnpay_php/index.php";
@@ -372,25 +373,25 @@ if (isset($_POST["buttonCheckout"])) {
 
     // // xủ lý giỏ hàng lưu vào db
 
-    $cartOrder = $link->query("SELECT shop.*, c.cart_id, SUM(c.cart_quantity) as total_amount, c.cart_user_id, c.cart_product_id, p.p_name, SUM(p.p_price) as total_price, p_fresh, p.p_image from cart as c inner join products as p on. c.cart_product_id = p.p_id inner join shop on p.p_shop_id = shop.shop_id where cart_user_id = '$cartUserId' GROUP BY shop.shop_id");
+    $cartOrder = $link->query("SELECT shop.*, c.cart_id, SUM(c.cart_quantity) as total_amount, c.cart_user_id, c.cart_product_id, p.p_name, SUM(p.p_price * c.cart_quantity) as total_price, p_fresh, p.p_image from cart as c inner join products as p on. c.cart_product_id = p.p_id inner join shop on p.p_shop_id = shop.shop_id where cart_user_id = '$cartUserId' GROUP BY shop.shop_id");
     $cartInforOrder = array();
     while ($rowCart = mysqli_fetch_array($cartOrder)) {
         $cartInforOrder[] =  $rowCart;
     }
+
     $insertOrderString = "";
     foreach ($cartInforOrder  as $keys => $carts) {
-
         $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" . time() . "','1','1')");
         $orderId = ($link->insert_id);
         $shopIdProduct = $carts['shop_id'];
 
-
         $cartCheckoutProduct  = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id = '$cartUserId' AND shop.shop_id = '$shopIdProduct' ");
-        // var_dump($cartCheckoutProduct);
+        //var_dump($cartCheckoutProduct);
         $checkOutOrder = array();
         while ($rowOrder = mysqli_fetch_array($cartCheckoutProduct)) {
             $checkOutOrder[] =  $rowOrder;
         }
+
 
         $insertString = "";
         foreach ($checkOutOrder  as $key => $cart) {
@@ -406,11 +407,11 @@ if (isset($_POST["buttonCheckout"])) {
         $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_city`, `oda_district`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $_POST[firstName]','$_POST[lastName]','$_POST[address1]','$_POST[address2]','$_POST[phoneNumber]','$_POST[email]','$_POST[calc_shipping_provinces]','$_POST[calc_shipping_district]','$_POST[zipCode]','$_POST[noteCheckout]', '" . time() . "')");
         // echo $success = "order thành công";
 
-        // var_dump($order);
-        // var_dump($orderDetail);
-        // var_dump($orderAddress);
+        var_dump($order);
+        var_dump($orderDetail);
+        var_dump($orderAddress);
     }
-
+    exit;
     if (isset($order) && isset($orderDetail) && isset($orderAddress)) {
     ?>
         <script>
