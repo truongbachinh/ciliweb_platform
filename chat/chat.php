@@ -1,11 +1,19 @@
 <?php
-include("../config_shop.php");
+include("../config.php");
 $talker = $_GET['user_id'];
 if (!isset($userId)) {
   header("location: ../account/login.php");
 }
 ?>
-<?php include_once "header.php"; ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+  <link rel="stylesheet" href="./style.css">
+</head>
 
 <body>
   <div class="wrapper">
@@ -38,7 +46,7 @@ if (!isset($userId)) {
     </section>
   </div>
 
-  <script src="javascript/chat.js"></script>
+  <script src="../chat/javascript/chat.js"></script>
 
 </body>
 

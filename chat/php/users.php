@@ -1,7 +1,12 @@
 <?php
 
-include_once "../../config_shop.php";
+include_once "../../config.php";
 $outgoing_id = $userId;
+$userId = $_SESSION["current_user"]["user_id"];
+
+$shopInfor = $link->query("select * from shop where shop_user_id = $userId ");
+$GLOBALS['shopInfor'] = mysqli_fetch_assoc($shopInfor);
+
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
 $query = $link->query("SELECT user.fullname,user.session_status, user.user_id, user_infor.ui_avatar, orders.id, orders.shipping_order_status, shop.* FROM user 

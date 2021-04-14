@@ -1,5 +1,8 @@
 <?php
-include "../config.php";
+
+include "../config_admin.php";
+
+
 $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 3;
 $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
 $offest = ($currentPage - 1) * $pPerPage;

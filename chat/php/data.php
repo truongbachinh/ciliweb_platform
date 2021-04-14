@@ -15,12 +15,14 @@ while ($row = mysqli_fetch_assoc($query)) {
     ($row['session_status'] == "Offline now") ? $offline = "offline" : $offline = "";
     ($outgoing_id == $row['user_id']) ? $hid_me = "hide" : $hid_me = "";
 
-    $output .= '<a href="chat.php?user_id=' . $row['user_id'] . '">
+    $output .= '<a href="../chat/chat.php?user_id=' . $row['user_id'] . '">
                     <div class="content">
                     <img src="https://ciliweb.vn/ciliweb_platform/user/avatar/' . $row['ui_avatar'] . '" alt="">
                     <div class="details">
                         <span>' . $row['fullname'] .  '</span>
                         <p>' . $you . $msg . '</p>
+                        <small>' . date("Y-d-M H:i:s", $row2['msg_time']) . '</small>
+                     
                     </div>
                     </div>
                     <div class="status-dot ' . $offline . '"><i class="fas fa-circle"></i></div>

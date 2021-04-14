@@ -1,5 +1,5 @@
 <?php
-include_once "../../config_shop.php";
+include_once "../../config.php";
 $outgoing_id = $userId;
 
 

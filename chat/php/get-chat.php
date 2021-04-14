@@ -1,5 +1,5 @@
 <?php
-include "../../config_shop.php";
+include "../../config.php";
 
 if (isset($userId)) {
 
@@ -16,6 +16,7 @@ if (isset($userId)) {
                 $output .= '<div class="chat outgoing">
                                 <div class="details">
                                     <p>' . $row['msg_message'] . '</p>
+                                    <small>' . date("Y-d-M H:i:s", $row['msg_time']) . '</small>
                                 </div>
                                 </div>';
             } else {
@@ -23,6 +24,7 @@ if (isset($userId)) {
                                 <img src="../../user/avatar/' . $row['ui_avatar'] . '" alt="">
                                 <div class="details">
                                     <p>' . $row['msg_message'] . '</p>
+                                    <small>' . date("Y-d-M H:i:s", $row['msg_time']) . '</small>
                                 </div>
                                 </div>';
             }

@@ -159,6 +159,17 @@ switch ($action) {
             $data = $query->fetch_assoc();
         }
         break;
+    case "feedback_product":
+        $id = $_POST['id'];
+
+
+        $query = $link->query("SELECT products.p_name, products.p_image, shop.shop_name FROM products INNER JOIN shop ON products.p_shop_id = shop.shop_id WHERE products.p_id  = '$id'");
+        if ($query->num_rows == 0) {
+            $msg = "This file is not available.";
+        } else {
+            $data = $query->fetch_assoc();
+        }
+        break;
     case "get_order_info_detail":
         $id = $_POST['id'];
         $query = $link->query("SELECT order_address.*, orders.*, order_items.*,user.*, products.p_name as order_product_name, products.p_image as order_product_image from orders INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN products ON products.p_id = order_items.order_product_id INNER JOIN user ON user.user_id = orders.order_user_id INNER JOIN order_address ON order_address.oda_order_id = orders.id WHERE orders.id  = '$id'");

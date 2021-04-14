@@ -67,6 +67,7 @@ include "../../connect_db.php";
             <?php
             } else {
                 $user = mysqli_fetch_assoc($res);
+
                 $currentUser = $_SESSION["current_user"] =  $user;
 
             ?>

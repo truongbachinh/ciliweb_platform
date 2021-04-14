@@ -26,3 +26,7 @@
 <script src="../assets/js/canvasjs.min.js"></script>
 <!-- Sweetalert -->
 <script src="../assets/js/sweetalert.min.js"></script>
+
+<!-- rater -->
+<script src="../assets/js/rater.js"></script>
+<script src="../assets/js/rater.min.js"></script>

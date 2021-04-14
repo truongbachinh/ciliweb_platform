@@ -2,9 +2,9 @@
 
 
 $idOrder = $_GET["id"];
-var_dump($userId);
 
-$billDetail = "SELECT order_address.*, orders.*, order_items.*,user.*, products.p_name as order_product_name, products.p_image as order_product_image from orders INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN products ON products.p_id = order_items.order_product_id INNER JOIN user ON user.user_id = orders.order_user_id INNER JOIN order_address ON order_address.oda_order_id = orders.id WHERE orders.id  = $idOrder AND order_user_id = $userId";
+
+$billDetail = "SELECT order_address.*, orders.*, order_items.*,user.*, products.p_name as order_product_name, products.p_image as order_product_image, products.p_id as product_id from orders INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN products ON products.p_id = order_items.order_product_id INNER JOIN user ON user.user_id = orders.order_user_id INNER JOIN order_address ON order_address.oda_order_id = orders.id WHERE orders.id  = $idOrder AND order_user_id = $userId";
 $res = mysqli_query($link, $billDetail);
 $bill = array();
 
@@ -65,6 +65,7 @@ while ($row = mysqli_fetch_array($res)) {
                                                 <th>Price</th>
                                                 <th>Quantity</th>
                                                 <th>Total</th>
+                                                <th>Feedback</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -101,9 +102,15 @@ while ($row = mysqli_fetch_array($res)) {
                                                     <td class="bill-product"><?= number_format($order["price"], 0, ",", ".") ?>VNĐ</td>
                                                     <td class="bill-product"><?= $order["quantity"] ?></td>
                                                     <td class="bill-product"><?= number_format($cost = $order["quantity"] * $order["price"], 0, ",", ".") ?>VNĐ</td>
+                                                    <td style="text-align:center">
+                                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                                            <button onclick="feedbackProduct(<?= $order['product_id'] ?>)" class="btn btn-info" role="button">
+                                                                <i class="mdi mdi-pencil-outline"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             <?php
-
                                                 $count += $order["quantity"];
                                                 $total += $cost;
                                             }
@@ -133,7 +140,71 @@ while ($row = mysqli_fetch_array($res)) {
                 </div>
             </div>
         </div>
-    </div>
-    </div>
+        <!-- Modal edit -->
+        <div class="modal fade" id="feedbackProductFrom" tabindex="-1" role="dialog" aria-labelledby="feedbackProductFrom" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="feedbackProductFrom">Feedback for product</h5>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST" id="edit-order-form">
+                            <div class="form-group">
+                                <input type="hidden" name="fbProductId" class="form-control" id="fbProductId">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Shop:</label>
+                                <label for="fbProductShop" id="fbProductShop"></label>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Product name:</label>
+                                <label for="fbProductName" id="fbProductName"></label>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Product image:</label>
+                                <img src="" alt="No avatar" id="detailProduct" width="50" height="50">
+                            </div>
+                            <div class="form-group">
+                                <label for=""> Review Name</label>
+                                <input type="text" name="reviewName" class="form-control" id="reviewName">
+                            </div>
+                            <div class="form-group">
+                                <label for=""> Review Conntent</label>
+                                <input type="text" name="reviewContent" class="form-control" id="reviewContent">
+                            </div>
+                            <div class="model-footer" style="float: right;">
+                                <button type="submit button" name="reviewProduct" class="btn btn-warning btn-feedback-product">
+                                    Save Changes
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
+<?php
+
+if (isset($_POST['reviewProduct'])) {
+    $id =  $_POST['fbProductId'];
+    $reviewName =  $_POST['reviewName'];
+    $reviewProduct =  $_POST['reviewContent'];
+    $timeReview = time();
+    var_dump($reviewName);
+    var_dump($reviewProduct);
+    $query = $link->query("SELECT products.p_name, shop.shop_id FROM products INNER JOIN shop ON products.p_shop_id = shop.shop_id WHERE products.p_id  = '  $id '");
+    $shop = $query->fetch_assoc();
+    $shopId = $shop['shop_id'];
+    $queryInsert = $link->query("INSERT INTO `reviews` (`review_id`, `review_user_id`, `review_shop_id`, `rank`, `review_comment`, `review_time`) VALUES (NULL, '$userId', ' $shopId', '$reviewName', '$reviewProduct', '  $timeReview');");
+    var_dump($queryInsert);
+    exit;
+}
+?>

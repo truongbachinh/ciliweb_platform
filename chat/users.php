@@ -1,19 +1,22 @@
 <?php
-include "../config_shop.php";
-$shopIF = $GLOBALS['shopInfor'];
-$shopId = $shopIF['shop_id'];
+
+include "../config.php";
+
+// $shopIF = $GLOBALS['shopInfor'];
+// $shopId = $shopIF['shop_id'];
 // exit;
 
 ?>
-<?php include_once "../chat/header.php"; ?>
 
-</html>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
   <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -21,7 +24,7 @@ $shopId = $shopIF['shop_id'];
 <body class="sidebar-pinned ">
 
   <main class="admin-main">
-    <h1>hEADER sHOP NAME = <?= $shopIF['shop_name'] ?></h1>
+
 
     <!-- PLACE CODE INSIDE THIS AREA -->
 

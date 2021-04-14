@@ -1,5 +1,5 @@
 <?php
-include "../config.php";
+include "../config_admin.php";
 $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 2;
 $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
 $offest = ($currentPage - 1) * $pPerPage;
@@ -37,14 +37,11 @@ $totalPage = ceil($totalUser / $pPerPage);
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group has-search">
-                                            <span class="fa fa-search form-control-feedback"></span>
                                             <input type="text" class="form-control" placeholder="Search">
                                         </div>
                                     </div>
                                 </div>
-                                <?php
-                                include('../pagination/pagination.php');
-                                ?>
+
                                 <div class="table-responsive p-t-10">
                                     <table class="table table-responsive center table-bordered table-striped">
                                         <thead>
@@ -129,9 +126,7 @@ $totalPage = ceil($totalUser / $pPerPage);
                                         </tbody>
                                     </table>
                                 </div>
-                                <?php
-                                include('../pagination/pagination.php');
-                                ?>
+
                             </div>
                         </div>
                     </div>

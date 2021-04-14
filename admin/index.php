@@ -1,5 +1,5 @@
 <?php
-include "../config.php";
+include "../config_admin.php";
 
 ?>
 
@@ -30,13 +30,3 @@ include "../config.php";
 </body>
 
 </html>
-
-
-
-
-
-
-<?php
-// session_start();
-include "../connect_db.php";
-?>

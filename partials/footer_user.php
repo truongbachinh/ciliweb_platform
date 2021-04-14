@@ -199,10 +199,53 @@
                     swal("Notice", response['msg'], "success").then(function(e) {
                         location.reload()
                     });
+                    $('#feedbackForm').modal();
                 });
             });
         }).catch(err => {
 
         });
+    }
+
+    // $(document).on('click', '.btn-detail-shop', function(e) {
+    //     e.preventDefault();
+    //     const shopId = parseInt($(this).data("id"));
+    //     console.log(shopId)
+    //     Utils.api('get_shop_info_detail', {
+    //         id: shopId
+    //     }).then(response => {
+    //         $('#detailShopAccount').text(response.data.username);
+    //         $('#detailShopName').text(response.data.shop_name);
+    //         $('#detailShopMail').text(response.data.email);
+    //         $('#detailShopAddress').text(response.data.shop_address);
+    //         $('#detailShopDescription').text(response.data.shop_description);
+    //         // var createDate = date("Y-m-d H:i:s", response.data.shop_create_time);
+    //         // $('#detailShopCreateTime').text(createDate);
+    //         // $('#detailShopUpdateTime').text(date("Y-m-d H:i:s", response.data.shop_update_time));
+    //         $('#detailShop').modal();
+    //     }).catch(err => {
+
+    //     })
+    // });
+
+    // function feedbackProduct(productId) {
+    //     $("#fbProduct").val(productId);
+    //     $('#feedbackProductFrom').modal();
+    // }
+
+    function feedbackProduct(productId) {
+        var pathFile = "../shop/image_products/";
+        Utils.api("feedback_product", {
+            id: productId
+        }).then(response => {
+
+            $("#fbProductId").val(productId);
+            $("#fbProductShop").text(response.data.shop_name);
+            $("#fbProductName").text(response.data.p_name);
+            $('#detailProduct').attr('src', pathFile.concat(response.data.p_image));
+            $('#feedbackProductFrom').modal();
+        }).catch(err => {
+
+        })
     }
 </script>
