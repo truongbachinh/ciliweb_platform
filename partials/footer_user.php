@@ -240,6 +240,7 @@
         }).then(response => {
 
             $("#fbProductId").val(productId);
+            $("#fbShopId").val(response.data.shop_id);
             $("#fbProductShop").text(response.data.shop_name);
             $("#fbProductName").text(response.data.p_name);
             $('#detailProduct').attr('src', pathFile.concat(response.data.p_image));

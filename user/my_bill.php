@@ -1,9 +1,5 @@
 <?php
-
-
 $idOrder = $_GET["id"];
-
-
 $billDetail = "SELECT order_address.*, orders.*, order_items.*,user.*, products.p_name as order_product_name, products.p_image as order_product_image, products.p_id as product_id from orders INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN products ON products.p_id = order_items.order_product_id INNER JOIN user ON user.user_id = orders.order_user_id INNER JOIN order_address ON order_address.oda_order_id = orders.id WHERE orders.id  = $idOrder AND order_user_id = $userId";
 $res = mysqli_query($link, $billDetail);
 $bill = array();
@@ -21,6 +17,8 @@ while ($row = mysqli_fetch_array($res)) {
 ?>
 
 
+
+<link rel="stylesheet" href="./css/rate.css">
 <link rel="stylesheet" href="./css/bill.css">
 <section class="manage-topic">
     <div class="container m-t-30">
@@ -152,9 +150,10 @@ while ($row = mysqli_fetch_array($res)) {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="POST" id="edit-order-form">
+                        <form action="" method="POST" id="edit-order-form" enctype="multipart/form-data">
                             <div class="form-group">
                                 <input type="hidden" name="fbProductId" class="form-control" id="fbProductId">
+                                <input type="hidden" name="fbShopId" class="form-control" id="fbShopId">
                             </div>
                             <div class="form-group">
                                 <label for="">Shop:</label>
@@ -168,12 +167,31 @@ while ($row = mysqli_fetch_array($res)) {
                                 <label for="">Product image:</label>
                                 <img src="" alt="No avatar" id="detailProduct" width="50" height="50">
                             </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col d-flex justify-content-center">
+                                    <div class="form-group">
+                                        <div class="rate2"></div>
+                                        <input id="reviewRank" name="reviewRankInput" type="hidden">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
-                                <label for=""> Review Name</label>
-                                <input type="text" name="reviewName" class="form-control" id="reviewName">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="control-label">Image :</label>
+                                        <input type="file" class="p11" class="form-control" id="reivewImageProduct" name="reivewImageProduct">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="control-label">video :</label>
+                                        <input type="file" class="p11" class="form-control" id="reivewVideoProduct" name="reivewVideoProduct">
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for=""> Review Conntent</label>
+                                <label for=""> Review Content</label>
                                 <input type="text" name="reviewContent" class="form-control" id="reviewContent">
                             </div>
                             <div class="model-footer" style="float: right;">
@@ -194,17 +212,74 @@ while ($row = mysqli_fetch_array($res)) {
 <?php
 
 if (isset($_POST['reviewProduct'])) {
-    $id =  $_POST['fbProductId'];
-    $reviewName =  $_POST['reviewName'];
-    $reviewProduct =  $_POST['reviewContent'];
+    $idProduct =  $_POST['fbProductId'];
+    $idShop = $_POST['fbShopId'];
+    $reviewRank =  $_POST['reviewRankInput'];
+    $reviewContent =  $_POST['reviewContent'];
     $timeReview = time();
-    var_dump($reviewName);
-    var_dump($reviewProduct);
-    $query = $link->query("SELECT products.p_name, shop.shop_id FROM products INNER JOIN shop ON products.p_shop_id = shop.shop_id WHERE products.p_id  = '  $id '");
-    $shop = $query->fetch_assoc();
-    $shopId = $shop['shop_id'];
-    $queryInsert = $link->query("INSERT INTO `reviews` (`review_id`, `review_user_id`, `review_shop_id`, `rank`, `review_comment`, `review_time`) VALUES (NULL, '$userId', ' $shopId', '$reviewName', '$reviewProduct', '  $timeReview');");
-    var_dump($queryInsert);
-    exit;
+
+
+    $tm = md5(time());
+    $statusMsgImage = '';
+    $statusMsgVideo = '';
+
+    // $uploadVideoPath = "./review_video/";
+    // if (!is_dir($uploadVideoPath)) {
+    //     mkdir($uploadVideoPath, 0777, true);
+    // }
+    $uploadImagePath = "./review_image/";
+    if (!is_dir($uploadImagePath)) {
+        mkdir($uploadImagePath, 0777, true);
+    }
+
+    // $uploadImage = false;
+    // $uploadVideo = false;
+    $fileNameImage =  $tm . basename($_FILES['reivewImageProduct']['name']);
+    $fileNameVideo =  $tm . basename($_FILES['reivewVideoProduct']['name']);
+    $targetImageFilePath = $uploadImagePath . $fileNameImage;
+    $targetVideoFilePath = $uploadImagePath . $fileNameVideo;
+    $uploadImage = move_uploaded_file($_FILES["reivewImageProduct"]["tmp_name"], $targetImageFilePath);
+    $uploadVideo = move_uploaded_file($_FILES["reivewVideoProduct"]["tmp_name"], $targetVideoFilePath);
+    // $allowTypeImages = array('jpg', 'png', 'jpeg', 'gif');
+    // $allowTypeVideos = array('mp4', 'mov', 'mpeg-2', 'flv');
+    // // Check whether file type is valid 
+    // $fileTypeImage = pathinfo($targetImageFilePath, PATHINFO_EXTENSION);
+    // // Check whether file type is valid 
+    // $fileTypeVideo = pathinfo($targetVideoFilePath, PATHINFO_EXTENSION);
+    // if (!empty($fileNameImage)) {
+
+    //     if (in_array($fileTypeImage, $allowTypeImages)) {
+    //         if (move_uploaded_file($_FILES["imageProduct"]["tmp_name"], $targetImageFilePath)) {
+    //             $statusMsgImage = 'Upload oke';
+    //         }
+    //     } else {
+    //         $statusMsgImage = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
+    //     }
+    // } else {
+    //     $statusMsgImage = 'Please select a image file to upload.';
+    // }
+
+    // if (!empty($fileNameVideo)) {
+
+    //     if (in_array($fileTypeVideo, $allowTypeVideos)) {
+    //         if (move_uploaded_file($_FILES["imageProduct"]["tmp_name"], $targetVideoFilePath)) {
+    //             $uploadVideo = true;
+    //             $statusMsgVideo = 'oke';
+    //         }
+    //     } else {
+    //         $statusMsgVideo = 'Sorry, only mp4 mov mpeg-2 flv  files are allowed to upload.';
+    //     }
+    // } else {
+    //     $statusMsgVideo = 'Please select a video file to upload.';
+    // }
+    var_dump($uploadImage);
+    var_dump($uploadVideo);
+    var_dump($fileNameImage);
+    var_dump($fileNameVideo);
+
+
+    $queryInsertReivew = $link->query("INSERT INTO `reviews` (`review_id`, `review_user_id`, `review_shop_id`, `review_product_id`, `review_image`, `review_video`, `rank`, `review_comment`, `review_time`) VALUES (NULL, '$userId', ' $idShop',' $idProduct',' $fileNameImage',' $fileNameVideo','$reviewRank',  '$reviewContent', '  $timeReview');");
+
+    var_dump($queryInsertReivew);
 }
 ?>

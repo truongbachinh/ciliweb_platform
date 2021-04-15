@@ -33,6 +33,33 @@ include "../config_user.php";
     <?php include "../partials/footer_user.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            var options = {
+                max_value: 5,
+                step_size: 0.5,
+                selected_symbol_type: 'utf8_star',
+                initial_value: 5,
+                update_input_field_name: $("#reviewRank"),
+            }
+            $(".rate2").rate(options);
+
+            $(".rate2").on("change", function(ev, data) {
+                console.log(data.from, data.to);
+            });
+
+            $(".rate2").on("updateError", function(ev, jxhr, msg, err) {
+                console.log("This is a custom error event");
+            });
+
+            $(".rate2").rate("setAdditionalData", {
+                id: 42
+            });
+            $(".rate2").on("updateSuccess", function(ev, data) {
+                console.log(data);
+            });
+
+
+        })
         document.addEventListener("DomContentLoaded", function(e) {
             let activeId = null;
             $(document).on('click', 'btn-edit-order', function(e) {
@@ -75,3 +102,13 @@ include "../config_user.php";
 </body>
 
 </html>
+
+<?php
+if (isset($queryInsertReivew)) {
+?>
+    <script>
+        swal("Notice", "Feedback successfully!", "success");
+    </script>
+<?php
+}
+?>

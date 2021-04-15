@@ -163,7 +163,7 @@ switch ($action) {
         $id = $_POST['id'];
 
 
-        $query = $link->query("SELECT products.p_name, products.p_image, shop.shop_name FROM products INNER JOIN shop ON products.p_shop_id = shop.shop_id WHERE products.p_id  = '$id'");
+        $query = $link->query("SELECT products.p_name, products.p_image, shop.shop_name, shop.shop_id  FROM products INNER JOIN shop ON products.p_shop_id = shop.shop_id WHERE products.p_id  = '$id'");
         if ($query->num_rows == 0) {
             $msg = "This file is not available.";
         } else {

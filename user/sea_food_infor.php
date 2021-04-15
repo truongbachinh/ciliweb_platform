@@ -4,6 +4,18 @@ $idCtg = $_GET["idl"];
 $id = $_GET["id"];
 $idShop = $_GET["idsh"];
 
+$queryReview = $link->query("SELECT user.username, user_infor.ui_avatar, reviews.* FROM reviews INNER JOIN user ON user.user_id = reviews.review_user_id INNER JOIN user_infor ON user_infor.ui_user_id = user.user_id WHERE review_product_id = '$id' AND review_shop_id = '$idShop '");
+$listReview = array();
+if (!empty($queryReview)) {
+    while ($rowReview = mysqli_fetch_array($queryReview)) {
+        $listReview[] = $rowReview;
+    }
+}
+
+$fileType = "";
+$allowTypeImages = array('jpg', 'png', 'jpeg', 'gif');
+$allowTypeVideos = array('mp4', 'mov', 'mpeg-2', 'flv');
+
 
 
 $query_food = $link->query("SELECT categories.*, shop.*, products.* from products INNER JOIN shop ON shop.shop_id = products.p_shop_id INNER JOIN categories ON categories.ctg_id = products.p_category_id WHERE products.p_id = $id AND shop.shop_id = $idShop  AND categories.ctg_id = $idCtg");
@@ -174,46 +186,74 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
                 </p>
                 <p> - Ngoài ra nếu muốn làm sạch giày bạn có thể sử dụng GEL đa năng làm sạch của Thailand, khi muốn làm sạch sâu hơn bạn có thể giặt giày bằng cách sử dụng nước rửa bát và bàn chải đánh răng hoặc kem đánh răng và bàn chải đánh răng (tuyệt đối ko sử dụng xà phòng và bàn chải thông thường!) để vệ sinh phần đế và làm sạch giày ạ!
                 </p>
-                <p> ------------------------------------------------
-                </p>
-                <p> bAimée &amp; bAmor cam kết với khách hàng:
-                </p>
-                <p> - Sản phẩm 100% giống mô tả, hình ảnh do shop tự chụp
-                </p>
-                <p> - Đảm bảo chất lượng, dịch vụ tốt nhất, hàng được giao từ 1-5 ngày kể từ ngày đặt hàng
-                </p>
-                <p> - Giao hàng trên toàn quốc, thanh toán khi nhận hàng
-                </p>
-                <p> - Hỗ trợ đổi SIZE cho khách hàng khi đi không vừa sản phẩm
-                </p>
-                <p> - Đổi trả theo đúng quy định của Shopee
-                </p>
-                <p> 1. Điều kiện áp dụng (trong vòng 07 ngày kể từ khi nhận sản phẩm):
-                </p>
-                <p> - Hàng hoá vẫn còn mới, chưa qua sử dụng
-                </p>
-                <p> - Hàng hóa hư hỏng do vận chuyển hoặc do nhà sản xuất.
-                </p>
-                <p> 2. Trường hợp được chấp nhận:
-                </p>
-                <p> - Hàng không đúng size, mẫu mã như quý khách đặt hàng
-                </p>
-                <p> - Không đủ số lượng, không đủ bộ như trong đơn hàng
-                </p>
-                <p> 3. Trường hợp không đủ điều kiện áp dụng chính sách:
-                </p>
-                <p> - Quá 07 ngày kể từ khi Quý khách nhận hàng
-                </p>
-                <p> - Gửi lại hàng không đúng mẫu mã, không phải hàng của bAimée &amp; bAmor
-                </p>
-                <p> - Đặt nhầm sản phẩm, chủng loại, không thích, không hợp,...
+                <p> ------------------------------------------------</p>
 
-                </p>
-                <p> #babaco #babagiayxuatxin #baimeebamor #giaynu #giaynudep #giaysandal #giaysandalnu #sandal #sandalnu #giaycaogot #giaycaogotnu #depnudep #depnu
             </span>
         </div>
     </div>
+    <div class="infor">
+        <div id="breadcrumb-product-details"><i class="fa fas-home" style="margin-left: 9px;"> Feedback of product <i class="fal fa-chevron-right" style="font-size: 10px;"></i> <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
+        </div>
+        <div class="feadback-description justify-content-center rounded">
+            <?php
+            foreach ($listReview  as $reviewInfor) {
+            ?>
+                <ul class="list-group list-group-flush" width: 90%;>
+                    <li class="list-group-item">
+                        <div class="avatar avatar-sm">
+                            <?php
+                            if ($queryReview->num_rows > 0) {
+                                $imageURL = '../user/avatar/' . $reviewInfor["ui_avatar"];
+                            ?>
+                                <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
+                                <span><?= $reviewInfor["username"] ?></span>
+                            <?php
+                            } else { ?>
+                                <span class="avatar-title rounded-circle bg-warning">Hidden</span>
 
+                            <?php } ?>
+                        </div>
+                        <hr>
+                        <div>
+                            <?php
+                            if ($queryReview->num_rows > 0) {
+                                $imageReviewURL = '../user/review_image/' . $reviewInfor["review_image"];
+                                $fileType = pathinfo($imageReviewURL, PATHINFO_EXTENSION);
+
+                                if (in_array($fileType, $allowTypeImages)) {
+
+                            ?>
+                                    <img class="" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
+
+                                <?php
+                                }
+                                if (in_array($fileType, $allowTypeVideos)) {
+                                ?>
+                                    <video width="150" height="150" controls>
+                                        <source src="<?php$imageReviewURL ?>" type="video/mp4">
+                                    </video>
+                                <?php
+                                }
+                            } else { ?>
+                                <span class="avatar-title rounded-circle bg-warning">Hidden</span>
+
+                            <?php }
+                            ?>
+
+                        </div>
+                        <div>
+                            <span><?= $reviewInfor['rank'] ?></span>
+                            <span><?= $reviewInfor['review_comment'] ?></span>
+                        </div>
+
+                    </li>
+
+                </ul>
+            <?php
+            }
+            ?>
+        </div>
+    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
