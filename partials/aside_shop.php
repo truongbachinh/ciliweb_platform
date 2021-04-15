@@ -109,9 +109,9 @@
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="../shop/chat.php" class=" menu-link">
+                                <a href="../shop/chat_to_user.php" class=" menu-link">
                                     <span class="menu-label">
-                                        <span class="menu-name">Chat </span>
+                                        <span class="menu-name">Chat to user </span>
                                     </span>
                                     <span class="menu-icon">
                                         <i class="mdi mdi-chat-processing mdi-24px "></i>

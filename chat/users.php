@@ -1,7 +1,7 @@
 <?php
 
 include "../config.php";
-
+$userId = $_SESSION["current_user"]["user_id"];
 // $shopIF = $GLOBALS['shopInfor'];
 // $shopId = $shopIF['shop_id'];
 // exit;

@@ -1,5 +1,6 @@
 <?php
 include_once "../../config.php";
+$userId = $_SESSION["current_user"]["user_id"];
 $outgoing_id = $userId;
 
 

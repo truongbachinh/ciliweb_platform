@@ -1,6 +1,7 @@
 <?php
 include("../config.php");
 $talker = $_GET['user_id'];
+$userId = $_SESSION["current_user"]["user_id"];
 if (!isset($userId)) {
   header("location: ../account/login.php");
 }

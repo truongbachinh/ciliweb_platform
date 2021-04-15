@@ -1,8 +1,9 @@
 <?php
 
 include_once "../../config.php";
-$outgoing_id = $userId;
 $userId = $_SESSION["current_user"]["user_id"];
+$outgoing_id = $userId;
+
 
 $shopInfor = $link->query("select * from shop where shop_user_id = $userId ");
 $GLOBALS['shopInfor'] = mysqli_fetch_assoc($shopInfor);
