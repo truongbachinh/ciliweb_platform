@@ -35,6 +35,15 @@ $totalPage = ceil($totalProduct / $pPerPage);
     <div class="list-all-product flex-container">
         <?php
         while ($productInfor = mysqli_fetch_array($query_search, MYSQLI_ASSOC)) {
+            $idProductSold  = $productInfor['p_id'];
+            $queryTotalSold = $link->query("SELECT COUNT(order_items.id) as total_sold FROM order_items INNER JOIN orders ON orders.id = order_items.order_id WHERE order_items.order_product_id = ' $idProductSold ' and orders.shipping_order_status = '3'");
+            $totalSold = $queryTotalSold->fetch_assoc();
+            $totalSoldOfShop = $totalSold['total_sold'];
+            $totalProduct = $productInfor['p_quantity'];
+
+            $with = $totalSoldOfShop / $totalProduct * 100;
+            $widthBar = $with . '%';
+
         ?>
             <div class="card align-items-center" id="card-product">
                 <a href="index.php?view=foodInfo&idl=<?= $productInfor['p_category_id'] ?>&id=<?= $productInfor['p_id'] ?>&idsh=<?= $productInfor['shop_id'] ?>" style="text-decoration:none">
@@ -43,15 +52,19 @@ $totalPage = ceil($totalProduct / $pPerPage);
                     </div>
                     <div class="card-body">
                         <p><?= $productInfor['p_name'] ?></p>
-                        <span style="color: red; font-size: 14px;">
+                        <p style="color: red; font-size: 14px;">
                             <?= number_format($productInfor['p_price'], 0, ",", ".")  ?> VNĐ
-                        </span>
-
+                        </p>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow=" <?= $totalSoldOfShop ?>" aria-valuemin="0" aria-valuemax="<?= $totalProduct ?>" style='width:<?= $widthBar ?>'>
+                                Sold <?= $totalSoldOfShop  ?>
+                            </div>
+                        </div>
                     </div>
                 </a>
                 <div class="card-footer-product">
                     <?php
-                    if ($productInfor["p_quantity"] > "0") {
+                    if ($productInfor["p_quantity"] > "0" &&   $totalSoldOfShop <  $totalProduct) {
                     ?>
                         <form action="../cart/cart.php?view=add_to_cart" class="buy-now-form" method="post" enctype="multipart/form-data">
                             <input type="text" value="1" name="quantity[<?= $productInfor['p_id'] ?>]" hidden="true">
@@ -60,13 +73,14 @@ $totalPage = ceil($totalProduct / $pPerPage);
                     <?php
                     } else {
                     ?>
-                        <strong class="alert alert-danger">Sold Out</strong>
+                        <input type="submit" class="btn btn-danger" value="Sold out">
                     <?php
                     }
                     ?>
                 </div>
             </div>
-        <?php } ?>
+        <?php }
+        ?>
     </div>
 </div>
 

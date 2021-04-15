@@ -219,7 +219,7 @@ if (isset($_POST['reviewProduct'])) {
     $timeReview = time();
 
 
-    $tm = md5(time());
+    // $tm = md5(time());
     $statusMsgImage = '';
     $statusMsgVideo = '';
 
@@ -234,6 +234,8 @@ if (isset($_POST['reviewProduct'])) {
 
     // $uploadImage = false;
     // $uploadVideo = false;
+    // $fileNameImage = basename($_FILES['reivewImageProduct']['name']);
+    // $fileNameVideo = basename($_FILES['reivewVideoProduct']['name']);
     $fileNameImage =  $tm . basename($_FILES['reivewImageProduct']['name']);
     $fileNameVideo =  $tm . basename($_FILES['reivewVideoProduct']['name']);
     $targetImageFilePath = $uploadImagePath . $fileNameImage;
@@ -278,7 +280,7 @@ if (isset($_POST['reviewProduct'])) {
     var_dump($fileNameVideo);
 
 
-    $queryInsertReivew = $link->query("INSERT INTO `reviews` (`review_id`, `review_user_id`, `review_shop_id`, `review_product_id`, `review_image`, `review_video`, `rank`, `review_comment`, `review_time`) VALUES (NULL, '$userId', ' $idShop',' $idProduct',' $fileNameImage',' $fileNameVideo','$reviewRank',  '$reviewContent', '  $timeReview');");
+    $queryInsertReivew = $link->query("INSERT INTO `reviews` (`review_id`, `review_user_id`, `review_shop_id`, `review_product_id`, `review_image`, `review_video`, `rank`, `review_comment`, `review_time`) VALUES (NULL, '$userId', ' $idShop',' $idProduct','$fileNameImage',' $fileNameVideo','$reviewRank',  '$reviewContent', '  $timeReview');");
 
     var_dump($queryInsertReivew);
 }

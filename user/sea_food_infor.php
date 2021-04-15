@@ -3,6 +3,21 @@
 $idCtg = $_GET["idl"];
 $id = $_GET["id"];
 $idShop = $_GET["idsh"];
+$fileType = "";
+$allowTypeImages = array('jpg', 'png', 'jpeg', 'gif', 'PNG');
+$allowTypeVideos = array('mp4', 'mov', 'mpeg-2', 'flv');
+
+
+$queryTotalUser = $link->query("SELECT COUNT(DISTINCT(reviews.review_user_id)) as total_user FROM reviews INNER JOIN user ON user.user_id = reviews.review_user_id INNER JOIN user_infor ON user_infor.ui_user_id = user.user_id WHERE review_product_id = '$id' AND review_shop_id = '$idShop'");
+$totalU = $queryTotalUser->fetch_assoc();
+$totalUser = $totalU['total_user'];
+$queryTotalReview = $link->query("SELECT COUNT(reviews.review_comment) as total_review FROM reviews WHERE review_product_id = '$id' AND review_shop_id = '$idShop'");
+$totalR = $queryTotalReview->fetch_assoc();
+$totalReview = $totalR['total_review'];
+
+$queryTotalSold = $link->query("SELECT COUNT(order_items.id) as total_sold FROM order_items INNER JOIN orders ON orders.id = order_items.order_id WHERE order_items.order_product_id = '$id' and orders.shipping_order_status = '3'");
+$totalSold = $queryTotalSold->fetch_assoc();
+$totalSoldOfShop = $totalSold['total_sold'];
 
 $queryReview = $link->query("SELECT user.username, user_infor.ui_avatar, reviews.* FROM reviews INNER JOIN user ON user.user_id = reviews.review_user_id INNER JOIN user_infor ON user_infor.ui_user_id = user.user_id WHERE review_product_id = '$id' AND review_shop_id = '$idShop '");
 $listReview = array();
@@ -12,10 +27,29 @@ if (!empty($queryReview)) {
     }
 }
 
-$fileType = "";
-$allowTypeImages = array('jpg', 'png', 'jpeg', 'gif');
-$allowTypeVideos = array('mp4', 'mov', 'mpeg-2', 'flv');
 
+
+
+$queryRating = $link->query("SELECT rank, COUNT(rank) as count_rater FROM reviews WHERE review_product_id = '$id' AND review_shop_id = '$idShop' GROUP BY rank");
+$listRating = array();
+if ($queryRating->num_rows > 0) {
+    if (!empty($queryReview)) {
+        while ($rowRating = mysqli_fetch_array($queryRating)) {
+            $listRating[] = $rowRating;
+        }
+    }
+    $rankOneRater = 0;
+    $totalPerRankOneRater = 0;
+    $totalRaterRank = 0;
+    foreach ($listRating as $value) {
+        $arraySum[] = $value['count_rater'];
+        $rankOneRater = $value['rank'] * $value['count_rater'];
+        $totalPerRankOneRater += $rankOneRater;
+        $totalRater = array_sum($arraySum);
+    }
+    $totalRaterRank = $totalPerRankOneRater /  $totalRater;
+    $viewTotalRate = (ROUND($totalRaterRank, 0));
+}
 
 
 $query_food = $link->query("SELECT categories.*, shop.*, products.* from products INNER JOIN shop ON shop.shop_id = products.p_shop_id INNER JOIN categories ON categories.ctg_id = products.p_category_id WHERE products.p_id = $id AND shop.shop_id = $idShop  AND categories.ctg_id = $idCtg");
@@ -50,6 +84,8 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
 
                                         <div class="list-group list-group-horizontal col-lg-9 d-md-flex" id="view-list-libImg">
                                             <?php
+
+
                                             if ($sql_img->num_rows > 0) {
                                                 while ($row = $sql_img->fetch_assoc()) {
                                                     $imageURL = '../shop/image_library/' . $row["img_name"];
@@ -79,7 +115,36 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
                     <div class="name-product">
                         <h4>Seafood Information</h4>
                     </div>
-                    <hr>
+                    <div class="card-body justify-content-around rounded d-flex">
+
+                        <div>
+                            <p class="text-muted text-overline m-0">Total Rating star</p>
+                            <div>
+                                <?php
+                                if ($queryRating->num_rows > 0) {
+                                    $star =  $viewTotalRate;
+                                    for ($i = 0; $i < 5; $i++) {
+                                        $output = '<img class="star m-b-20" />';
+                                        if ($i >=  $star) {
+                                            $output = '<img class="starNull m-b-20" />';
+                                        }
+                                        echo  $output;
+                                    }
+                                } else {
+                                ?>
+                                    <small>No rater rating this product</small>
+                                <?php
+                                }
+
+                                ?>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-muted text-overline m-0">Total user feedback</p>
+                            <small><?= $totalUser ?></small>
+                        </div>
+                    </div>
+
                     <table class="table table-hover">
                         <tbody>
                             <tr>
@@ -194,64 +259,101 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
     <div class="infor">
         <div id="breadcrumb-product-details"><i class="fa fas-home" style="margin-left: 9px;"> Feedback of product <i class="fal fa-chevron-right" style="font-size: 10px;"></i> <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
         </div>
-        <div class="feadback-description justify-content-center rounded">
-            <?php
-            foreach ($listReview  as $reviewInfor) {
-            ?>
-                <ul class="list-group list-group-flush" width: 90%;>
-                    <li class="list-group-item">
-                        <div class="avatar avatar-sm">
-                            <?php
-                            if ($queryReview->num_rows > 0) {
-                                $imageURL = '../user/avatar/' . $reviewInfor["ui_avatar"];
-                            ?>
-                                <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
-                                <span><?= $reviewInfor["username"] ?></span>
-                            <?php
-                            } else { ?>
-                                <span class="avatar-title rounded-circle bg-warning">Hidden</span>
+        <div class="feadback-description">
+            <div class="col-lg-12 col-md-12">
+                <div class="card m-b-30 m-t-30">
+                    <div class="card-body justify-content-around rounded d-flex">
 
-                            <?php } ?>
-                        </div>
-                        <hr>
                         <div>
-                            <?php
-                            if ($queryReview->num_rows > 0) {
-                                $imageReviewURL = '../user/review_image/' . $reviewInfor["review_image"];
-                                $fileType = pathinfo($imageReviewURL, PATHINFO_EXTENSION);
-
-                                if (in_array($fileType, $allowTypeImages)) {
-
-                            ?>
-                                    <img class="" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
-
-                                <?php
-                                }
-                                if (in_array($fileType, $allowTypeVideos)) {
-                                ?>
-                                    <video width="150" height="150" controls>
-                                        <source src="<?php$imageReviewURL ?>" type="video/mp4">
-                                    </video>
-                                <?php
-                                }
-                            } else { ?>
-                                <span class="avatar-title rounded-circle bg-warning">Hidden</span>
-
-                            <?php }
-                            ?>
-
+                            <p class="text-muted text-overline m-0">Total Rating star</p>
+                            <img class="starNull" />
                         </div>
                         <div>
-                            <span><?= $reviewInfor['rank'] ?></span>
-                            <span><?= $reviewInfor['review_comment'] ?></span>
+                            <p class="text-muted text-overline m-0">Total user feedback</p>
+                            <small><?= $totalUser ?></small>
                         </div>
+                        <div>
+                            <p class="text-muted text-overline m-0">Total feedback content</p>
+                            <small><?= $totalReview ?></small>
+                        </div>
+                        <div>
+                            <p class="text-muted text-overline m-0">Total Sold</p>
+                            <small><?= $totalSoldOfShop ?></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12">
+                <div class="card m-b-30 m-t-30">
+                    <?php
+                    foreach ($listReview  as $reviewInfor) {
+                    ?>
 
-                    </li>
+                        <ul class="list-group list-group-flush" width: 90%;>
+                            <li class="list-group-item">
+                                <div class="avatar avatar-sm">
+                                    <?php
+                                    if ($queryReview->num_rows > 0) {
+                                        $imageURL = '../user/avatar/' . $reviewInfor["ui_avatar"];
+                                    ?>
+                                        <img class="avatar-img rounded-circle  m-l-25" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
 
-                </ul>
-            <?php
-            }
-            ?>
+                                    <?php
+                                    } else { ?>
+                                        <span class="avatar-title rounded-circle bg-warning">Hidden</span>
+
+                                    <?php } ?>
+                                </div>
+                                <p>Account:<?= $reviewInfor["username"] ?></p>
+
+                                <div>
+                                    <?php
+                                    $star =   $reviewInfor['rank'];
+                                    for ($i = 0; $i < 5; $i++) {
+                                        $output = '<img class="star m-b-20" />';
+                                        if ($i >=  $star) {
+                                            $output = '<img class="starNull m-b-20" />';
+                                        }
+                                        echo  $output;
+                                    }
+                                    ?>
+                                </div>
+                                <div>
+                                    <?php
+                                    if ($queryReview->num_rows > 0) {
+                                        $imageReviewURL = '../user/review_image/' . $reviewInfor["review_image"];
+                                        $fileType = pathinfo($imageReviewURL, PATHINFO_EXTENSION);
+                                        if (in_array($fileType, $allowTypeImages)) {
+                                    ?>
+                                            <img class="" src="<?php echo $imageReviewURL; ?>" alt="" height="70" width="70" style="border-radius:10px" />
+
+                                        <?php
+                                        }
+                                        if (in_array($fileType, $allowTypeVideos)) {
+                                        ?>
+                                            <video width="150" height="150" controls>
+                                                <source src="<?php$imageReviewURL ?>" type="video/mp4">
+                                            </video>
+                                        <?php
+                                        }
+                                    } else { ?>
+                                        <span class="avatar-title rounded-circle bg-warning">Hidden</span>
+
+                                    <?php }
+                                    ?>
+
+
+                                    <p>Content:<?= $reviewInfor['review_comment'] ?></p>
+                                    <small><?= date('Y-d-M H:i:s', $reviewInfor['review_time']) ?></small>
+                                </div>
+                            </li>
+
+                        </ul>
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -358,3 +460,7 @@ $sql_img = $link->query("SELECT * FROM image_library Where `img_p_id` = $id");
         }
     });
 </script>
+<?php
+
+
+?>

@@ -152,6 +152,22 @@
       margin: 40px auto;
       
 }
+.star{
+    background-image: url(../rater/star.png);
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+}
+.starNull{
+    background-image: url(../rater/starR.png);
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+}
     
 
 
