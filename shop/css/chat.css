@@ -12,8 +12,8 @@
   max-width: 100%;
   width: 100%;
   border-radius: 16px;
-  box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
-              0 32px 64px -48px rgba(0,0,0,0.5);
+  box-shadow: 0 0 128px 0 rgba(27, 67, 247, 0.1),
+              0 32px 64px -48px rgba(10, 42, 223, 0.5);
 }
 
 
@@ -150,7 +150,7 @@
   padding: 18px 30px;
 }
 .chat-area header .back-icon{
-  color: #333;
+  color: blue;
   font-size: 18px;
 }
 .chat-area header img{
@@ -197,7 +197,7 @@
   max-width: calc(100% - 130px);
 }
 .outgoing .details p{
-  background: #333;
+  background: blue;
   color: #fff;
   border-radius: 18px 18px 0 18px;
 }

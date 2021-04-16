@@ -3,6 +3,43 @@ include "../config_shop.php";
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
 
+
+$queryTotalOrder = ("SELECT COUNT(orders.id) as order_amount, orders.*, order_address.*,user.* from orders
+INNER JOIN user ON user.user_id = orders.order_user_id
+inner join order_address on order_address.oda_order_id = orders.id
+where orders.order_shop_id = 8 GROUP BY orders.order_user_id ORDER BY COUNT(orders.id)");
+$sumOrder = $link->query($queryTotalOrder);
+$sumOrderArray = array();
+while ($rowOrder = mysqli_fetch_array($sumOrder)) {
+    $sumOrderArray[] =  $rowOrder;
+}
+
+$totalOrder = 0;
+$otalUser = 0;
+foreach ($sumOrderArray as $sumOrderValue) {
+    $sum = $sumOrderValue['order_amount'];
+    $sumUser[] = ($sumOrderValue['order_amount']);
+
+    $totalOrder += $sum;
+}
+$totalUser = (COUNT($sumUser));
+
+$queryOrderReice = $link->query("SELECT COUNT(orders.id) as order_receive_amount FROM orders where orders.order_shop_id = $shopId AND orders.shipping_order_status = 3");
+$totalOrderR = mysqli_fetch_assoc($queryOrderReice);
+$totalOrdeReceive = $totalOrderR['order_receive_amount'];
+
+$queryOrderShiped = $link->query("SELECT COUNT(orders.id) as order_shiped_amount FROM orders where orders.order_shop_id = $shopId AND orders.shipping_order_status = 2");
+$totalOrderS = mysqli_fetch_assoc($queryOrderShiped);
+$totalOrdeShiped  = $totalOrderS['order_shiped_amount'];
+
+$queryOrderCancle = $link->query("SELECT COUNT(orders.id) as order_cancle_amount FROM orders where orders.order_shop_id = $shopId AND orders.shipping_order_status = 4");
+$totalOrderC = mysqli_fetch_assoc($queryOrderCancle);
+$totalOrdeCancle  = $totalOrderC['order_cancle_amount'];
+
+$queryOrderNotShip = $link->query("SELECT COUNT(orders.id) as order_not_ship_amount FROM orders where orders.order_shop_id = $shopId AND orders.shipping_order_status = 1");
+$totalOrderNS = mysqli_fetch_assoc($queryOrderNotShip);
+$totalOrdeNotShip   = $totalOrderNS['order_not_ship_amount'];
+
 $chartSearch = null;
 if (isset($_POST["submitFieldChart"])) {
     $chartSearch = $_POST["chartField"];
@@ -86,6 +123,112 @@ if ($chartSearch != null) {
 
         <section class="manage-topic">
             <div class="container m-t-30">
+                <div class="row d-fex justify-content-lg-between">
+                    <div class="col-lg-2 col-md-6">
+                        <div class="card m-b-30 ">
+                            <div class="card-body">
+                                <div class="pb-2 text-center">
+                                    <div class="avatar avatar-lg">
+                                        <div class="avatar-title bg-soft-primary rounded-circle">
+                                            <i class="fe fe-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-muted text-overline m-0 text-center">Total of user has order product</p>
+                                    <h3 class="fw-400 text-center m-t-10">
+                                        <?= $totalUser ?>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="card m-b-30">
+                            <div class="card-body">
+                                <div class="pb-2 text-center">
+                                    <div class="avatar avatar-lg">
+                                        <div class="avatar-title bg-soft-primary rounded-circle">
+                                            <i class="fe fe-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class=" text-center text-muted text-overline m-0">Total of orders has confirm</p>
+                                    <h3 class="fw-400 text-center m-t-10"> <?= $totalOrder ?></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="card m-b-30">
+                            <div class="card-body">
+                                <div class="pb-2 text-center">
+                                    <div class="avatar avatar-lg">
+                                        <div class="avatar-title bg-soft-primary rounded-circle">
+                                            <i class="fe fe-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-muted text-overline m-0 text-center">Total of orders not shipped </p>
+                                    <h3 class="fw-400 text-center m-t-10"><?= $totalOrdeNotShip ?> </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="card m-b-30">
+                            <div class="card-body">
+                                <div class="pb-2 text-center">
+                                    <div class="avatar avatar-lg">
+                                        <div class="avatar-title bg-soft-primary rounded-circle">
+                                            <i class="fe fe-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-muted text-overline m-0 text-center">Total of orders shipped</p>
+                                    <h3 class="fw-400 text-center m-t-10"> <?= $totalOrdeShiped ?></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="card m-b-30">
+                            <div class="card-body">
+                                <div class="pb-2 text-center">
+                                    <div class="avatar avatar-lg">
+                                        <div class="avatar-title bg-soft-primary rounded-circle">
+                                            <i class="fe fe-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-center text-muted text-overline m-0">Total of orders receive</p>
+                                    <h3 class="text-center fw-400 m-t-10"> <?= $totalOrdeReceive ?></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="card m-b-30">
+                            <div class="card-body">
+                                <div class="pb-2 text-center">
+                                    <div class="avatar avatar-lg">
+                                        <div class="avatar-title bg-soft-primary rounded-circle">
+                                            <i class="fe fe-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-muted text-overline m-0 text-center">Total of ordes cancle</p>
+                                    <h3 class="fw-400 text-center m-t-10"><?= $totalOrdeCancle ?> </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row ">
                     <div class="col-12">
                         <div class="card">

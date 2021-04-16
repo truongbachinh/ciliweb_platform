@@ -1,3 +1,4 @@
+//  var  setInter = null;
 function MyFunction()
 {
    
@@ -43,8 +44,8 @@ function MyFunction()
         chatBox.onmouseleave = () => {
             chatBox.classList.remove("active");
         }
-
-        setInterval(() => {
+        // setInter = 
+       setInterval(() => {
             console.log(incoming_id);
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "../chat/php/get-chat.php", true);
@@ -62,9 +63,13 @@ function MyFunction()
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.send("incoming_id=" + incoming_id);
         }, 500);
-
+     
         function scrollToBottom() {
             chatBox.scrollTop = chatBox.scrollHeight;
         }
    
 }
+// function turnOfInterval()
+// {
+//     clearInterval(setInter);
+// }

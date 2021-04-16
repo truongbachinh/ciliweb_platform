@@ -6,6 +6,15 @@ $shopId = $shopIF['shop_id'];
 
 
 
+$queryOnline = $link->query("SELECT COUNT( orders.payment_order_status) as online_payment FROM orders WHERE orders.payment_order_status = 2 AND orders.order_shop_id = $shopId");
+$totalOnline = mysqli_fetch_assoc($queryOnline);
+$totalOnlinePayment = $totalOnline['online_payment'];
+
+$queryOffline = $link->query("SELECT COUNT( orders.payment_order_status) as offline_payment FROM orders WHERE orders.payment_order_status = 1 AND orders.order_shop_id = $shopId");
+$totalOffline = mysqli_fetch_assoc($queryOffline);
+$totalOfflinePayment = $totalOffline['offline_payment'];
+
+
 
 $offlineQuery = $link->query("SELECT orders.order_shop_id, SUM(payments.money) as MoneyOfDay ,shop.shop_name, day(payments.time) as DayOfMonth FROM orders INNER JOIN payments ON payments.payment_order_id = orders.id INNER JOIN shop ON shop.shop_id = orders.order_shop_id WHERE orders.order_shop_id = '$shopId'AND orders.shipping_order_status = 3 AND orders.payment_order_status = 1 GROUP BY day(payments.time)");
 $onlineQuery = $link->query("SELECT orders.order_shop_id, SUM(payments.money) as MoneyOfDay ,shop.shop_name, day(payments.time) as DayOfMonth FROM orders INNER JOIN payments ON payments.payment_order_id = orders.id INNER JOIN shop ON shop.shop_id = orders.order_shop_id WHERE orders.order_shop_id = '$shopId'AND orders.shipping_order_status = 3 AND orders.payment_order_status = 2 GROUP BY day(payments.time)");
@@ -155,6 +164,44 @@ $dataPoints2s = array(
 
         <section class="manage-topic">
             <div class="container m-t-30">
+                <div class="row d-fex justify-content-lg-around">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card m-b-30 ">
+                            <div class="card-body">
+                                <div class="pb-2 text-center">
+                                    <div class="avatar avatar-lg">
+                                        <div class="avatar-title bg-soft-primary rounded-circle">
+                                            <i class="fe fe-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-muted text-overline m-0 text-center">Total of order with online payemnt</p>
+                                    <h3 class="fw-400 text-center m-t-10">
+                                        <?= $totalOnlinePayment ?>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card m-b-30">
+                            <div class="card-body">
+                                <div class="pb-2 text-center">
+                                    <div class="avatar avatar-lg">
+                                        <div class="avatar-title bg-soft-primary rounded-circle">
+                                            <i class="fe fe-user"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class=" text-center text-muted text-overline m-0">Total of orders wiht offline payment</p>
+                                    <h3 class="fw-400 text-center m-t-10"> <?= $totalOfflinePayment ?></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row ">
                     <div class="col-12">
                         <div class="card">

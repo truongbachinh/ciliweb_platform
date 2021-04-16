@@ -29,7 +29,7 @@ if (!isset($userId)) {
           header("location: users.php");
         }
         ?>
-        <a href="users.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
+        <a href="users.php" class="back-icon" onclick="turnOfInterval()"><i class="fas fa-arrow-left"></i></a>
         <img src="../user/avatar/<?php echo $row['ui_avatar']; ?>" alt="">
         <div class="details">
           <span><?php echo  $row['fullname'] ?></span>

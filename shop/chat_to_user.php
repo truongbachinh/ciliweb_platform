@@ -72,7 +72,7 @@ include "../config_shop.php";
                                     <div class="wrapper">
                                         <section class="chat-area">
                                             <header>
-                                                <a href="./index.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
+                                                <a href="./chat_to_user.php" class="back-icon" onclick="turnOfInterval()"><i class="fas fa-arrow-left"></i></a>
                                                 <img src="" alt="" id="chatToUserAvatar">
                                                 <div class="details">
                                                     <span id="chatToUserName"></span>
@@ -134,6 +134,11 @@ include "../config_shop.php";
             })
 
         });
+
+        function turnOfInterval() {
+            console.log("Setinter oke");
+            window.location.replace = "./chat_to_user.php";
+        }
     </script>
     <script src="./javascript/chat.js"></script>
 
