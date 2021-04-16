@@ -7,10 +7,12 @@ if (isset($userId)) {
     $outgoing_id = $userId;
     $incoming_id = mysqli_real_escape_string($link, $_POST['incoming_id']);
     $message = mysqli_real_escape_string($link, $_POST['message']);
+    $timeSendMsg = time();
+
     if (!empty($message)) {
-        $sql = mysqli_query($link, "INSERT INTO `chat_messages` (`msg_id`, `msg_incoming_id`, `msg_outcoming_id`, `msg_message`,`msg_time`) 
-                                        VALUES (NULL,{$incoming_id}, {$outgoing_id}, '{$message}', ' " . time() . "')") or die();
+        $sql = $link->query("INSERT INTO `chat_messages` (`msg_id`, `msg_incoming_id`, `msg_outcoming_id`, `msg_message`, `msg_time`)VALUES (NULL,{$incoming_id}, {$outgoing_id}, '{$message}', '{$timeSendMsg}')");
     }
+
     var_dump($outgoing_id);
     var_dump($incoming_id);
     var_dump($message);

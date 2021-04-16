@@ -47,7 +47,7 @@ if (!isset($userId)) {
     </section>
   </div>
 
-  <script src="../chat/javascript/chat.js"></script>
+  <!-- <script src="../chat/javascript/chat.js"></script> -->
 
 </body>
 

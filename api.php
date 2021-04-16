@@ -159,6 +159,20 @@ switch ($action) {
             $data = $query->fetch_assoc();
         }
         break;
+    case "get_user_chat_detail":
+
+        $talker = $_POST['id'];
+        $userId = $_SESSION["current_user"]["user_id"];
+        $user_id = mysqli_real_escape_string($link, $talker);
+        $sql = mysqli_query($link, "SELECT user.*, user_infor.* FROM user LEFT JOIN user_infor ON user_infor.ui_user_id = user.user_id WHERE `user_id` = {$talker}");
+        if (mysqli_num_rows($sql) > 0) {
+            // $row = mysqli_fetch_assoc($sql);
+            $data = $sql->fetch_assoc();
+        }
+        break;
+
+        $id = $_POST['id'];
+        break;
     case "feedback_product":
         $id = $_POST['id'];
 
@@ -358,6 +372,17 @@ switch ($action) {
         } else {
             $error = 400;
             $msg = "Error delete record: " . $link->error;
+        }
+        break;
+
+    case "chat_to_shop":
+        $talker = $_POST['id'];
+        $userId = $_SESSION["current_user"]["user_id"];
+        $user_id = mysqli_real_escape_string($link, $talker);
+        $sql = mysqli_query($link, "SELECT user.*, shop.* FROM user INNER JOIN shop ON shop.shop_user_id = user.user_id WHERE `user_id` = {$talker}");
+        if (mysqli_num_rows($sql) > 0) {
+            // $row = mysqli_fetch_assoc($sql);
+            $data = $sql->fetch_assoc();
         }
         break;
 }

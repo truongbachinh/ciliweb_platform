@@ -31,7 +31,7 @@ include "../config_user.php";
     </main>
     <?php include "../partials/js_libs.php"; ?>
     <?php include "../partials/footer_user.php"; ?>
-
+    <!-- <script src="../user/javascript/chat.js"></script> -->
     <script>
         $(document).ready(function() {
             var options = {
@@ -111,4 +111,5 @@ if (isset($queryInsertReivew)) {
     </script>
 <?php
 }
+
 ?>

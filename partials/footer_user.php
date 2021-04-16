@@ -245,4 +245,26 @@
 
         })
     }
+
+
+
+    function chatToShop(shopId) {
+        var pathFile = "../shop/image_shop/";
+        Utils.api("chat_to_shop", {
+            id: shopId
+        }).then(response => {
+
+            $('#chatToShopAvatar').attr('src', pathFile.concat(response.data.shop_avatar));
+            $("#chatToShopName").text(response.data.shop_name);
+            $("#chatToShopStatus").text(response.data.session_status);
+            // $("#chatToShopId").val(response.data.user_id);
+            $('#chatToShop').modal();
+
+        }).catch(err => {
+
+        })
+
+
+
+    }
 </script>

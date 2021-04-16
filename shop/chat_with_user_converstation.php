@@ -58,11 +58,11 @@ include "../config_shop.php";
                             </div>
                         </div>
                     </div>
-                    <div class=" modal fade" id="chatToUserForm" tabindex="-1" role="dialog" aria-labelledby="chatToUserForm" aria-hidden="true">
+                    <div class="modal fade" id="chatToUserForm" tabindex="-1" role="dialog" aria-labelledby="chatToUserForm" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="chatToUserForm">Chat with user</h5>
+                                    <h5 class="modal-title" id="chatToUserForm">Chat with shop <?= $shopChat['shop_name'] ?></h5>
                                     </h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -73,18 +73,17 @@ include "../config_shop.php";
                                         <section class="chat-area">
                                             <header>
                                                 <a href="./index.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
-                                                <img src="" alt="" id="chatToUserAvatar">
+                                                <img src="" alt="" id="chatToShopAvatar">
                                                 <div class="details">
-                                                    <span id="chatToUserName"></span>
-                                                    <p id="chatToUserStatus"></p>
-
+                                                    <span id="chatToShopName"></span>
+                                                    <p id="chatToShopStatus"></p>
                                                 </div>
                                             </header>
                                             <div class="chat-box">
 
                                             </div>
-                                            <form action="#" class="typing-area" onsubmit="myFunction()">
-                                                <input type="text" class="incoming_id" name="incoming_id" id="incoming_id" value="" hidden>
+                                            <form action="#" class="typing-area">
+                                                <input type="hidden" class="incoming_id" name="incoming_id" id="chatToShopId" value="<?= $shopUserId ?>">
                                                 <input type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
                                                 <button><i class="fab fa-telegram-plane"></i></button>
                                             </form>
@@ -108,36 +107,12 @@ include "../config_shop.php";
 
     <script>
         document.addEventListener("DOMContentLoaded", function(e) {
-            var userId = null
-
-            $(document).on('click', '.btn-chat-user', function(e) {
-
-                e.preventDefault();
-                var pathFile = "../user/avatar/";
-                const userId = parseInt($(this).data("id"));
-                console.log("addd", userId);
-                $('#chatToUserForm').modal();
-                Utils.api('get_user_chat_detail', {
-                    id: userId
-                }).then(response => {
-                    $('#chatToUserAvatar').attr('src', pathFile.concat(response.data.ui_avatar));
-                    $("#chatToUserName").text(response.data.fullname);
-                    $("#chatToUserStatus").text(response.data.session_status);
-                    $('input[id=incoming_id]').attr('value', response.data.user_id);
-                    $('#chatToUserForm').modal();
-                }).catch(err => {})
-
-                setTimeout(() => {
-                    MyFunction();
-                }, 1000);
-
-            })
-
-        });
+            function chatToUser(userId) {
+                console.log(userId);
+                $('#chatToUserFrom').modal();
+            }
+        })
     </script>
-    <script src="./javascript/chat.js"></script>
-
-
 </body>
 
 </html>
