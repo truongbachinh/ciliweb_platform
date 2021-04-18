@@ -436,7 +436,7 @@ CREATE TABLE `reviews` (
   `review_shop_id` int(20) NOT NULL,
   `review_product_id` int(20) NOT NULL,
   `review_image` varchar(255) NOT NULL,
-  `review_video` varchar(255) NOT NULL,
+  `review_video` varchar(1000) NOT NULL,
   `rank` int(10) NOT NULL,
   `review_comment` varchar(255) NOT NULL,
   `review_time` int(11) NOT NULL

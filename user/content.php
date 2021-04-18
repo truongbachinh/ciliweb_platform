@@ -15,7 +15,9 @@ if ($t == 'foodInfo') {
 } elseif ($t == 'my_order-detail') {
     include('my_bill.php');
 } else {
+
     include('advertisement.php');
     include('categories.php');
+    include('shop_providers.php');
     include('all_products.php');
 }

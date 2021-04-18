@@ -53,7 +53,6 @@
     $(".buy-form").submit(function(event) {
         event.preventDefault();
         console.log("data", $(this).serializeArray());
-
         $.ajax({
             type: "POST",
             url: '../cart/process_cart.php?view=add_to_cart',
@@ -61,7 +60,7 @@
             success: function(response) {
                 response = JSON.parse(response);
                 if (response.status == 0) {
-
+                    window.location.replace("../account/login.php");
                 } else {
 
                     swal("Notice", response.message, "success");
@@ -95,7 +94,7 @@
             success: function(response) {
                 response = JSON.parse(response);
                 if (response.status == 0) {
-
+                    window.location.replace("../account/login.php");
                 } else {
 
                     swal("Notice", response.message, "success");
@@ -124,7 +123,7 @@
                     if (res) {
                         var response = JSON.parse(res);
                         if (response.status == 0) {
-
+                            window.location.replace("../account/login.php");
 
                         } else {
                             $.get('../cart/ajax_cart_content.php', function(cartContentHTML) {
@@ -155,7 +154,7 @@
             success: function(response) {
                 response = JSON.parse(response);
                 if (response.status == 0) {
-
+                    window.location.replace("../account/login.php");
                 } else {
                     swal("Notice", "Delete product successfully!", "success");
                     $.get('../cart/ajax_cart_content.php', function(cartContentHTML) {

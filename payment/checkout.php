@@ -380,8 +380,12 @@ if (isset($_POST["buttonCheckout"])) {
     }
 
     $insertOrderString = "";
+
+    $current = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh'));
+
+    $timeCheckout = $current->format('Y/m/d H:i:s');
     foreach ($cartInforOrder  as $keys => $carts) {
-        $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" . time() . "','1','1')");
+        $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" .  $timeCheckout . "','1','1')");
         $orderId = ($link->insert_id);
         $shopIdProduct = $carts['shop_id'];
 

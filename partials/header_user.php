@@ -193,9 +193,66 @@ ob_start();
                     </a>
                 </div>
             <?php else : ?>
-                <li class="nav-item m-r-3">
-                    <a href="../account/login.php" class="btn btn-dark">Login</a>
-                </li>
+                <div class="header-content">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-nav">
+                        <a class="navbar-brand" href="../user/index.php" id="logo-brand">
+                            <i class="fas fa-home"></i> Seller channel
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ciliweb-navBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="ciliweb-navBar">
+                            <ul class="navbar-nav mr-auto ">
+                                <li class="nav-item active">
+
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ml-auto ">
+                                &nbsp;
+                                <li class="nav-item">
+                                    <a class="nav-link " id="login" href="../account/login.php"><i class="fas fa-sign-in-alt"></i>Log in</a>
+                                </li>
+                                <div class="verticalLine">
+
+                                </div>
+                                <li class="nav-item">
+                                    <a class="nav-link " id="sign-up" href="../account/register.php"><i class="fas fa-user-plus"></i>Sign up</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <nav class="navbar navbar-expand-lg navbar-light bg-nav">
+                        <a class="navbar-brand" href="https://ciliweb.vn/ciliweb_project/shop/register_shop.php">
+                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="55" height="55">
+                        </a>
+                        <div class="collapse navbar-collapse">
+                        </div>
+                    </nav>
+                    <section class="search-bar search-content">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-9 col-md-8 col-sm-5 col-6 mx-auto ">
+                                    <form action="">
+                                        <div class="input">
+                                            <div class="input-group">
+                                                <input type="search" class="form-control empty d-flex justify-content-center" id="searchNameFood" value="<?php if (isset($_POST['searchText'])) echo $_POST['searchText'] ?>" placeholder="Search seafood..." />
+
+                                                <!-- <span class="input-group-text border-0" id="search-addon">
+                                        <i class="fas fa-search"></i>
+                                    </span> -->
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+
+
+
+
             <?php endif; ?>
         </ul>
 

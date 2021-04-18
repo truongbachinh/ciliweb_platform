@@ -216,10 +216,10 @@ $shopUserId = $shopChat['user_id']
                             <!-- <a href="" class="btn btn-info  btn-show-shop-chat" role="button" data-id="<?= $shopUserId ?>"><i class="mdi mdi-chat"></i> </a> -->
                             <div class="verticalLine">
                             </div>
-                            <input type="submit" name="buyProduct" class="btn btn-outline-danger" id="btn-danger-now" value="Order Now">
+                            <input type="submit" name="buyProduct" class="btn btn-outline-danger " id="btn-danger-now" value="Order Now">
                             <div class="verticalLine">
                             </div>
-                            <input type="submit" name="buyProduct" class="btn btn-danger" id="btn-danger" value="Add To Cart">
+                            <input type="submit" name="buyProduct" class="btn btn-danger " id="btn-danger" value="Add To Cart">
                         </div>
 
                     <?php

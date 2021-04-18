@@ -13,11 +13,12 @@ if (isset($userId)) {
         $sql = $link->query("INSERT INTO `chat_messages` (`msg_id`, `msg_incoming_id`, `msg_outcoming_id`, `msg_message`, `msg_time`)VALUES (NULL,{$incoming_id}, {$outgoing_id}, '{$message}', '{$timeSendMsg}')");
     }
 
-    var_dump($outgoing_id);
-    var_dump($incoming_id);
-    var_dump($message);
-    var_dump($sql);
-    exit;
-} else {
-    header("location: ../login.php");
+    // var_dump($outgoing_id);
+    // var_dump($incoming_id);
+    // var_dump($message);
+    // var_dump($sql);
+    // exit;
 }
+//  else {
+//     header("location: ../login.php");
+// }
