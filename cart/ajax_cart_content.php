@@ -58,6 +58,15 @@
                                 $count = 0;
                                 $i = 1;
                                 foreach ($myCartProduct  as $rowMyCartProduct) {
+
+                                    $selectQuantity  = $link->query("SELECT products.p_id, products.p_quantity FROM products where p_id =$rowMyCartProduct[p_id] ");
+                                    $quantityP = mysqli_fetch_array($selectQuantity);
+                                    // print_r($quan);
+                                    if ($quantityP["p_quantity"] < $rowMyCartProduct["cart_quantity"]) {
+                                        $deleteProduct = $link->query("DELETE FROM cart where cart_product_id = $quantityP[p_id]");
+                                    }
+                                    // var_dump($deleteProduct);
+
                                 ?>
                                     <tr>
                                         <td><?= $i++ ?></td>
@@ -90,6 +99,7 @@
                                     // var_dump($cost);
                                     $total += $cost;
                                 }
+
                                 ?>
                                 <tr>
                                     <td>Total Cost</td>

@@ -382,8 +382,8 @@ if (isset($_POST["buttonCheckout"])) {
     $insertOrderString = "";
 
     $current = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh'));
-
     $timeCheckout = $current->format('Y/m/d H:i:s');
+
     foreach ($cartInforOrder  as $keys => $carts) {
         $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" .  $timeCheckout . "','1','1')");
         $orderId = ($link->insert_id);
@@ -392,30 +392,54 @@ if (isset($_POST["buttonCheckout"])) {
         $cartCheckoutProduct  = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id = '$cartUserId' AND shop.shop_id = '$shopIdProduct' ");
         //var_dump($cartCheckoutProduct);
         $checkOutOrder = array();
+        $checkOutP = array();
         while ($rowOrder = mysqli_fetch_array($cartCheckoutProduct)) {
             $checkOutOrder[] =  $rowOrder;
         }
 
 
         $insertString = "";
+        $updateQuantity = "";
+        $py = "";
         foreach ($checkOutOrder  as $key => $cart) {
+
             $insertString .= "(NULL, '" . $orderId . "', '" . $cart['cart_product_id'] . "', '" . $cart['cart_quantity']  . "', '" . $cart['p_price'] . "', '" . time() . "')";
             if ($key != count($checkOutOrder) - 1) {
                 $insertString .=  ",";
             }
+
+            $caculateQuantity = ($cart['p_quantity'] -  $cart['cart_quantity']);
+            $updateQuantityProduct = $link->query("UPDATE products SET p_quantity =  $caculateQuantity WHERE p_id = '$cart[p_id]'");
         }
-        // var_dump($insertString);
+
+        // var_dump($updateQuantityProduct);
+        // var_dump($updateQuantity < $cart['p_id']);
+        // var_dump($updateQuantity);
+
+
+        // exit;
         $orderDetail = mysqli_query($link, "INSERT INTO `order_items` (`id`, `order_id`, `order_product_id`, `quantity`, `price`, `create_time`) VALUES " . $insertString . ";");
 
+        // if ($orderDetail == true) {
+
+        //     // $updateQuantityProduct = $link->query("UPDATE products SET p_quantity = ");
+        //     $stmt = $link->query("UPDATE `products` SET `p_quantity`= $updateQuantity WHERE `p_id`=$py");
+
+        //     $stmt = $conn->prepare("UPDATE `submission` SET `submission_id`=?,`submission_name`=?,`submission_description`=?,`submission_deadline`=? WHERE `id`=?");
+        //     $stmt->bind_param("ssssi", $submissionCode, $submissionName, $description, $deadline, $id);
+        //     if ($stmt->execute()) {
+        //         $msg = "Record updated successfully";
+        //     }
+        // }
 
         $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_city`, `oda_district`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $_POST[firstName]','$_POST[lastName]','$_POST[address1]','$_POST[address2]','$_POST[phoneNumber]','$_POST[email]','$_POST[calc_shipping_provinces]','$_POST[calc_shipping_district]','$_POST[zipCode]','$_POST[noteCheckout]', '" . time() . "')");
         // echo $success = "order thành công";
-
-        var_dump($order);
-        var_dump($orderDetail);
-        var_dump($orderAddress);
+        // var_dump($stmt);
+        // var_dump($order);
+        // var_dump($orderDetail);
+        // var_dump($orderAddress);
     }
-    exit;
+    // exit;
     if (isset($order) && isset($orderDetail) && isset($orderAddress)) {
     ?>
         <script>

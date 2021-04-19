@@ -41,9 +41,14 @@ $query_search = $link->query("SELECT categories.*, shop.*, products.* from produ
             $totalSold = $queryTotalSold->fetch_assoc();
             $totalSoldOfShop = $totalSold['total_sold'];
             $totalProduct = $productInfor['p_quantity'];
+            if ($totalProduct != 0) {
+                $with = $totalSoldOfShop / $totalProduct * 100;
+                $widthBar = $with . '%';
+            } else {
+                $widthBar = '100%';
+            }
 
-            $with = $totalSoldOfShop / $totalProduct * 100;
-            $widthBar = $with . '%';
+
 
         ?>
             <div class="card align-items-center" id="card-product">
@@ -65,7 +70,7 @@ $query_search = $link->query("SELECT categories.*, shop.*, products.* from produ
                 </a>
                 <div class="card-footer-product">
                     <?php
-                    if ($productInfor["p_quantity"] > "0" &&   $totalSoldOfShop <  $totalProduct) {
+                    if ($productInfor["p_quantity"] > "0") {
                     ?>
                         <form action="../cart/cart.php?view=add_to_cart" class="buy-now-form" method="post" enctype="multipart/form-data">
                             <input type="text" value="1" name="quantity[<?= $productInfor['p_id'] ?>]" hidden="true">

@@ -178,6 +178,10 @@ $noteCheckout = $GLOBALS['checkout_infor']["noteCheckout"];
                                     if ($key != count($checkOutOrder) - 1) {
                                         $insertString .=  ",";
                                     }
+
+                                    $caculateQuantity = ($cart['p_quantity'] -  $cart['cart_quantity']);
+
+                                    $updateQuantityProduct = $link->query("UPDATE products SET p_quantity =  $caculateQuantity WHERE p_id = '$cart[p_id]'");
                                 }
                                 // var_dump($insertString);
                                 $orderDetail = mysqli_query($link, "INSERT INTO `order_items` (`id`, `order_id`, `order_product_id`, `quantity`, `price`, `create_time`) VALUES " . $insertString . ";");
