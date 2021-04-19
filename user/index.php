@@ -35,6 +35,10 @@ include "../config_user.php";
     <!-- <script src="../user/javascript/chat.js"></script> -->
     <script>
         $(document).ready(function() {
+            $('.table_my_order').DataTable();
+        })
+
+        $(document).ready(function() {
             var options = {
                 max_value: 5,
                 step_size: 0.5,

@@ -30,3 +30,5 @@
 <!-- rater -->
 <script src="../assets/js/rater.js"></script>
 <script src="../assets/js/rater.min.js"></script>
+<!-- pagination -->
+<script src="../assets/vendor/jquery/jquery.dataTables.js"></script>

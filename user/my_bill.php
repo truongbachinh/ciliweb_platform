@@ -14,6 +14,8 @@ while ($row = mysqli_fetch_array($res)) {
     $phone = $row['oda_phone'];
     $orderTime = $row['order_create_time'];
 }
+$isFB  = $link->query("SELECT orders.shipping_order_status as order_status FROM orders WHERE orders.id = $idOrder");
+$isFeedback = mysqli_fetch_assoc($isFB);
 ?>
 
 
@@ -30,7 +32,8 @@ while ($row = mysqli_fetch_array($res)) {
                             <h1 class="bill-title"> <i> Bill Detail</i> </h1>
                         </div>
                         <div id="order-time">
-                            <p class="bill-title">Time order, <?= date("Y-m-d H:i:s", $orderTime) ?> </p>
+                            <!-- <p class="bill-title">Time order, <?= date("Y-m-d H:i:s", $orderTime) ?> </p> -->
+                            <p class="bill-title">Time order, <?= $orderTime ?> </p>
                         </div>
                     </div>
                     <hr class="hr-line">
@@ -63,7 +66,14 @@ while ($row = mysqli_fetch_array($res)) {
                                                 <th>Price</th>
                                                 <th>Quantity</th>
                                                 <th>Total</th>
-                                                <th>Feedback</th>
+                                                <?php
+                                                if ($isFeedback['order_status'] == '3') {
+                                                ?>
+                                                    <th>Feedback</th>
+                                                <?php
+                                                }
+                                                ?>
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -100,13 +110,24 @@ while ($row = mysqli_fetch_array($res)) {
                                                     <td class="bill-product"><?= number_format($order["price"], 0, ",", ".") ?>VNĐ</td>
                                                     <td class="bill-product"><?= $order["quantity"] ?></td>
                                                     <td class="bill-product"><?= number_format($cost = $order["quantity"] * $order["price"], 0, ",", ".") ?>VNĐ</td>
-                                                    <td style="text-align:center">
-                                                        <div class="btn-group" role="group" aria-label="Basic example">
-                                                            <button onclick="feedbackProduct(<?= $order['product_id'] ?>)" class="btn btn-info" role="button">
-                                                                <i class="mdi mdi-pencil-outline"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
+                                                    <?php
+
+                                                    if ($isFeedback['order_status'] == '3') {
+
+
+                                                    ?>
+                                                        <td style="text-align:center">
+                                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                                <button onclick="feedbackProduct(<?= $order['product_id'] ?>)" class="btn btn-info" role="button">
+                                                                    <i class="mdi mdi-pencil-outline"></i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    <?php
+                                                    }
+                                                    ?>
+
+
                                                 </tr>
                                             <?php
                                                 $count += $order["quantity"];

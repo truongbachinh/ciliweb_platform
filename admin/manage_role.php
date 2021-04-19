@@ -1,12 +1,16 @@
 <?php
 include "../config_admin.php";
-$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 1;
-$currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
-$offest = ($currentPage - 1) * $pPerPage;
-$countRole = mysqli_query($link, "SELECT * from role");
-$res = mysqli_query($link, "SELECT * from `role`  order by `role_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
-$totalRole = $countRole->num_rows;
-$totalPage = ceil($totalRole / $pPerPage);
+// $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 1;
+// $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
+// $offest = ($currentPage - 1) * $pPerPage;
+// $countRole = mysqli_query($link, "SELECT * from role");
+// $res = mysqli_query($link, "SELECT * from `role`  order by `role_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
+// $totalRole = $countRole->num_rows;
+// $totalPage = ceil($totalRole / $pPerPage);
+
+
+
+$res = mysqli_query($link, "SELECT * from `role`  order by `role_id`");
 ?>
 
 
@@ -37,22 +41,22 @@ $totalPage = ceil($totalRole / $pPerPage);
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <!-- <div class="col-sm-6">
                                         <div class="form-group has-search">
                                             <span class="fa fa-search form-control-feedback"></span>
                                             <input type="text" class="form-control" placeholder="Search">
                                         </div>
-                                    </div>
-                                    <div class="col-sm-6 ">
+                                    </div> -->
+                                    <div class="col-sm-12 ">
                                         <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addRole"><i class="mdi mdi-clipboard-plus"></i> Add Role
                                         </a>
                                     </div>
                                 </div>
-                                <?php
-                                include('../pagination/pagination.php');
-                                ?>
+                                <!-- <?php
+                                        include('../pagination/pagination.php');
+                                        ?> -->
                                 <div class="table-responsive p-t-10">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="table_manage_role" class="table table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>Id</th>
@@ -118,9 +122,9 @@ $totalPage = ceil($totalRole / $pPerPage);
                                         </tbody>
                                     </table>
                                 </div>
-                                <?php
-                                include('../pagination/pagination.php');
-                                ?>
+                                <!-- <?php
+                                        include('../pagination/pagination.php');
+                                        ?> -->
                             </div>
                         </div>
                     </div>
@@ -253,6 +257,9 @@ $totalPage = ceil($totalRole / $pPerPage);
     <?php include "../partials/js_libs.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            $('#table_manage_role').DataTable();
+        });
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
 

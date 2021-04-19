@@ -43,7 +43,7 @@ $totalPage = ceil($totalUser / $pPerPage);
                                 </div>
 
                                 <div class="table-responsive p-t-10">
-                                    <table class="table table-responsive center table-bordered table-striped">
+                                    <table id="table_manage_user" class="table table-responsive center table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th scope="col">Id</th>
@@ -255,6 +255,9 @@ $totalPage = ceil($totalUser / $pPerPage);
     <?php include "../partials/js_libs.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            $('#table_manage_user').DataTable();
+        })
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
             $(document).on('click', ".btn-delete-user", function(e) {

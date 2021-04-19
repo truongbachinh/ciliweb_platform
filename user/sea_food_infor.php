@@ -210,9 +210,9 @@ $shopUserId = $shopChat['user_id']
                     ?>
                         <div class="Buying">
 
-                            <a onclick="chatToShop(<?= $shopUserId ?>)" name="chat" class="btn btn-info" role="button">
-                                <i class="mdi mdi-pencil-outline"></i>
-                            </a>
+                            <input onclick="chatToShop(<?= $shopUserId ?>)" name="chat" value="Chat" class="btn btn-outline-info" role="button">
+
+                            </input>
                             <!-- <a href="" class="btn btn-info  btn-show-shop-chat" role="button" data-id="<?= $shopUserId ?>"><i class="mdi mdi-chat"></i> </a> -->
                             <div class="verticalLine">
                             </div>

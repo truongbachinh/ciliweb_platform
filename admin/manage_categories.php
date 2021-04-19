@@ -51,11 +51,11 @@ $totalPage = ceil($totalCtg / $pPerPage);
                                         </a>
                                     </div>
                                 </div>
-                                <?php
-                                include('../pagination/pagination.php');
-                                ?>
+                                <!-- <?php
+                                        include('../pagination/pagination.php');
+                                        ?> -->
                                 <div class="table-responsive p-t-10">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="table_manage_categories" class="table table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>Id</th>
@@ -133,9 +133,9 @@ $totalPage = ceil($totalCtg / $pPerPage);
                                         </tbody>
                                     </table>
                                 </div>
-                                <?php
-                                include('../pagination/pagination.php');
-                                ?>
+                                <!-- <?php
+                                        include('../pagination/pagination.php');
+                                        ?> -->
                             </div>
                         </div>
                     </div>
@@ -279,6 +279,9 @@ $totalPage = ceil($totalCtg / $pPerPage);
     <?php include "../partials/js_libs.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            $('#table_manage_categories').DataTable();
+        });
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
             $(document).on('click', ".btn-delete-categories", function(e) {

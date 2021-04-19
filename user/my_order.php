@@ -21,15 +21,15 @@ $orderProduct = $link->query(" ");
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group has-search">
                                     <span class="fa fa-search form-control-feedback"></span>
                                     <input type="text" class="form-control" placeholder="Search">
                                 </div>
                             </div>
-                        </div>
-                        <div class="table-responsive p-t-10">
+                        </div> -->
+                        <div class="table-responsive p-t-10 m-t-50">
                             <?php
                             if (isset($rowShopInfor)) {
 
@@ -45,7 +45,7 @@ $orderProduct = $link->query(" ");
                             ?>
                                     <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Order of shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $rowS['shop_name'] . "</font>" ?></a></i>
                                     </div>
-                                    <table class="table table-bordered table-striped">
+                                    <table class=" table_my_order table table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th> Id</th>
@@ -69,7 +69,8 @@ $orderProduct = $link->query(" ");
                                                     <td><?= $i++ ?></td>
                                                     <td><?= $rowMyOrderProduct['order_id'] ?></td>
                                                     <td>
-                                                        <?= "Start: ", date("Y-m-d H:i:s", $rowMyOrderProduct["order_create_time"]) ?>
+                                                        <!-- <?= "Start: ", date("Y-m-d H:i:s", $rowMyOrderProduct["order_create_time"]) ?> -->
+                                                        <?= $rowMyOrderProduct["order_create_time"] ?>
                                                     </td>
                                                     <td><?= number_format($rowMyOrderProduct['order_total_cost'], 0, ",", ".") ?> VNĐ</td>
                                                     <td><?= $rowMyOrderProduct['order_total_amount'] ?></td>

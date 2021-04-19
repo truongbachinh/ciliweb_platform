@@ -27,22 +27,22 @@ $shopId = $shopIF['shop_id'];
 // var_dump("result-------------------------------------------", $where);
 
 
-$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 3;
-$currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
-$offest = ($currentPage - 1) * $pPerPage;
-$countOrder = $link->query("SELECT * from orders where order_shop_id = $shopId");
-$totalOrder = $countOrder->num_rows;
-$totalPage = ceil($totalOrder / $pPerPage);
+// $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 3;
+// $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
+// $offest = ($currentPage - 1) * $pPerPage;
+// $countOrder = $link->query("SELECT * from orders where order_shop_id = $shopId");
+// $totalOrder = $countOrder->num_rows;
+// $totalPage = ceil($totalOrder / $pPerPage);
 
-if (!empty($where)) {
-    $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId  AND (" . $where . ") order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
-} else {
-    $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
-}
+// if (!empty($where)) {
+//     $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId  AND (" . $where . ") order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
+// } else {
+//     $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
+// }
 // var_dump("result-------------------------------------------", $res);
 
 
-
+$res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId  ");
 
 ?>
 
@@ -105,11 +105,11 @@ if (!empty($where)) {
                                         </div>
                                     </div>
                                 </div>
-                                <?php
-                                include("../pagination/pagination.php");
-                                ?>
+                                <!-- <?php
+                                        include("../pagination/pagination.php");
+                                        ?> -->
                                 <div class="table-responsive p-t-10">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="table_order" class="table table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>Order Id</th>
@@ -203,9 +203,9 @@ if (!empty($where)) {
                                         </tbody>
                                     </table>
                                 </div>
-                                <?php
-                                include("../pagination/pagination.php");
-                                ?>
+                                <!-- <?php
+                                        include("../pagination/pagination.php");
+                                        ?> -->
                             </div>
                         </div>
                     </div>
@@ -308,6 +308,9 @@ if (!empty($where)) {
     <?php include "../partials/js_libs.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            $('#table_order').DataTable();
+        });
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
             $(document).on('click', '.btn-edit-order', function(e) {

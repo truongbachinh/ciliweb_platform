@@ -24,6 +24,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
 
 <head>
     <?php include "../partials/html_header.php"; ?>
+
 </head>
 
 <body class="sidebar-pinned ">
@@ -58,7 +59,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                 </div>
 
                                 <div class="table-responsive p-t-10">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="table_id" class="table table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>Id</th>
@@ -296,7 +297,11 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
     </main>
     <?php include "../partials/js_libs.php"; ?>
 
+
     <script>
+        $(document).ready(function() {
+            $('#table_id').DataTable();
+        });
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
             $(document).on('click', ".btn-delete-product", function(e) {
