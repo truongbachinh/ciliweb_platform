@@ -12,6 +12,8 @@ if ($t == 'foodInfo') {
     include('profile.php');
 } elseif ($t == 'myorder') {
     include('my_order.php');
+} elseif ($t == 'conversation') {
+    include('chat_to_shop.php');
 } elseif ($t == 'my_order-detail') {
     include('my_bill.php');
 } else {

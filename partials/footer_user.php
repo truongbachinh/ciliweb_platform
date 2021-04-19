@@ -266,4 +266,33 @@
 
 
     }
+
+    function listChatToShop(shopId) {
+
+        var pathFile = "../shop/image_shop/";
+        Utils.api("chat_to_shop", {
+            id: shopId
+        }).then(response => {
+
+            $('#chatToShopAvatar').attr('src', pathFile.concat(response.data.shop_avatar));
+            $("#chatToShopName").text(response.data.shop_name);
+            $("#chatToShopStatus").text(response.data.session_status);
+            $('input[id=incoming_id]').attr('value', response.data.user_id);
+            $('#chatToShop').modal();
+
+        }).catch(err => {
+
+        })
+        setTimeout(() => {
+            MyFunction();
+        }, 1000);
+
+    }
+
+    function turnOfInterval() {
+        console.log("Setinter oke");
+        window.location.replace = "./chat_to_user.php";
+    }
 </script>
+
+<script src="./javascript/chat.js"></script>

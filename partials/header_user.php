@@ -59,6 +59,7 @@ ob_start();
                                     </a>
                                     <div class="dropdown-menu  dropdown-menu-right">
                                         <a href="../user/index.php?view=profile" class="dropdown-item"> Profile</a>
+                                        <a href="../user/index.php?view=conversation" class="dropdown-item"> My conversation</a>
                                         <a href="../user/index.php?view=myorder" class="dropdown-item"> My Order</a>
                                         <a href="../account/change_password.php" class="dropdown-item"> Reset Password</a>
                                         <a class="dropdown-item" href=""> Help </a>
