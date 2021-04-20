@@ -1,7 +1,9 @@
 <?php
 
 include "../config_admin.php";
-
+if (!isset($_SESSION['current_user'])) {
+    header("location: ./account/login.php");
+}
 
 $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 3;
 $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;

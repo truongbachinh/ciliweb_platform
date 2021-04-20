@@ -2,7 +2,9 @@
 include "../config_shop.php";
 $resultShopInfor = $link->query("SELECT * from shop where shop_user_id = '$userId'");
 $shopInfor = mysqli_fetch_assoc($resultShopInfor);
-
+if (!isset($_SESSION['current_user'])) {
+    header("location: ../account/login.php");
+}
 ?>
 <?php
 if (isset($_POST["addShopInfor"])) {

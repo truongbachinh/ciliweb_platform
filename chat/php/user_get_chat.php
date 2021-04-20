@@ -18,7 +18,7 @@ if (isset($userId)) {
                 $output .= '<div class="chat outgoing">
                                 <div class="details">
                                     <p>' . $row['msg_message'] . '</p>
-                                    <small>' . date("    H:i:s", $row['msg_time']) . '</small>
+                                    <small>' .  date('H:i:s', strtotime($row['msg_time']))  . '</small>
                                 </div>
                                 </div>';
             } else {
@@ -26,7 +26,7 @@ if (isset($userId)) {
                                 <img src="../shop/image_shop/' . $row['shop_avatar'] . '" alt="">
                                 <div class="details">
                                     <p>' . $row['msg_message'] . '</p>
-                                    <small>' . date("H:i:s", $row['msg_time']) . '</small>
+                                    <small>' .  date('H:i:s', strtotime($row['msg_time']))  . '</small>
                                 </div>
                                 </div>';
             }

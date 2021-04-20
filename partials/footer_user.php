@@ -285,7 +285,7 @@
         })
         setTimeout(() => {
             MyFunction();
-        }, 1000);
+        }, 500);
 
     }
 

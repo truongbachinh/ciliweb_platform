@@ -1,6 +1,8 @@
 <?php
 include "../config_admin.php";
-
+if (!isset($_SESSION['current_user'])) {
+    header("location: ./account/login.php");
+}
 ?>
 
 <!DOCTYPE html>

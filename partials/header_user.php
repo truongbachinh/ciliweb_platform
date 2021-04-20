@@ -84,7 +84,7 @@ ob_start();
                                     <form action="">
                                         <div class="input">
                                             <div class="input-group">
-                                                <input type="search" class="form-control empty d-flex justify-content-center" id="searchNameFood" value="<?php if (isset($_POST['searchText'])) echo $_POST['searchText'] ?>" placeholder="Search seafood..." />
+                                                <input type="search" class="form-control empty d-flex justify-content-center search-box" id="searchNameFood" value="<?php if (isset($_POST['searchText'])) echo $_POST['searchText'] ?>" placeholder="Search seafood..." />
 
                                                 <!-- <span class="input-group-text border-0" id="search-addon">
                                         <i class="fas fa-search"></i>

@@ -69,16 +69,6 @@
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="../shop/manage_staff.php" class=" menu-link">
-                                    <span class="menu-label">
-                                        <span class="menu-name">Manage Staff</span>
-                                    </span>
-                                    <span class="menu-icon">
-                                        <i class="mdi mdi-account-multiple   mdi-24px "></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="menu-item">
                                 <a href="../shop/manage_order.php" class=" menu-link">
                                     <span class="menu-label">
                                         <span class="menu-name">Manage Order</span>

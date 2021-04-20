@@ -1,5 +1,8 @@
 <?php
 include "../config_admin.php";
+if (!isset($_SESSION['current_user'])) {
+    header("location: ./account/login.php");
+}
 $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 2;
 $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
 $offest = ($currentPage - 1) * $pPerPage;

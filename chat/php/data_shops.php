@@ -23,7 +23,9 @@ while ($row = mysqli_fetch_assoc($query)) {
             <div class="details">
                 <span><?= $row['fullname'] ?></span>
                 <p><?= $you . $msg ?></p>
-                <small><?= date("H:i:s", $row2['msg_time']) ?></small>
+                <small><?=
+                        date('H:i:s', strtotime($row2['msg_time']))
+                        ?></small>
 
             </div>
         </div>

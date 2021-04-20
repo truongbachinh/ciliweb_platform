@@ -1,5 +1,8 @@
 <?php
 include "../config_shop.php";
+if (!isset($_SESSION['current_user'])) {
+    header("location: ../account/login.php");
+}
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
 $idOrder = $_GET["id"];
@@ -20,6 +23,7 @@ while ($row = mysqli_fetch_array($res)) {
     $phone = $row['oda_phone'];
     $orderTime = $row['order_create_time'];
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +51,7 @@ while ($row = mysqli_fetch_array($res)) {
                                     <h1 class="bill-title"> <i> Bill Detail</i> </h1>
                                 </div>
                                 <div id="order-time">
-                                    <p class="bill-title">Time order, <?= $orderTime ?> </p>
+                                    <p class="bill-title">Time order, <?= date('d-M-Y  H:i:s', strtotime($orderTime))  ?> </p>
                                 </div>
                             </div>
                             <hr class="hr-line">

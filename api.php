@@ -297,7 +297,7 @@ if ($isLoggedIn) {
             $user_order = $orderInfor["username"];
             $total_money_order = $orderInfor["order_total_cost"];
             $order_id_paymeny = time();
-            $shippingCreateTime = time();
+            $shippingCreateTime = $timeInVietNam;
             $current = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh'));
             $timePayment = $current->format('Y-m-d H:i:s');
             $orderShipping = $_POST['updateOrderShipping'];
@@ -318,16 +318,26 @@ if ($isLoggedIn) {
                 $subject = "Notification from Cili website";
                 $text_message    =   "hello";
                 send_mail($email, $subject, $message, $text_message);
-                if ($orderInfor["payment_order_status"] == 1 && $orderShipping == 3) {
+                // if ($orderInfor["payment_order_status"] == 1 && $orderShipping == 3) {
+                //     $sql = "SELECT * FROM payments WHERE payment_order_id = '$id'";
+                //     if (isset($sql)) {
+                //         $query = mysqli_query($link, $sql);
+                //         $row = mysqli_num_rows($query);
+                //     }
+                //     if ($row > 0) {
+                //         $updatePayment  = $link->query("UPDATE `payments` SET  `money` = '$total_money_order', `time` = '$timePayment' WHERE  `payment_order_id` = '$id'");
+                //     } else {
+                //         $addPayment = $link->query("INSERT INTO `payments` (`id`, `payment_order_id`, `order_id`, `user_order`, `money`, `time`) VALUES (NULL, '$id', '$order_id_paymeny', '$user_order', ' $total_money_order',  '$timePayment');");
+                //     }
+                // }
+                if ($orderInfor["payment_order_status"] == 2 && $orderShipping == 4) {
                     $sql = "SELECT * FROM payments WHERE payment_order_id = '$id'";
                     if (isset($sql)) {
                         $query = mysqli_query($link, $sql);
                         $row = mysqli_num_rows($query);
                     }
                     if ($row > 0) {
-                        $updatePayment  = $link->query("UPDATE `payments` SET  `money` = '$total_money_order', `time` = '$timePayment' WHERE  `payment_order_id` = '$id'");
-                    } else {
-                        $addPayment = $link->query("INSERT INTO `payments` (`id`, `payment_order_id`, `order_id`, `user_order`, `money`, `time`) VALUES (NULL, '$id', '$order_id_paymeny', '$user_order', ' $total_money_order',  '$timePayment');");
+                        $updatePayment  = $link->query("DELETE from payments WHERE  `payment_order_id` = '$id'");
                     }
                 }
                 if ($update) {
@@ -341,7 +351,7 @@ if ($isLoggedIn) {
 
         case "update_order_user_shipping_infor":
             $id = $_POST['id'];
-            $shippingReceiveTime = time();
+            $shippingReceiveTime = $timeInVietNam;
             $orderShipping = $_POST['updateShippingStatus'];
             if ($orderShipping == 3) {
                 $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping', `shipping_receive_time` = '$shippingReceiveTime' WHERE `id` = $id");

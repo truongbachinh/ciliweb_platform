@@ -146,7 +146,7 @@ $noteCheckout = $GLOBALS['checkout_infor']["noteCheckout"];
                             $insertOrderString = "";
                             foreach ($cartInforOrder  as $keys => $carts) {
 
-                                $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" . time() . "','2','1')");
+                                $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" .   $timeInVietNam . "','2','1')");
                                 $orderId = ($link->insert_id);
                                 $shopIdProduct = $carts['shop_id'];
 
@@ -174,7 +174,7 @@ $noteCheckout = $GLOBALS['checkout_infor']["noteCheckout"];
 
                                 $insertString = "";
                                 foreach ($checkOutOrder  as $key => $cart) {
-                                    $insertString .= "(NULL, '" . $orderId . "', '" . $cart['cart_product_id'] . "', '" . $cart['cart_quantity']  . "', '" . $cart['p_price'] . "', '" . time() . "')";
+                                    $insertString .= "(NULL, '" . $orderId . "', '" . $cart['cart_product_id'] . "', '" . $cart['cart_quantity']  . "', '" . $cart['p_price'] . "', '" .   $timeInVietNam . "')";
                                     if ($key != count($checkOutOrder) - 1) {
                                         $insertString .=  ",";
                                     }
@@ -187,11 +187,11 @@ $noteCheckout = $GLOBALS['checkout_infor']["noteCheckout"];
                                 $orderDetail = mysqli_query($link, "INSERT INTO `order_items` (`id`, `order_id`, `order_product_id`, `quantity`, `price`, `create_time`) VALUES " . $insertString . ";");
 
 
-                                $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_city`, `oda_district`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $firstName','$lastName','$address1','$address2','$phoneNumber','$email','$calc_shipping_provinces','$calc_shipping_district','$zipCode','$noteCheckout', '" . time() . "')");
+                                $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_city`, `oda_district`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $firstName','$lastName','$address1','$address2','$phoneNumber','$email','$calc_shipping_provinces','$calc_shipping_district','$zipCode','$noteCheckout', '" .   $timeInVietNam . "')");
                                 // echo $success = "order thành công";
 
 
-                                $orderPayment = $link->query("INSERT INTO `payments` (`order_id`,`payment_order_id`, `user_order`, `money`, `note`, `vnp_response_code`,`code_vnpay`, `code_bank`, `time`) VALUES ('$order_id','$orderId', '$taikhoan', '  $totalCost', '$note', '$vnp_response_code', '$code_vnpay', '$code_bank','$date_time')");
+                                $orderPayment = $link->query("INSERT INTO `payments` (`order_id`,`payment_order_id`, `user_order`, `money`, `note`, `vnp_response_code`,`code_vnpay`, `code_bank`, `time`) VALUES ('$order_id','$orderId', '$taikhoan', '  $totalCost', '$note', '$vnp_response_code', '$code_vnpay', '$code_bank',' $timeInVietNam ')");
 
 
                                 var_dump($order);

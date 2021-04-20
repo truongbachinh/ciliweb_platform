@@ -32,8 +32,7 @@ $isFeedback = mysqli_fetch_assoc($isFB);
                             <h1 class="bill-title"> <i> Bill Detail</i> </h1>
                         </div>
                         <div id="order-time">
-                            <!-- <p class="bill-title">Time order, <?= date("Y-m-d H:i:s", $orderTime) ?> </p> -->
-                            <p class="bill-title">Time order, <?= $orderTime ?> </p>
+                            <p class="bill-title">Time order, <?= date('d-M-Y  H:i:s', strtotime($orderTime))  ?> </p>
                         </div>
                     </div>
                     <hr class="hr-line">

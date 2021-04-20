@@ -2,6 +2,9 @@
 include "../config_shop.php";
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
+if (!isset($_SESSION['current_user'])) {
+    header("location: ../account/login.php");
+}
 ?>
 
 

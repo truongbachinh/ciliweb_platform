@@ -14,10 +14,10 @@ if (isset($userId)) {
     if (mysqli_num_rows($query) > 0) {
         while ($row = mysqli_fetch_assoc($query)) {
             if ($row['msg_outcoming_id'] === $outgoing_id) {
-                $output .= '<div class="chat outgoing">
+                $output .=  '<div class="chat outgoing">
                                 <div class="details">
                                     <p>' . $row['msg_message'] . '</p>
-                                    <small>' . date("H:i:s", $row['msg_time']) . '</small>
+                                    <small>' .  date('H:i:s', strtotime($row['msg_time'])) . '</small>
                                 </div>
                                 </div>';
             } else {
@@ -25,7 +25,7 @@ if (isset($userId)) {
                                 <img src="../user/avatar/' . $row['ui_avatar'] . '" alt="">
                                 <div class="details">
                                     <p>' . $row['msg_message'] . '</p>
-                                    <small>' . date(" H:i:s", $row['msg_time']) . '</small>
+                                    <small>' .   date('H:i:s', strtotime($row['msg_time'])) . '</small>
                                 </div>
                                 </div>';
             }

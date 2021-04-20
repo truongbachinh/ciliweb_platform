@@ -100,7 +100,7 @@ $shopUserId = $shopChat['user_id']
                                                     $imageURL = '../shop/image_library/' . $row["img_name"];
                                             ?>
                                                     <div>
-                                                        <a href="<?= $row['img_id'] ?>"> <img src="<?php echo $imageURL; ?>" alt="" width="70" height="70" class="img-fluid" id="img-view-details" />
+                                                        <a href=""> <img src="<?php echo $imageURL; ?>" alt="" width="70" height="70" class="img-fluid" id="img-view-details" />
                                                         </a>
 
                                                     </div>
@@ -177,25 +177,18 @@ $shopUserId = $shopChat['user_id']
                                 <td class="td-name">Product Date :</td>
                                 <td width="70%"><?= (!empty($line_food['p_date_create']) ? date("Y-m-d H:i:s", $line_food['p_date_create']) : "Null") ?></td>
                             </tr>
-
-                            <!-- <tr>
-                                <td class="td-name">Product Amount :</td>
-                                <td width="70%"> <input type="number" value="1" name="quantity[<?= $line_food['p_id'] ?>]">
-                                    <span>Số lượng sẵn có <?php echo $line_food['p_quantity'] ?></span>
-                                </td>
-                            </tr> -->
                             <tr>
                                 <td class="td-name">Product Count :</td>
                                 <td>
                                     <div class="input-group" id="quantity-product">
                                         <span class="input-group-btn">
-                                            <button type="button" class="btn btn-danger btn-number" data-type="minus" data-field="quantity[<?= $line_food['p_id'] ?>]">
+                                            <button type="button" class="btn btn-outline-danger btn-number" data-type="minus" data-field="quantity[<?= $line_food['p_id'] ?>]">
                                                 <span><i class="fas fa-minus"></i></span>
                                             </button>
                                         </span>
                                         <input type="text" name="quantity[<?= $line_food['p_id'] ?>]" class="form-control input-number" value="1" min="1" max="<?= $line_food['p_quantity'] ?>">
                                         <span class="input-group-btn">
-                                            <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quantity[<?= $line_food['p_id'] ?>]">
+                                            <button type="button" class="btn btn-outline-warning btn-number" data-type="plus" data-field="quantity[<?= $line_food['p_id'] ?>]">
                                                 <span><i class="fas fa-plus"></i></span>
                                             </button>
                                         </span>
@@ -277,33 +270,11 @@ $shopUserId = $shopChat['user_id']
         </div>
         <div class="product-description">
             <p>Tên sản phẩm:
-                <?= $line_food['p_description'] ?> </p>
-            <span>
-                <p>Tên sản phẩm
-                </p>
+                <?= $line_food['p_description'] ?>
+            </p>
+            <p>
 
-                </p>
-                <p> HƯỚNG DẪN BẢO QUẢN/ SỬ DỤNG
-
-                </p>
-                <p> CÁCH LÀM MỀM DA: Bản chất giày VNXK đầu tiên sẽ hơi cứng cáp Form, đặc biệt là giày liệu da tự nhiên 2 lớp như da bò tấm và những liệu da phủ bóng Nano thì sau khi đi khoảng 2 - 3 lần là Form sẽ bai và da sẽ mềm tự nhiên ra đó ạ!
-                </p>
-                <p> Tuy nhiên có mẹo nhỏ, có thể sử dụng máy sấy để tác động nhiệt cho liệu da Mềm và Form bai ra ngay ạ!
-
-                </p>
-                <p>BẢO QUẢN KHI KHÔNG SỬ DỤNG:
-                </p>
-                <p> - Mỗi sản phẩm giày tại bAimée &amp; bAmor, đều được đặt trong một hộp giày kèm giấy nến với túi chống ẩm. (Khi sử dụng giày, chị/em đừng vội vứt hộp, giấy nến hay túi chống ẩm đi nhé!)
-                </p>
-                <p> - Giày nên được để ở nơi thoáng mát. Nếu không thường xuyên sử dụng, có thể để vào hộp có túi hút ẩm, tránh để keo giày không bị thái hóa do lâu ngày không sử dụng.
-                </p>
-                <p> - Nên thường xuyên vệ sinh giày để giúp đôi giày luôn mới và tăng tuổi thọ của giày.
-                </p>
-                <p> - Ngoài ra nếu muốn làm sạch giày bạn có thể sử dụng GEL đa năng làm sạch của Thailand, khi muốn làm sạch sâu hơn bạn có thể giặt giày bằng cách sử dụng nước rửa bát và bàn chải đánh răng hoặc kem đánh răng và bàn chải đánh răng (tuyệt đối ko sử dụng xà phòng và bàn chải thông thường!) để vệ sinh phần đế và làm sạch giày ạ!
-                </p>
-                <p> ------------------------------------------------</p>
-
-            </span>
+            </p>
         </div>
     </div>
     <div class="infor">

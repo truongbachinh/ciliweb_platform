@@ -2,7 +2,9 @@
 include "../config_shop.php";
 $idCtg = $_GET["idctg"];
 $shopId = $_GET["idsh"];
-
+if (!isset($_SESSION['current_user'])) {
+    header("location: ../account/login.php");
+}
 // $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 1;
 // $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
 // $offest = ($currentPage - 1) * $pPerPage;

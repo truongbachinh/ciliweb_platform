@@ -381,11 +381,10 @@ if (isset($_POST["buttonCheckout"])) {
 
     $insertOrderString = "";
 
-    $current = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh'));
-    $timeCheckout = $current->format('Y/m/d H:i:s');
+
 
     foreach ($cartInforOrder  as $keys => $carts) {
-        $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" .  $timeCheckout . "','1','1')");
+        $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" .  $timeInVietNam . "','1','1')");
         $orderId = ($link->insert_id);
         $shopIdProduct = $carts['shop_id'];
 
@@ -403,7 +402,7 @@ if (isset($_POST["buttonCheckout"])) {
         $py = "";
         foreach ($checkOutOrder  as $key => $cart) {
 
-            $insertString .= "(NULL, '" . $orderId . "', '" . $cart['cart_product_id'] . "', '" . $cart['cart_quantity']  . "', '" . $cart['p_price'] . "', '" . time() . "')";
+            $insertString .= "(NULL, '" . $orderId . "', '" . $cart['cart_product_id'] . "', '" . $cart['cart_quantity']  . "', '" . $cart['p_price'] . "', '" . $timeInVietNam . "')";
             if ($key != count($checkOutOrder) - 1) {
                 $insertString .=  ",";
             }
@@ -432,7 +431,7 @@ if (isset($_POST["buttonCheckout"])) {
         //     }
         // }
 
-        $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_city`, `oda_district`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $_POST[firstName]','$_POST[lastName]','$_POST[address1]','$_POST[address2]','$_POST[phoneNumber]','$_POST[email]','$_POST[calc_shipping_provinces]','$_POST[calc_shipping_district]','$_POST[zipCode]','$_POST[noteCheckout]', '" . time() . "')");
+        $orderAddress = $link->query("INSERT INTO `order_address` (`oda_id`, `oda_order_id`, `oda_firstname`, `oda_lastname`, `oda_address`, `oda_address_2`, `oda_phone`, `oda_email`, `oda_city`, `oda_district`, `oda_zip`, `oda_note`, `oda_create_time`) VALUES (NULL, ' $orderId ', ' $_POST[firstName]','$_POST[lastName]','$_POST[address1]','$_POST[address2]','$_POST[phoneNumber]','$_POST[email]','$_POST[calc_shipping_provinces]','$_POST[calc_shipping_district]','$_POST[zipCode]','$_POST[noteCheckout]', '" . $timeInVietNam . "')");
         // echo $success = "order thành công";
         // var_dump($stmt);
         // var_dump($order);

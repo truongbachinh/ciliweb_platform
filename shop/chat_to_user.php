@@ -1,6 +1,8 @@
 <?php
 include "../config_shop.php";
-
+if (!isset($_SESSION['current_user'])) {
+    header("location: ../account/login.php");
+}
 // var_dump($userId);
 // exit;
 

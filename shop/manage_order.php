@@ -2,7 +2,9 @@
 include "../config_shop.php";
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
-
+if (!isset($_SESSION['current_user'])) {
+    header("location: ../account/login.php");
+}
 // if (isset($submitSearch)) {
 //     $_SESSION['product_filter'] = $_POST;
 //     var_dump("---------------------------------------------------------", $_POST);
@@ -43,6 +45,40 @@ $shopId = $shopIF['shop_id'];
 
 
 $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId  ");
+
+
+$resTime = $link->query("SELECT orders.* from orders where order_shop_id  = $shopId  ");
+$checkTime = array();
+while ($rowTime =  mysqli_fetch_array($resTime)) {
+    $checkTime[] = $rowTime;
+}
+foreach ($checkTime as $rowTimeOrder) {
+
+    $checkTimeOrder = $rowTimeOrder['order_create_time'];
+    $orderCheckTimeId = $rowTimeOrder['id'];
+    $duration = 2;
+    $duration_type = 'day';
+    $deadline = date('Y/m/d H:i:s', strtotime($checkTimeOrder . ' +' . $duration . ' ' . $duration_type));
+
+    $diff = abs(strtotime($timeInVietNam) - strtotime($timeInVietNam));
+    $years = floor($diff / (365 * 60 * 60 * 24));
+    $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
+    $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+    $hours = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24) / (60 * 60));
+    $minutes = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24 - $hours * 60 * 60) / 60);
+    $seconds = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24 - $hours * 60 * 60 - $minutes * 60));
+
+    if ($years != 0) {
+        $checkTimeCancle = $years . " years, " . $months . " months, " . $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
+    } else if ($months != 0) {
+        $checkTimeCancle = $months . " months, " . $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
+    } else {
+        $checkTimeCancle =  $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
+    }
+    if ($diff == 0) {
+        $updateOrderShipping = $link->query("UPDATE `orders` SET `shipping_order_status`= '4', `shipping_cancle_time` = '$timeInVietNam' WHERE `id` = $orderCheckTimeId ");
+    }
+}
 
 ?>
 
@@ -173,16 +209,16 @@ $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JO
                                                     <?php
                                                     if (!empty($row['shipping_order_status'] == 1)) {
                                                     ?>
-                                                        <td>Not start</td>
+                                                        <td>Not Start</td>
                                                     <?php
                                                     } elseif (!empty($row['shipping_order_status'] == 2)) {  ?>
-                                                        <td style="color:green"><?= date("Y-d-M H:i:s", $row['shipping_create_time']) ?></td>
+                                                        <td style="color:green"><?= date('d-M-Y  H:i:s', strtotime($row['shipping_create_time'])); ?></td>
                                                     <?php
                                                     } elseif (!empty($row['shipping_order_status'] == 3)) {  ?>
-                                                        <td style="color:red"><?= date("Y-d-M H:i:s", $row['shipping_receive_time']) ?></td>
+                                                        <td style="color:red"><?= date('d-M-Y  H:i:s', strtotime($row['shipping_receive_time'])); ?></td>
                                                     <?php
                                                     } elseif (!empty($row['shipping_order_status'] == 4)) {  ?>
-                                                        <td style="color:red"><?= date("Y-d-M H:i:s", $row['shipping_cancle_time']) ?></td>
+                                                        <td style="color:red"><?= date('d-M-Y  H:i:s', strtotime($row['shipping_cancle_time'])) ?></td>
                                                     <?php
                                                     }
                                                     ?>
@@ -337,7 +373,8 @@ $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JO
                 }).then(response => {
                     $("#editOrder").modal("hide"),
                         swal("Notice", response.msg, "success").then(function(e) {
-                            location.replace("./manage_order.php");
+                            location.reload()
+                            // location.replace("./manage_order.php");
                         });
                 }).catch(err => {
 

@@ -2,7 +2,9 @@
 include "../config_shop.php";
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
-
+if (!isset($_SESSION['current_user'])) {
+    header("location: ../account/login.php");
+}
 
 $queryTotalOrder = ("SELECT COUNT(orders.id) as order_amount, orders.*, order_address.*,user.* from orders
 INNER JOIN user ON user.user_id = orders.order_user_id

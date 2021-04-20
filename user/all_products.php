@@ -1,5 +1,5 @@
 <?php
-$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 10;
+$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 15;
 $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
 $offest = ($currentPage - 1) * $pPerPage;
 $totalProduct = mysqli_query($link, "select * from products");
@@ -18,7 +18,7 @@ $query_search = $link->query("SELECT categories.*, shop.*, products.* from produ
 
 
 
-<div class="container-fluid">
+<div class="container-fluid result-search">
     <div id="title-categories">
         <p style="background: #7abaa1;
     padding: 10px;
@@ -37,7 +37,7 @@ $query_search = $link->query("SELECT categories.*, shop.*, products.* from produ
         <?php
         while ($productInfor = mysqli_fetch_array($query_search, MYSQLI_ASSOC)) {
             $idProductSold  = $productInfor['p_id'];
-            $queryTotalSold = $link->query("SELECT COUNT(order_items.id) as total_sold FROM order_items INNER JOIN orders ON orders.id = order_items.order_id WHERE order_items.order_product_id = ' $idProductSold ' and orders.shipping_order_status = '3'");
+            $queryTotalSold = $link->query("SELECT SUM(order_items.quantity) as total_sold FROM order_items INNER JOIN orders ON orders.id = order_items.order_id WHERE order_items.order_product_id = ' $idProductSold ' and orders.shipping_order_status = '3'");
             $totalSold = $queryTotalSold->fetch_assoc();
             $totalSoldOfShop = $totalSold['total_sold'];
             $totalProduct = $productInfor['p_quantity'];
