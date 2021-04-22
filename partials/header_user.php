@@ -42,20 +42,24 @@ ob_start();
                             <ul class="navbar-nav ">
                                 <li class="nav-item dropdown ">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <div class="avatar avatar-sm avatar-online">
-                                            <?php
-                                            if ($resultUserInfor->num_rows > 0) {
-                                                $imageURL = '../user/avatar/' . $rowUser["ui_avatar"];
-                                            ?>
+
+                                        <?php
+                                        if ($resultUserInfor->num_rows > 0) {
+                                            $imageURL = '../user/avatar/' . $rowUser["ui_avatar"];
+                                        ?>
+                                            <div class="avatar avatar-sm avatar-online">
                                                 <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
-                                            <?php
-                                            } else { ?>
-                                                <span class="avatar-title rounded-circle bg-warning"><?php echo $_SESSION["current_user"]["username"]; ?></span>
+                                            </div>
+                                        <?php
+                                        } else { ?>
+                                            <div class="btn btn-outline-waring">
 
-                                            <?php } ?>
+                                                <span style="color:aliceblue"><?php echo $_SESSION["current_user"]["username"]; ?></span>
+                                            </div>
+                                        <?php } ?>
 
 
-                                        </div>
+
                                     </a>
                                     <div class="dropdown-menu  dropdown-menu-right">
                                         <a href="../user/index.php?view=profile" class="dropdown-item"> Profile</a>

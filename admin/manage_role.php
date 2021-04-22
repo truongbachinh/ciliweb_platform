@@ -3,21 +3,8 @@ include "../config_admin.php";
 if (!isset($_SESSION['current_user'])) {
     header("location: ./account/login.php");
 }
-// $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 1;
-// $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
-// $offest = ($currentPage - 1) * $pPerPage;
-// $countRole = mysqli_query($link, "SELECT * from role");
-// $res = mysqli_query($link, "SELECT * from `role`  order by `role_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
-// $totalRole = $countRole->num_rows;
-// $totalPage = ceil($totalRole / $pPerPage);
-
-
-
 $res = mysqli_query($link, "SELECT * from `role`  order by `role_id`");
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -96,7 +83,10 @@ $res = mysqli_query($link, "SELECT * from `role`  order by `role_id`");
 
 
                                                     ?>
-                                                    <td><?php echo date("Y/m/d H:i:s", $row["role_create_time"]); ?></td>
+                                                    <td><?php echo
+
+                                                        date('d-M-Y  H:i:s', strtotime($row["role_create_time"]));
+                                                        ?></td>
                                                     <?php
                                                     if (!empty($row['role_update_time'] == 0)) {
 
@@ -105,7 +95,9 @@ $res = mysqli_query($link, "SELECT * from `role`  order by `role_id`");
 
                                                     <?php
                                                     } else {  ?>
-                                                        <td style="padding: 2.5%;"><?php echo date("Y/m/d  H:i:s", $row["role_update_time"]); ?></td>
+                                                        <td style="padding: 2.5%;"><?php echo
+                                                                                    date('d-M-Y  H:i:s', strtotime($row["role_update_time"]));
+                                                                                    ?></td>
                                                     <?php
                                                     }
                                                     ?>
@@ -340,7 +332,7 @@ if (isset($_POST["addRole"])) {
         </script>
     <?php
     } else {
-        $sqlAddRole = $link->query("INSERT INTO `role` (`role_id`, `role_name`, `role_description`, `role_status`, `role_create_time`) VALUES (NULL,'$_POST[nameRole]', '$_POST[descriptionRole]','1','" . time() . "')");
+        $sqlAddRole = $link->query("INSERT INTO `role` (`role_id`, `role_name`, `role_description`, `role_status`, `role_create_time`) VALUES (NULL,'$_POST[nameRole]', '$_POST[descriptionRole]','1','" . $timeInVietNam . "')");
     ?>
         <script type="text/javascript">
             swal("Notice", "Add successfully!", "success");

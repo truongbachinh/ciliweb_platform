@@ -5,13 +5,9 @@ if (!isset($_SESSION['current_user'])) {
     header("location: ./account/login.php");
 }
 
-$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 3;
-$currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
-$offest = ($currentPage - 1) * $pPerPage;
-$countCtg = mysqli_query($link, "SELECT * from `categories`");
-$result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
-$totalCtg = $countCtg->num_rows;
-$totalPage = ceil($totalCtg / $pPerPage);
+
+$result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
+
 ?>
 
 
@@ -43,19 +39,11 @@ $totalPage = ceil($totalCtg / $pPerPage);
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <div class="form-group has-search">
-                                            <span class="fa fa-search form-control-feedback"></span>
-                                            <input type="text" class="form-control" placeholder="Search">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 ">
                                         <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addCategories"><i class="mdi mdi-clipboard-plus"></i> Add neu categories
                                         </a>
                                     </div>
                                 </div>
-                                <!-- <?php
-                                        include('../pagination/pagination.php');
-                                        ?> -->
+
                                 <div class="table-responsive p-t-10">
                                     <table id="table_manage_categories" class="table table-bordered table-striped">
                                         <thead>
@@ -105,7 +93,9 @@ $totalPage = ceil($totalCtg / $pPerPage);
 
 
                                                     ?>
-                                                    <td><?= date("Y/d/m H:i:s", $row["ctg_create_time"]); ?></td>
+                                                    <td><?=
+                                                        date('d-M-Y  H:i:s', strtotime($row["ctg_create_time"]))
+                                                        ?></td>
                                                     <?php
                                                     if (!empty($row['ctg_update_time'] == 0)) {
 
@@ -114,7 +104,8 @@ $totalPage = ceil($totalCtg / $pPerPage);
 
                                                     <?php
                                                     } else {  ?>
-                                                        <td style="padding: 2.5%;"><?= date("Y/d/m H:i:s", $row["ctg_update_time"]); ?></td>
+                                                        <td style="padding: 2.5%;"><?=
+                                                                                    date('d-M-Y  H:i:s', strtotime($row["ctg_update_time"])) ?></td>
                                                     <?php
                                                     }
                                                     ?>
@@ -135,9 +126,7 @@ $totalPage = ceil($totalCtg / $pPerPage);
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- <?php
-                                        include('../pagination/pagination.php');
-                                        ?> -->
+
                             </div>
                         </div>
                     </div>
@@ -279,7 +268,6 @@ $totalPage = ceil($totalCtg / $pPerPage);
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
     <?php include "../partials/js_libs.php"; ?>
-
     <script>
         $(document).ready(function() {
             $('#table_manage_categories').DataTable();
@@ -309,6 +297,7 @@ $totalPage = ceil($totalCtg / $pPerPage);
 
             $(document).on('click', '.btn-edit-categories', function(e) {
                 e.preventDefault();
+                var pathFile = "../admin/image_categories/";
                 const ctgId = parseInt($(this).data("id"));
                 activeId = ctgId;
                 console.log(ctgId);
@@ -317,7 +306,7 @@ $totalPage = ceil($totalCtg / $pPerPage);
                 }).then(ctg => {
                     $("input#editCategory ").val(ctg.data.ctg_name)
                     $("#editCtgDescription ").val(ctg.data.ctg_description)
-
+                    $('#displayImageEdit').attr('src', pathFile.concat(ctg.data.ctg_image));
                     // $("img#displayImageEdit").attr('src', $("img#displayImageEdit").attr('src') + './image_categories/' + val(ctg.data.ctg_image));
                     $("#editCtgStatus ").val(ctg.data.ctg_status)
                     $('#editCategories').modal();
@@ -380,7 +369,7 @@ if (isset($_POST["addCategories"])) {
             $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
             if (in_array($fileType, $allowTypes)) {
                 if (move_uploaded_file($_FILES["imageCategories"]["tmp_name"], $targetFilePath)) {
-                    $addCategories = $link->query("INSERT INTO `categories` (`ctg_id`,`ctg_name`,`ctg_description`, `ctg_image`,  `ctg_status`,  `ctg_create_time`) VALUES(NULL,'$_POST[nameCategories]','$_POST[descriptionCategories]','$fileName','1','" . time() . "')");
+                    $addCategories = $link->query("INSERT INTO `categories` (`ctg_id`,`ctg_name`,`ctg_description`, `ctg_image`,  `ctg_status`,  `ctg_create_time`) VALUES(NULL,'$_POST[nameCategories]','$_POST[descriptionCategories]','$fileName','1','" . $timeInVietNam  . "')");
                 }
                 if ($addCategories) {
         ?>
@@ -407,5 +396,4 @@ if (isset($_POST["addCategories"])) {
         }
     }
 }
-
 ?>

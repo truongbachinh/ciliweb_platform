@@ -70,15 +70,18 @@ $shopUserId = $shopChat['user_id']
 <link rel="stylesheet" href="./css/sea_food_infor.css">
 <link rel="stylesheet" href="./css/chat.css">
 <div class="seafood-infor" style="margin-top: 100px; ">
-    <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Sản phẩm của shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $line_food["shop_name"] . "</font>" ?></a></i>
-    </div>
+
     <div class="infor">
+        <div id="breadcrumb" style="width: 30%;"><i class="fa fas-home" style="margin-left: 9px;"> Sản phẩm của shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $line_food["shop_name"] . "</font>" ?></a></i>
+        </div>
         <form action="../cart/cart.php?view=add_to_cart" class="buy-form" method="post" enctype="multipart/form-data">
-            <div class="row">
+            <div class="row m-t-20">
                 <div class="col-md-6 col-lg-6 " style="text-align: center;">
                     <div class="row-lg-5 row-md-5 row-5 list-imglist">
                         <div class="avatar-product">
-                            <img src="../shop/image_products/<?php echo $line_food['p_image'] ?>" id="img-infor" class="img-fluid img-thumbnail ">
+                            <a href="../shop/image_products/<?php echo $line_food['p_image'] ?>" data-fancybox="avatar-product">
+                                <img src="../shop/image_products/<?php echo $line_food['p_image'] ?>" id="img-infor" class="img-fluid img-thumbnail ">
+                            </a>
                         </div>
                         <div class="img-library">
                             <div class="list-img-library">
@@ -90,26 +93,22 @@ $shopUserId = $shopChat['user_id']
                                         <i class="mdi mdi-chevron-right mdi:24px" aria-hidden="true" id="arrow-button"></i>
                                     </div>
                                     <div class="list">
-
                                         <div class="list-group list-group-horizontal col-lg-9 d-md-flex" id="view-list-libImg">
-                                            <?php
-
-
-                                            if ($sql_img->num_rows > 0) {
-                                                while ($row = $sql_img->fetch_assoc()) {
-                                                    $imageURL = '../shop/image_library/' . $row["img_name"];
-                                            ?>
-                                                    <div>
-                                                        <a href=""> <img src="<?php echo $imageURL; ?>" alt="" width="70" height="70" class="img-fluid" id="img-view-details" />
-                                                        </a>
-
-                                                    </div>
-
-                                                <?php }
-                                            } else { ?>
-                                                <p>No image(s) found...</p>
-                                            <?php } ?>
-
+                                            <div class="galleryProduct d-flex">
+                                                <?php
+                                                if ($sql_img->num_rows > 0) {
+                                                    while ($row = $sql_img->fetch_assoc()) {
+                                                        $imageURL = '../shop/image_library/' . $row["img_name"];
+                                                ?>
+                                                        <div>
+                                                            <a href="<?= $imageURL ?>" data-fancybox="galleryProduct">
+                                                                <img src="<?php echo $imageURL; ?>" alt="" class="img-fluid m-r-10" id="img-view-details" />
+                                                            </a>
+                                                        </div> <?php }
+                                                        } else { ?>
+                                                    <p>No image(s) found...</p>
+                                                <?php } ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -120,6 +119,7 @@ $shopUserId = $shopChat['user_id']
                     </div>
 
                 </div>
+
                 <div class="col-md-6 col-lg-6 mb-4">
                     <div class="name-product">
                         <h4>Seafood Information</h4>
@@ -175,7 +175,7 @@ $shopUserId = $shopChat['user_id']
                             </tr>
                             <tr>
                                 <td class="td-name">Product Date :</td>
-                                <td width="70%"><?= (!empty($line_food['p_date_create']) ? date("Y-m-d H:i:s", $line_food['p_date_create']) : "Null") ?></td>
+                                <td width="70%"><?= (!empty($line_food['p_date_create']) ? date("Y-M-d H:i:s", strtotime($line_food['p_date_create'])) : "Null") ?></td>
                             </tr>
                             <tr>
                                 <td class="td-name">Product Count :</td>
@@ -192,7 +192,7 @@ $shopUserId = $shopChat['user_id']
                                                 <span><i class="fas fa-plus"></i></span>
                                             </button>
                                         </span>
-                                        <span>Số lượng sẵn có <?php echo $line_food['p_quantity'] ?></span>
+                                        <span>Số lượng sẵn có <?php echo $line_food['p_quantity'] ?>Kg</span>
                                     </div>
 
                                 </td>
@@ -226,6 +226,7 @@ $shopUserId = $shopChat['user_id']
 
 
                 </div>
+            </div>
         </form>
     </div>
     <hr>
@@ -266,19 +267,23 @@ $shopUserId = $shopChat['user_id']
     </div>
 
     <div class="infor">
-        <div id="breadcrumb-product-details"><i class="fa fas-home" style="margin-left: 9px;"> Chi tiết sản phẩm <i class="fal fa-chevron-right" style="font-size: 10px;"></i> <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
-        </div>
-        <div class="product-description">
-            <p>Tên sản phẩm:
-                <?= $line_food['p_description'] ?>
-            </p>
-            <p>
 
-            </p>
+        <div id="breadcrumb-product-details">Detail of seafood: <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
+        </div>
+        <div class="col-lg-12 col-md-12">
+            <div class="card m-b-30 m-t-30">
+                <div class="product-description">
+                    <p>Seafood name:
+                        <?= $line_food['p_description'] ?>
+                    </p>
+                    <p>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
     <div class="infor">
-        <div id="breadcrumb-product-details"><i class="fa fas-home" style="margin-left: 9px;"> Feedback of product <i class="fal fa-chevron-right" style="font-size: 10px;"></i> <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
+        <div id="breadcrumb-product-details"> Feedback of product: <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
         </div>
         <div class="feadback-description">
             <div class="col-lg-12 col-md-12">
@@ -339,15 +344,15 @@ $shopUserId = $shopChat['user_id']
                                     }
                                     ?>
                                 </div>
-                                <div>
+                                <div class="galleryReview">
                                     <?php
                                     if ($queryReview->num_rows > 0) {
                                         $imageReviewURL = '../user/review_image/' . $reviewInfor["review_image"];
                                         $fileType = pathinfo($imageReviewURL, PATHINFO_EXTENSION);
                                         if (in_array($fileType, $allowTypeImages)) {
                                     ?>
-                                            <img class="" src="<?php echo $imageReviewURL; ?>" alt="" height="70" width="70" style="border-radius:10px" />
-
+                                            <a href="<?= $imageReviewURL ?>" data-fancybox="galleryReview"> <img class="" src="<?php echo $imageReviewURL; ?>" alt="" height="70" width="70" style="border-radius:10px" />
+                                            </a>
                                         <?php
                                         }
                                         if (in_array($fileType, $allowTypeVideos)) {
@@ -365,7 +370,7 @@ $shopUserId = $shopChat['user_id']
 
 
                                     <p>Content:<?= $reviewInfor['review_comment'] ?></p>
-                                    <small><?= date('Y-d-M H:i:s', $reviewInfor['review_time']) ?></small>
+                                    <small><?= date('Y-d-M H:i:s', strtotime($reviewInfor['review_time'])) ?></small>
                                 </div>
                             </li>
 
@@ -379,74 +384,11 @@ $shopUserId = $shopChat['user_id']
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    const form = document.querySelector(".typing-area"),
 
+<script src="./javascript/seafood_infor_chat.js"></script>
 
-        incoming_id = form.querySelector('input[name=incoming_id]').value,
-        inputField = form.querySelector(".input-field"),
-        sendBtn = form.querySelector("button"),
-        chatBox = document.querySelector(".chat-box");
-
-    form.onsubmit = (e) => {
-        e.preventDefault();
-    }
-
-    inputField.focus();
-    inputField.onkeyup = () => {
-        if (inputField.value != "") {
-            sendBtn.classList.add("active");
-        } else {
-            sendBtn.classList.remove("active");
-        }
-    }
-
-    sendBtn.onclick = () => {
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "../chat/php/user_insert_chat.php", true);
-        xhr.onload = () => {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    inputField.value = "";
-                    scrollToBottom();
-                }
-            }
-        }
-        let formData = new FormData(form);
-        xhr.send(formData);
-    }
-    chatBox.onmouseenter = () => {
-        chatBox.classList.add("active");
-    }
-
-    chatBox.onmouseleave = () => {
-        chatBox.classList.remove("active");
-    }
-
-    setInterval(() => {
-        console.log(incoming_id);
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "../chat/php/user_get_chat.php", true);
-        xhr.onload = () => {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    let data = xhr.response;
-                    chatBox.innerHTML = data;
-                    if (!chatBox.classList.contains("active")) {
-                        scrollToBottom();
-                    }
-                }
-            }
-        }
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send("incoming_id=" + incoming_id);
-    }, 500);
-
-    function scrollToBottom() {
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-</script>
 <script type="text/javascript">
+    $('[data-fancybox]').fancybox();
     $(document).ready(function() {
 
         var $item = $('div#view-list-libImg'), //Cache your DOM selector

@@ -5,14 +5,6 @@ $shopId = $_GET["idsh"];
 if (!isset($_SESSION['current_user'])) {
     header("location: ../account/login.php");
 }
-// $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 1;
-// $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
-// $offest = ($currentPage - 1) * $pPerPage;
-// $countProduct = mysqli_query($link, "SELECT * from `products` where `p_category_id`= '$idCtg' AND `p_shop_id` = '$shopId'");
-// $totalProduct = $countProduct->num_rows;
-// $totalPage = ceil($totalProduct / $pPerPage);
-
-// $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from products INNER JOIN categories ON products.p_category_id = categories.ctg_id INNER JOIN shop ON products.p_shop_id = shop.shop_id where categories.ctg_id = '$idCtg' AND shop.shop_id = '$shopId'  order by `p_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
 
 $result = $link->query("SELECT categories.* from categories  where ctg_id = $idCtg");
 $resultCategories = mysqli_fetch_assoc($result);
@@ -114,10 +106,11 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
 
                                                         <td>
                                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                                <a href="" class="btn btn-info  btn-edit-product" role="button" data-id="<?= $row['p_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
-                                                                <a href="" class="btn btn-danger btn-delete-product" role="button" data-id="<?= $row['p_id'] ?>"><i class="mdi mdi-delete"></i>
-                                                                </a>
-                                                                <a href="" class="btn btn-primary  btn-detail-product" role="button" data-id="<?= $row['p_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
+                                                                <button class="btn btn-info  btn-edit-product" role="button" data-id="<?= $row['p_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </button>
+                                                                <button class="btn btn-danger btn-delete-product" role="button" data-id="<?= $row['p_id'] ?>"><i class="mdi mdi-delete"></i>
+                                                                </button>
+                                                                <button class="btn btn-primary btn-detail-product" role="button" data-id="<?= $row['ctg_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </button>
+
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -135,11 +128,11 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                     </div>
                 </div>
                 <!-- Modal add role -->
-                <div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="addRole" aria-hidden="true">
+                <div class="modal fade" id="addProduct" tabindex="-1" role="dialog" aria-labelledby="addProduct" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="addRole">Add new product</h5>
+                                <h5 class="modal-title" id="addProduct">Add new product</h5>
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -173,7 +166,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Product Image Library :</label>
-                                        <input type="file" class="form-control" id="imageProduct" name="imageProductLibrary[]" multiple required>
+                                        <input type="file" class="form-control" id="imageProductLibrary" name="imageProductLibrary[]" multiple required>
                                     </div>
                                     <input type="submit" class="btn btn-primary btn-md float-right" name="addProduct" value="Create product">
                                 </form>
@@ -198,27 +191,28 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                     <table class="table table-striped">
                                         <tbody>
                                             <tr>
-                                                <td>Product category</td>
-                                                <td id="detailProductCategory"></td>
+                                                <td>Category</td>
+                                                <td id="detailCategory"></td>
                                             </tr>
                                             <tr>
-                                                <td>Product Name</td>
-                                                <td id="detailProductName"></td>
+                                                <td>Category description</td>
+                                                <td id="DetailCtgDescription"></td>
                                             </tr>
                                             <tr>
-                                                <td>Product description</td>
-
-                                                <td id="detailProductDescription"></td>
+                                                <td>Category image</td>
+                                                <td id="DetailCtgImage"></td>
                                             </tr>
                                             <tr>
-                                                <td>Product image library</td>
-                                                <td>
-                                                    <img src="" id="detailImage" width="65" height="65">
-                                                </td>
+                                                <td>Category status</td>
+                                                <td id="DetailCtgStatus"></td>
                                             </tr>
                                             <tr>
-                                                <td>Product update time</td>
-                                                <td id="detailUpdateTime"></td>
+                                                <td>Category create time</td>
+                                                <td id="DetailCtgCreateTime"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Category update time</td>
+                                                <td id="DetailCtgUpdateTime"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -234,66 +228,6 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                         </div>
                     </div>
                 </div>
-
-                <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editTopic" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editTopic">Edit User Information</h5>
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" id="create-account-form">
-                                    <div class="form-group">
-                                        <label for="inp-username">Username</label>
-                                        <input type="text" class="form-control" id="inp-username" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-fullname">Full Name</label>
-                                        <input type="text" class="form-control" id="inp-fullname" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-email">Email</label>
-                                        <input type="text" class="form-control" id="inp-email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-status">Status</label>
-                                        <select id="inp-status" class="form-control">
-                                            <option value="1">Active</option>
-                                            <option value="2">Blocked</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-role">Role</label>
-                                        <select id="inp-role" class="form-control">
-                                            <option value="student">Student</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="manager-coordinator">Coordinator Manager</option>
-                                            <option value="manager-marketing">Marketing Manager</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="inp-password">New Password (Leave blank for unchanged)</label>
-                                        <input type="password" placeholder="Leave blank for unchanged..." class="form-control" id="inp-password" required>
-                                    </div>
-
-                                    <div class="model-footer">
-                                        <button type="button" class="btn btn-warning btn-save">
-                                            Save Changes
-                                        </button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
         </section>
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
@@ -305,6 +239,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
             $('#table_id').DataTable();
         });
         document.addEventListener("DOMContentLoaded", function(e) {
+
             let activeId = null;
             $(document).on('click', ".btn-delete-product", function(e) {
                 e.preventDefault();
@@ -327,22 +262,23 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                 });
             });
             $(document).on('click', '.btn-detail-product', function(e) {
-                e.preventDefault();
-                var pathFile = "../shop/image_products/";
-                const productId = parseInt($(this).data("id"));
-                console.log(productId)
-                Utils.api('get_product_info_detail', {
-                    id: productId
-                }).then(response => {
-                    $('#detailProductCategory').text(response.data.ctg_name);
-                    $('#detailProductName').text(response.data.p_name);
-                    $('#detailProductDescription').text(response.data.p_description);
-                    $("#detailImage").attr("src", pathFile.concat(response.data.img_name));
-                    $('#detailUpdateTime').text(response.data.p_date_update);
-                    $('#detailProduct').modal();
-                }).catch(err => {
+                $('#detailProduct').modal();
+                // e.preventDefault();
+                // var pathFile = "../shop/image_products/";
+                // const productId = parseInt($(this).data("id"));
+                // console.log(productId)
+                // Utils.api('get_product_info_detail', {
+                //     id: productId
+                // }).then(response => {
+                //     // $('#detailProductCategory').text(response.data.ctg_name);
+                //     $('#detailProductName').text(response.data.p_name);
+                //     $('#detailProductDescription').text(response.data.p_description);
+                //     $("#detailImage").attr("src", pathFile.concat(response.data.img_name));
+                //     $('#detailUpdateTime').text(response.data.p_date_update);
+                //     $('#detailProduct').modal();
+                // }).catch(err => {
 
-                })
+                // })
             });
         })
     </script>
@@ -385,7 +321,7 @@ if (isset($_POST["addProduct"])) {
             $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
             if (in_array($fileType, $allowTypes)) {
                 if (move_uploaded_file($_FILES["imageProduct"]["tmp_name"], $targetFilePath)) {
-                    $addProduct = $link->query("INSERT INTO `products` (`p_id`, `p_category_id`, `p_shop_id`, `p_name`, `p_description`, `p_fresh`, `p_quantity`, `p_price`, `p_image`,  `p_date_create`) VALUES (NULL,'$idCtg','$shopId','$_POST[nameProduct]','$_POST[descriptionProduct]','$_POST[freshProduct]','$_POST[quantityProduct]','$_POST[priceProduct]','$fileName','" . time() . "')");
+                    $addProduct = $link->query("INSERT INTO `products` (`p_id`, `p_category_id`, `p_shop_id`, `p_name`, `p_description`, `p_fresh`, `p_quantity`, `p_price`, `p_image`,  `p_date_create`) VALUES (NULL,'$idCtg','$shopId','$_POST[nameProduct]','$_POST[descriptionProduct]','$_POST[freshProduct]','$_POST[quantityProduct]','$_POST[priceProduct]','$fileName','" . $timeInVietNam . "')");
                 }
             } else {
                 $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
@@ -423,7 +359,7 @@ if (isset($_POST["addProduct"])) {
                         // Image db insert sql 
 
                         $insertId = $link->insert_id;
-                        $insertValuesSQL .= "( ' $insertId', '" . $fileName . "', '" . time() . "')";
+                        $insertValuesSQL .= "( ' $insertId', '" . $fileName . "', '" . $timeInVietNam . "')";
                         // $insertValuesSQL .= "('" . $fileName . "', NOW()),";
                         // var_dump($insertValuesSQL);
 

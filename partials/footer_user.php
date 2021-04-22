@@ -248,6 +248,7 @@
 
 
     function chatToShop(shopId) {
+
         var pathFile = "../shop/image_shop/";
         Utils.api("chat_to_shop", {
             id: shopId
@@ -262,9 +263,6 @@
         }).catch(err => {
 
         })
-
-
-
     }
 
     function listChatToShop(shopId) {

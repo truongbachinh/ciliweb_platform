@@ -150,7 +150,10 @@
                                                         <?php
                                                         if (!empty($rowShop["shop_create_time"])) {
                                                         ?>
-                                                            <p><?= date("Y/m/d H:i:s", $rowShop["shop_create_time"]); ?></p>
+                                                            <p><?=
+                                                                date('d-M-Y  H:i:s', strtotime($rowShop["shop_create_time"]));
+
+                                                                ?></p>
                                                         <?php
                                                         } else {
                                                         ?>
@@ -174,7 +177,10 @@
                                                         <?php
                                                         } else {  ?>
                                                             <td style="padding: 2.5%;">
-                                                                <?php echo date("Y/m/d  H:i:s", $rowShop["shop_update_time"]); ?>
+                                                                <?php echo
+                                                                date('d-M-Y  H:i:s', strtotime($rowShop["shop_update_time"]));
+
+                                                                ?>
                                                             </td>
                                                         <?php
                                                         }

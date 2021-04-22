@@ -126,15 +126,21 @@ include "header.php";
 <?php
 if (isset($_POST["login"])) {
     $sessionStatus = "Active now";
-    $username = mysqli_real_escape_string($link, $_POST["username"]);
-    $password = mysqli_real_escape_string($link, $_POST["password"]);
+    $username =  $_POST["username"];
+
+    $password =  md5($_POST["password"]);
 
     $count = 0;
-    $res = mysqli_query($link, "select * from user where username='$username' && password='$password'");
-    $result = mysqli_query($link, "select * from user where username='$username' && password='$password'");
-    $updateSessionStatus = $link->query("UPDATE `user` SET `session_status` = '$sessionStatus'  where username='$username' && password='$password'");
+    $res = mysqli_query($link, "SELECT user.* from user where username='$username' AND `password`='$password'");
+    $result = mysqli_query($link, "SELECT * from user where username='$username' AND `password`='$password'");
+
+    $updateSessionStatus = $link->query("UPDATE `user` SET `session_status` = '$sessionStatus'  where username='$username' AND `password`='$password'");
 
     $count = mysqli_num_rows($res);
+    // var_dump($username);
+    // var_dump($password);
+    // var_dump($result);
+    // exit;
     while ($row = mysqli_fetch_array($result)) {
 
         $role = $row["user_role_id"];

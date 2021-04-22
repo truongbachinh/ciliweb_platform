@@ -127,16 +127,12 @@ if ($isLoggedIn) {
             break;
         case "get_product_info_detail":
             $id = $_POST['id'];
-            $query = $link->query("SELECT products.*, categories.*, image_library.* FROM `products` INNER JOIN categories ON categories.ctg_id = products.p_category_id INNER JOIN image_library ON image_library.img_p_id = products.p_id WHERE `p_id` = '$id'");
+            $query = $link->query("SELECT products.* from products WHERE `p_id` = '$id'");
             if ($query->num_rows == 0) {
                 $error = 1;
                 $msg = "This file is not available.";
             } else {
-                $count = 0;
-                $count = $query->num_rows;
-                for ($i = 0; $i < $count; $i++) {
-                    $data = $query->fetch_assoc();
-                }
+                $data = $query->fetch_assoc();
             }
             break;
         case "get_order_shipping_info":
@@ -240,7 +236,7 @@ if ($isLoggedIn) {
             $id = $_POST['id'];
             $roleUser = $_POST['editRole'];
             $statusUser = $_POST['editStatus'];
-            $update = $link->query("UPDATE `user` SET `user_role_id`= '$roleUser',`user_status`= '$statusUser',`user_update_time`= '" . time() . "' WHERE `user_id`=$id");
+            $update = $link->query("UPDATE `user` SET `user_role_id`= '$roleUser',`user_status`= '$statusUser',`user_update_time`= '" . $timeInVietNam . "' WHERE `user_id`=$id");
 
             if ($update) {
                 $msg = "Record updated successfully";
@@ -255,7 +251,7 @@ if ($isLoggedIn) {
             $id = $_POST['id'];
             $statusShop = $_POST['editStatusShop'];
             $rankShop = $_POST['editRankShop'];
-            $shopTimeUpdate = time();
+            $shopTimeUpdate = $timeInVietNam;
             $stmt = $link->prepare("UPDATE `shop` SET `shop_status`=?,`shop_rank`=?,`shop_update_time`=? WHERE `shop_id`=?");
             $stmt->bind_param("sssi", $statusShop, $rankShop, $shopTimeUpdate, $id);
             if ($stmt->execute()) {
@@ -281,7 +277,7 @@ if ($isLoggedIn) {
             $roleDescription = $_POST['editRoleDescription'];
             $roleStatus = $_POST['editRoleStatus'];
 
-            $update = $link->query("UPDATE `role` SET `role_name`= '$roleName',`role_description`= '$roleDescription',`role_status`= '$roleStatus',`role_update_time`= '" . time() . "' WHERE `role_id`=$id");
+            $update = $link->query("UPDATE `role` SET `role_name`= '$roleName',`role_description`= '$roleDescription',`role_status`= '$roleStatus',`role_update_time`= '" . $timeInVietNam . "' WHERE `role_id`=$id");
 
             if ($update) {
                 $msg = "Record updated successfully";
@@ -374,7 +370,7 @@ if ($isLoggedIn) {
             $category = $_POST['editCategory'];
             $ctgDescription = $_POST['editCtgDescription'];
             $ctgStatus = $_POST['editCtgStatus'];
-            $ctgTimeUpdate = time();
+            $ctgTimeUpdate = $timeInVietNam;
             $stmt = $link->prepare("UPDATE `categories` SET `ctg_name`=?,`ctg_description`=?,`ctg_status`=?,`ctg_update_time`=? WHERE `ctg_id`=?");
             $stmt->bind_param("ssssi", $category, $ctgDescription, $ctgStatus, $ctgTimeUpdate, $id);
             if ($stmt->execute()) {

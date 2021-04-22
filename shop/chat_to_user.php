@@ -13,8 +13,9 @@ if (!isset($_SESSION['current_user'])) {
 <html lang="en">
 
 <head>
-    <?php include "../partials/html_header.php"; ?>
     <link rel="stylesheet" href="./css/chat.css">
+    <?php include "../partials/html_header.php"; ?>
+
 </head>
 
 <body class="sidebar-pinned ">

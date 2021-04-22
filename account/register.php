@@ -92,6 +92,9 @@ include "../connect_db.php"
             $result = $link->query("SELECT * from `user` where `username` ='$_POST[username]'");
             $count = mysqli_num_rows($result);
 
+            $encryptPassword = md5("$_POST[password]");
+
+
             if ($count > 0) {
         ?>
                 <script type="text/javascript">
@@ -100,7 +103,7 @@ include "../connect_db.php"
                 </script>
             <?php
             } else {
-                $addAccount = $link->query("INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `fullname`, `user_status`, `user_role_id`, `user_create_time`) VALUES (NULL, '$_POST[username]', '$_POST[password]', '$_POST[email]', '$_POST[fullname]', '1', '$_POST[role]', '" . time() . "');");
+                $addAccount = $link->query("INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `fullname`, `user_status`, `user_role_id`, `user_create_time`) VALUES (NULL, '$_POST[username]', '$encryptPassword', '$_POST[email]', '$_POST[fullname]', '1', '$_POST[role]', '" . time() . "');");
 
             ?>
                 <script type="text/javascript">

@@ -101,7 +101,9 @@ $totalPage = ceil($totalUser / $pPerPage);
                                                     ?>
 
 
-                                                    <td><?= date("Y-m-d", $row["user_create_time"]); ?></td>
+                                                    <td><?=
+                                                        date('d-M-Y  H:i:s', strtotime($row["user_create_time"]));
+                                                        ?></td>
                                                     <!--     <?php
                                                                 if (!empty($row['user_update_time'] == 0)) {
 
@@ -110,7 +112,10 @@ $totalPage = ceil($totalUser / $pPerPage);
 
                                                     <?php
                                                                 } else {  ?>
-                                                        <td><?php echo date("Y-m-d  H:i:s", $row["user_update_time"]); ?></td>
+                                                        <td><?php echo
+                                                                    date('d-M-Y  H:i:s', strtotime($row["user_update_time"]));
+
+                                                            ?></td>
                                                     <?php
                                                                 }
                                                     ?> -->
@@ -194,7 +199,14 @@ $totalPage = ceil($totalUser / $pPerPage);
                                             <tr>
                                                 <td>Avatar</td>
                                                 <td>
-                                                    <img src="" alt="No avatar" id="detailAvatar" width="65" height="65">
+
+                                                    <div class="avatar avatar-sm avatar-online">
+
+                                                        <img src="" class="avatar-img rounded-circle" alt="No avatar" id="detailAvatar">
+
+
+                                                    </div>
+
                                                 </td>
                                             </tr>
 

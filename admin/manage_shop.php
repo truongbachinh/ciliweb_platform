@@ -3,13 +3,9 @@ include "../config_admin.php";
 if (!isset($_SESSION['current_user'])) {
     header("location: ./account/login.php");
 }
-$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 4;
-$currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
-$offest = ($currentPage - 1) * $pPerPage;
-$countShop = mysqli_query($link, "SELECT * from `shop`");
-$result = mysqli_query($link, "SELECT * from `shop`  order by `shop_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
-$totalShop = $countShop->num_rows;
-$totalPage = ceil($totalShop / $pPerPage)
+
+$result = mysqli_query($link, "SELECT * from `shop`  order by `shop_id`");
+
 ?>
 
 <!DOCTYPE html>
@@ -120,7 +116,10 @@ $totalPage = ceil($totalShop / $pPerPage)
 
 
                                                     ?>
-                                                    <td><?= date("Y/d/m H:i:s", $row["shop_create_time"]); ?></td>
+                                                    <td><?=
+                                                        date('d-M-Y  H:i:s', strtotime($row["shop_create_time"]));
+
+                                                        ?></td>
                                                     <?php
                                                     if (!empty($row['shop_update_time'] == 0)) {
 
@@ -129,7 +128,10 @@ $totalPage = ceil($totalShop / $pPerPage)
 
                                                     <?php
                                                     } else {  ?>
-                                                        <td style="padding: 2.5%;"><?= date("Y/d/m H:i:s", $row["shop_update_time"]); ?></td>
+                                                        <td style="padding: 2.5%;"><?=
+                                                                                    date('d-M-Y  H:i:s', strtotime($row["shop_update_time"]));
+
+                                                                                    ?></td>
                                                     <?php
                                                     }
                                                     ?>
