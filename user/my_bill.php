@@ -236,7 +236,7 @@ if (isset($_POST['reviewProduct'])) {
     $idShop = $_POST['fbShopId'];
     $reviewRank =  $_POST['reviewRankInput'];
     $reviewContent =  $_POST['reviewContent'];
-    $timeReview = time();
+    $timeReview = $timeInVietNam;
 
 
     // $tm = md5(time());
@@ -300,7 +300,7 @@ if (isset($_POST['reviewProduct'])) {
     var_dump($fileNameVideo);
 
 
-    $queryInsertReivew = $link->query("INSERT INTO `reviews` (`review_id`, `review_user_id`, `review_shop_id`, `review_product_id`, `review_image`, `review_video`, `rank`, `review_comment`, `review_time`) VALUES (NULL, '$userId', ' $idShop',' $idProduct','$fileNameImage',' $fileNameVideo','$reviewRank',  '$reviewContent', '  $timeReview');");
+    $queryInsertReivew = $link->query("INSERT INTO `reviews` (`review_id`, `review_user_id`, `review_product_id`, `review_image`, `review_video`, `rank`, `review_comment`, `review_time`) VALUES (NULL, '$userId',' $idProduct','$fileNameImage',' $fileNameVideo','$reviewRank',  '$reviewContent', '  $timeReview');");
 
     var_dump($queryInsertReivew);
 }

@@ -37,7 +37,7 @@ include "../config_user.php";
         $(document).ready(function() {
             $('.table_my_order').DataTable();
         })
-
+        $('[data-fancybox]').fancybox();
         $(document).ready(function() {
             var options = {
                 max_value: 5,

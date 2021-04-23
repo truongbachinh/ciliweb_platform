@@ -8,10 +8,10 @@ $allowTypeImages = array('jpg', 'png', 'jpeg', 'gif', 'PNG');
 $allowTypeVideos = array('mp4', 'mov', 'mpeg-2', 'flv');
 
 
-$queryTotalUser = $link->query("SELECT COUNT(DISTINCT(reviews.review_user_id)) as total_user FROM reviews INNER JOIN user ON user.user_id = reviews.review_user_id INNER JOIN user_infor ON user_infor.ui_user_id = user.user_id WHERE review_product_id = '$id' AND review_shop_id = '$idShop'");
+$queryTotalUser = $link->query("SELECT COUNT(DISTINCT(reviews.review_user_id)) as total_user FROM reviews INNER JOIN user ON user.user_id = reviews.review_user_id INNER JOIN user_infor ON user_infor.ui_user_id = user.user_id WHERE review_product_id = '$id'");
 $totalU = $queryTotalUser->fetch_assoc();
 $totalUser = $totalU['total_user'];
-$queryTotalReview = $link->query("SELECT COUNT(reviews.review_comment) as total_review FROM reviews WHERE review_product_id = '$id' AND review_shop_id = '$idShop'");
+$queryTotalReview = $link->query("SELECT COUNT(reviews.review_comment) as total_review FROM reviews WHERE review_product_id = '$id' ");
 $totalR = $queryTotalReview->fetch_assoc();
 $totalReview = $totalR['total_review'];
 
@@ -19,7 +19,7 @@ $queryTotalSold = $link->query("SELECT COUNT(order_items.id) as total_sold FROM 
 $totalSold = $queryTotalSold->fetch_assoc();
 $totalSoldOfShop = $totalSold['total_sold'];
 
-$queryReview = $link->query("SELECT user.username, user_infor.ui_avatar, reviews.* FROM reviews INNER JOIN user ON user.user_id = reviews.review_user_id INNER JOIN user_infor ON user_infor.ui_user_id = user.user_id WHERE review_product_id = '$id' AND review_shop_id = '$idShop '");
+$queryReview = $link->query("SELECT user.username, user_infor.ui_avatar, reviews.* FROM reviews INNER JOIN user ON user.user_id = reviews.review_user_id INNER JOIN user_infor ON user_infor.ui_user_id = user.user_id WHERE review_product_id = '$id' ");
 $listReview = array();
 if (!empty($queryReview)) {
     while ($rowReview = mysqli_fetch_array($queryReview)) {
@@ -30,7 +30,7 @@ if (!empty($queryReview)) {
 
 
 
-$queryRating = $link->query("SELECT rank, COUNT(rank) as count_rater FROM reviews WHERE review_product_id = '$id' AND review_shop_id = '$idShop' GROUP BY rank");
+$queryRating = $link->query("SELECT rank, COUNT(rank) as count_rater FROM reviews WHERE review_product_id = '$id'  GROUP BY rank");
 $listRating = array();
 if ($queryRating->num_rows > 0) {
     if (!empty($queryReview)) {
@@ -388,7 +388,6 @@ $shopUserId = $shopChat['user_id']
 <script src="./javascript/seafood_infor_chat.js"></script>
 
 <script type="text/javascript">
-    $('[data-fancybox]').fancybox();
     $(document).ready(function() {
 
         var $item = $('div#view-list-libImg'), //Cache your DOM selector
