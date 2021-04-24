@@ -1,3 +1,6 @@
+<?php
+ob_start();
+?>
 <meta charset="UTF-8">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -52,6 +55,5 @@
 <!--Bootstrap + atmos Admin CSS-->
 <link rel='stylesheet' type='text/css' href='https://d33wubrfki0l68.cloudfront.net/css/16e33a95bb46f814f87079394f72ef62972bd197/light/assets/css/atmos.min.css' />
 <!-- Additional library for page -->
-
-<!-- Fancybox -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous"></script>
+<!-- Additional chat  -->
+<link rel="stylesheet" href="../assets/css/chat.css">

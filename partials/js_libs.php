@@ -21,7 +21,7 @@
 <!--Validation-->
 <script src="../assets/vendor/jquery.validate/jquery.validate.min.js"></script>
 <!--Fancybox-->
-<script src="../assets/fancybox/jquery.fancybox.min.js"></script>
+<!-- <script src="../assets/fancybox/jquery.fancybox.min.js"></script> -->
 <!-- Chart -->
 <script src="../assets/js/canvasjs.min.js"></script>
 <!-- Sweetalert -->
@@ -34,4 +34,4 @@
 <script src="../assets/vendor/jquery/jquery.dataTables.js"></script>
 
 <!-- Fancybox -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.js" integrity="sha512-j7/1CJweOskkQiS5RD9W8zhEG9D9vpgByNGxPIqkO5KrXrwyDAroM9aQ9w8J7oRqwxGyz429hPVk/zR6IOMtSA==" crossorigin="anonymous"></script>
+<script src="../assets/vendor/jquery/jquery.fancybox.js"></script>

@@ -6,6 +6,73 @@
 </div>
 
 <script>
+    // Show loading overlay when ajax request starts
+    $(document).ajaxStart(function() {
+        $('.loading-overlay').show();
+    });
+
+    // Hide loading overlay when ajax request completes
+    $(document).ajaxStop(function() {
+        $('.loading-overlay').hide();
+    });
+    var checkSearch
+    var ctg_id = '';
+    var shop_id = '';
+    // 
+
+    function searchFilterDelay() {
+        if (checkSearch) {
+            clearTimeout(checkSearch);
+        }
+        checkSearch = setTimeout(() => {
+            searchFilter();
+        }, 400);
+    }
+    $(".btn-get-ctg-id").click(function(event) {
+        event.preventDefault();
+        ctg_id = parseInt($(this).data("id"));
+        console.log("ctg_id", ctg_id)
+        searchFilter();
+    })
+
+    $(".btn-get-shop-id").click(function(event) {
+        event.preventDefault();
+        shop_id = parseInt($(this).data("id"));
+        console.log("shop_id", shop_id)
+        searchFilter();
+    })
+
+    function resetSearch() {
+        console.log("hello");
+        $('#keywords').html('');
+
+    }
+
+
+    function searchFilter(page_num) {
+        page_num = page_num ? page_num : 0;
+        var keywords = $('#keywords').val();
+        var sortBy = $('#sortBy').val();
+        $.ajax({
+            type: 'POST',
+            url: 'getData.php',
+            data: 'page=' + page_num + '&keywords=' + keywords + '&sortBy=' + sortBy + '&category=' + ctg_id + '&shop=' + shop_id,
+            beforeSend: function() {
+                $('.loading-overlay').show();
+            },
+            success: function(html) {
+                $('#postContent').html(html);
+                $('.loading-overlay').fadeOut("slow");
+            }
+        });
+    }
+
+
+
+
+
+
+
     // $.fn.serializeObject = function() {
     //     var o = {};
     //     var a = this.serializeArray();

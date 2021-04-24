@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../user/css/chat.css">
+<!-- <link rel="stylesheet" href="../user/css/chat.css"> -->
 <section class="admin-content">
     <div class="container m-t-30">
         <div class="row justify-content-md-center">

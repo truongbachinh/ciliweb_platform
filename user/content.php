@@ -21,5 +21,19 @@ if ($t == 'foodInfo') {
     include('advertisement.php');
     include('categories.php');
     include('shop_providers.php');
-    include('all_products.php');
+?>
+    <div class="container-fluid result-search">
+        <div id="title-categories">
+            <p style="background: #7abaa1;
+    padding: 10px;
+    border-left: 5px solid #ff284b;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius:12px;
+    color:white">
+                All Of Product
+            </p>
+        </div>
+    <?php
+    include('seafood.php');
 }

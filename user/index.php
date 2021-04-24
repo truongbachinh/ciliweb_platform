@@ -1,7 +1,7 @@
 <?php
 include "../config_user.php";
 
-
+$GLOBALS['category'] = '';
 
 ?>
 
@@ -11,6 +11,8 @@ include "../config_user.php";
 
 <head>
     <?php include "../partials/html_header.php"; ?>
+    <link rel="stylesheet" href="./css/all_products.css">
+    </link>
 </head>
 
 <body class="sidebar-pinned " style="overflow-x: hidden;">
@@ -32,7 +34,7 @@ include "../config_user.php";
     </main>
     <?php include "../partials/js_libs.php"; ?>
     <?php include "../partials/footer_user.php"; ?>
-    <!-- <script src="../user/javascript/chat.js"></script> -->
+
     <script>
         $(document).ready(function() {
             $('.table_my_order').DataTable();

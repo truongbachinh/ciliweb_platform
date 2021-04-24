@@ -1,5 +1,6 @@
 <?php
-$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 15;
+// $pPerPage = 20;
+$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 5;
 $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
 $offest = ($currentPage - 1) * $pPerPage;
 $totalProduct = mysqli_query($link, "select * from products");
@@ -7,6 +8,8 @@ $totalProduct = $totalProduct->num_rows;
 $totalPage = ceil($totalProduct / $pPerPage);
 
 $query_search = $link->query("SELECT categories.*, shop.*, products.* from products INNER JOIN shop ON shop.shop_id = products.p_shop_id INNER JOIN categories ON products.p_category_id = categories.ctg_id order by `p_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
+
+// $query_search = $link->query("SELECT categories.*, shop.*, products.* from products INNER JOIN shop ON shop.shop_id = products.p_shop_id INNER JOIN categories ON products.p_category_id = categories.ctg_id order by `p_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
 
 
 

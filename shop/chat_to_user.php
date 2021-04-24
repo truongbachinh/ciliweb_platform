@@ -13,7 +13,7 @@ if (!isset($_SESSION['current_user'])) {
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="./css/chat.css">
+
     <?php include "../partials/html_header.php"; ?>
 
 </head>

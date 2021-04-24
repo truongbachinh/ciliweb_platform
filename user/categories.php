@@ -17,7 +17,9 @@
                     $resultCategories =  $link->query("SELECT categories.* from categories");
                     while ($row = mysqli_fetch_array($resultCategories)) {
                     ?>
-                        <div class="item-categories " style="width: 120px; "><a href="index.php?view=categories&idl=<?php echo $row["ctg_id"]; ?>" style="text-decoration: none;">
+                        <a href="" style="text-decoration: none;">
+                            <!-- <a href="" class="btn-get-id_ctg" role="button" data-id="<?= $row['ctg_id'] ?>"> -->
+                            <div id="categorySearch" class="item-categories btn-get-ctg-id" data-id="<?= $row['ctg_id'] ?>" style="width: 120px; " onclick='searchFilter()'>
                                 <div class="card card-block card-4" style="margin-top: 6px;">
                                     <div class="card-body">
 
@@ -39,8 +41,9 @@
 
                                 </div>
 
-                            </a>
-                        </div>
+
+                            </div>
+                        </a>
                     <?php
                     }
                     ?>
