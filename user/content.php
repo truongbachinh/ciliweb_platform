@@ -10,6 +10,8 @@ if ($t == 'foodInfo') {
     include('sea_food_infor.php');
 } elseif ($t == 'profile') {
     include('profile.php');
+} elseif ($t == 'changepass') {
+    include('../account/change_password.php');
 } elseif ($t == 'myorder') {
     include('my_order.php');
 } elseif ($t == 'conversation') {

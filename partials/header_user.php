@@ -65,7 +65,7 @@ ob_start();
                                         <a href="../user/index.php?view=profile" class="dropdown-item"> Profile</a>
                                         <a href="../user/index.php?view=conversation" class="dropdown-item"> My conversation</a>
                                         <a href="../user/index.php?view=myorder" class="dropdown-item"> My Order</a>
-                                        <a href="../account/change_password.php" class="dropdown-item"> Reset Password</a>
+                                        <a href="../user/index.php?view=changepass" class="dropdown-item"> Reset Password</a>
                                         <a class="dropdown-item" href=""> Help </a>
                                         <div class="dropdown-divider"></div>
                                         <a href="../account/logout.php" class="dropdown-item"> Logout</a>
@@ -88,22 +88,12 @@ ob_start();
                                     <form action="">
                                         <div class="input">
                                             <div class="input-group">
-                                                <!-- <input type="search" class="form-control empty d-flex justify-content-center search-box" id="searchNameFood" value="<?php if (isset($_POST['searchText'])) echo $_POST['searchText'] ?>" placeholder="Search seafood..." /> -->
-
-                                                <!-- <span class="input-group-text border-0" id="search-addon">
-                                        <i class="fas fa-search"></i>
-                                    </span> -->
-
-                                                <!-- <div class="post-search-panel"> -->
                                                 <input type="text" class="form-control empty d-flex justify-content-center search-box" id="keywords" placeholder="Type keywords..." onkeyup="searchFilterDelay();" />
                                                 <select class="form-control empty d-flex justify-content-center search-box col-2" id="sortBy" onchange="searchFilter();">
                                                     <option value="">Sort by Price</option>
                                                     <option value="asc"> Low to high</option>
                                                     <option value="desc">High to low</option>
                                                 </select>
-                                                <!-- <input type="button" value="delete" onclick="resetSearch()" class="form-control empty d-flex justify-content-center search-box col-1" /> -->
-
-                                                <!-- </div> -->
                                             </div>
                                         </div>
                                     </form>

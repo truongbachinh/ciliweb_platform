@@ -14,8 +14,6 @@ if ($isLoggedInUser) {
     $userId = $_SESSION["current_user"]["user_id"];
 }
 
-
-
 if (!empty($userId)) {
     $resultUserInfor = mysqli_query($link, "SELECT  user.*, user_infor.*  from user_infor INNER JOIN user ON user.user_id = user_infor.ui_user_id WHERE `user_id` = '$userId'");
 }

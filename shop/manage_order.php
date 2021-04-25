@@ -54,11 +54,11 @@ while ($rowTime =  mysqli_fetch_array($resTime)) {
 }
 foreach ($checkTime as $rowTimeOrder) {
 
-    $checkTimeOrder = $rowTimeOrder['order_create_time'];
+    $checkTimeOrder = $rowTimeOrder['shipping_create_time'];
     $orderCheckTimeId = $rowTimeOrder['id'];
     $duration = 2;
     $duration_type = 'day';
-    $deadline = date('Y/m/d H:i:s', strtotime($checkTimeOrder . ' +' . $duration . ' ' . $duration_type));
+    $deadline = date('Y-M-d H:i:s', strtotime($checkTimeOrder . ' +' . $duration . ' ' . $duration_type));
 
     $diff = abs(strtotime($timeInVietNam) - strtotime($timeInVietNam));
     $years = floor($diff / (365 * 60 * 60 * 24));
@@ -365,7 +365,6 @@ foreach ($checkTime as $rowTimeOrder) {
 
                 });
             });
-
             $(document).on('click', '.btn-update-order', function(e) {
                 Utils.api("update_order_shipping_infor", {
                     id: activeId,
@@ -374,97 +373,97 @@ foreach ($checkTime as $rowTimeOrder) {
                     $("#editOrder").modal("hide"),
                         swal("Notice", response.msg, "success").then(function(e) {
                             location.reload()
-                            // location.replace("./manage_order.php");
                         });
                 }).catch(err => {
 
                 })
             });
-
-            // $(document).on('click', 'btn-update-order', function(e) {
-            //     Utils.api("update_order_shipping_infor", {
-            //         id: activeId,
-            //         updateOrderShipping: $("#updateShippingStatus").val(),
-            //     }).then(response => {
-            //         $("#editOrder").hide(),
-            //             swal("Notice", response.msg, "success").then(function(e) {
-            //                 location.replace("./manage_order.php");
-            //             });
-            //     }).catch(err => {
-
-            //     })
-            // });
-
-
-            // $(document).on('click', '.btn-edit-order', function(e) {
-            //     e.preventDefault();
-
-            //     const orderId = parseInt($(this).data("id"));
-            //     activeId = orderId;
-            //     console.log(orderId);
-            //     Utils.api("get_order_info_detail", {
-            //         id: orderId
-            //     }).then(response => {
-            //         $.get("../api.php", function(orderDetailContentHtml) {
-            //             console.log("order-count", orderDetailContentHtml);
-            //             // $('#editOrder').modal();
-
-            //         }).catch(err => {
-
-            //         });
-            //     });
-            // });
-            // $(document).on('click', '.btn-detail-order', function(e) {
-            //     e.preventDefault();
-            //     const orderId = parseInt($(this).data("id"));
-            //     activeId = orderId;
-            //     console.log(orderId);
-            //     $.fancybox({
-            //         'width': '60%',
-            //         'height': '80%',
-            //         'autoScale': true,
-            //         'transitionIn': 'fade',
-            //         'transitionOut': 'fade',
-            //         'href': './bill.php',
-            //         'type': 'iframe',
-            //         'onClosed': function() {
-            //             window.location.href = "./manage_order.php";
-            //         }
-
-
-            //     });
-            //     return false;
-            // });
-            // $(document).on('click', '.btn-edit-order', function(e) {
-            //     e.preventDefault();
-            //     const orderId = parseInt($(this).data("id"));
-            //     activeId = orderId;
-            //     console.log(orderId);
-            //     $.ajax({
-            //         type: "POST",
-            //         url: Utils.api("get_order_info_detail"),
-            //         data: {
-            //             "id": orderId
-            //         },
-            //         success: function(res) {
-            //             if (res) {
-            //                 var response = JSON.parse(res);
-            //                 if (response.status == 0) {
-
-            //                 } else {
-            //                     $.get('../shop/bill.php', function(cartContentHTML) {
-            //                         console.log("cart-count", cartContentHTML);
-            //                         $('#viewDetailOrder').html(cartContentHTML);
-            //                         $('#editOrder').modal();
-            //                     })
-            //                 }
-            //             }
-            //         }
-            //     });
-            // });
-
-
         });
+
+
+
+        // $(document).on('click', 'btn-update-order', function(e) {
+        //     Utils.api("update_order_shipping_infor", {
+        //         id: activeId,
+        //         updateOrderShipping: $("#updateShippingStatus").val(),
+        //     }).then(response => {
+        //         $("#editOrder").hide(),
+        //             swal("Notice", response.msg, "success").then(function(e) {
+        //                 location.replace("./manage_order.php");
+        //             });
+        //     }).catch(err => {
+
+        //     })
+        // });
+
+
+        // $(document).on('click', '.btn-edit-order', function(e) {
+        //     e.preventDefault();
+
+        //     const orderId = parseInt($(this).data("id"));
+        //     activeId = orderId;
+        //     console.log(orderId);
+        //     Utils.api("get_order_info_detail", {
+        //         id: orderId
+        //     }).then(response => {
+        //         $.get("../api.php", function(orderDetailContentHtml) {
+        //             console.log("order-count", orderDetailContentHtml);
+        //             // $('#editOrder').modal();
+
+        //         }).catch(err => {
+
+        //         });
+        //     });
+        // });
+        // $(document).on('click', '.btn-detail-order', function(e) {
+        //     e.preventDefault();
+        //     const orderId = parseInt($(this).data("id"));
+        //     activeId = orderId;
+        //     console.log(orderId);
+        //     $.fancybox({
+        //         'width': '60%',
+        //         'height': '80%',
+        //         'autoScale': true,
+        //         'transitionIn': 'fade',
+        //         'transitionOut': 'fade',
+        //         'href': './bill.php',
+        //         'type': 'iframe',
+        //         'onClosed': function() {
+        //             window.location.href = "./manage_order.php";
+        //         }
+
+
+        //     });
+        //     return false;
+        // });
+        // $(document).on('click', '.btn-edit-order', function(e) {
+        //     e.preventDefault();
+        //     const orderId = parseInt($(this).data("id"));
+        //     activeId = orderId;
+        //     console.log(orderId);
+        //     $.ajax({
+        //         type: "POST",
+        //         url: Utils.api("get_order_info_detail"),
+        //         data: {
+        //             "id": orderId
+        //         },
+        //         success: function(res) {
+        //             if (res) {
+        //                 var response = JSON.parse(res);
+        //                 if (response.status == 0) {
+
+        //                 } else {
+        //                     $.get('../shop/bill.php', function(cartContentHTML) {
+        //                         console.log("cart-count", cartContentHTML);
+        //                         $('#viewDetailOrder').html(cartContentHTML);
+        //                         $('#editOrder').modal();
+        //                     })
+        //                 }
+        //             }
+        //         }
+        //     });
+        // });
+
 
         // $(document).ready(function() {
         //     $('#inputSearchOrder').keyup(function() {

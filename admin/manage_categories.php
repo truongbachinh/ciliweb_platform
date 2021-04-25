@@ -38,7 +38,7 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-12">
                                         <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addCategories"><i class="mdi mdi-clipboard-plus"></i> Add neu categories
                                         </a>
                                     </div>
@@ -50,7 +50,6 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                                             <tr style="text-align: center;">
                                                 <th>Id</th>
                                                 <th>Categories name</th>
-                                                <th>Categories description</th>
                                                 <th>Categories image</th>
                                                 <th>Categories status</th>
                                                 <th>Create time</th>
@@ -66,7 +65,6 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                                                 <tr>
                                                     <td><?= $i++; ?></td>
                                                     <td><?= $row["ctg_name"]; ?></td>
-                                                    <td><?= $row["ctg_description"]; ?></td>
                                                     <td><?php
                                                         if ($result->num_rows > 0) {
                                                             $imageURL = '../admin/image_categories/' . $row["ctg_image"];
@@ -115,7 +113,7 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                                                             <a href="" class="btn btn-info  btn-edit-categories" role="button" data-id="<?= $row['ctg_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
                                                             <a href="" class="btn btn-danger btn-delete-categories" role="button" data-id="<?= $row['ctg_id'] ?>"><i class="mdi mdi-delete"></i>
                                                             </a>
-                                                            <!-- <a href="" class="btn btn-primary  btn-detail-categories" role="button" data-id="<?= $row['ctg_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a> -->
+                                                            <a href="" class="btn btn-primary  btn-detail-categories" role="button" data-id="<?= $row['ctg_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -143,7 +141,7 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="" name="manageCategories" method="POST" enctype="multipart/form-data">
+                                <form action="" name="manageCategories" id="addCategoriesForm" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label class="control-label">Categories Name :</label>
                                         <input type="text" class="form-control" id="nameCategories" name="nameCategories" placeholder="Enter name of categories" required>
@@ -163,12 +161,12 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                     </div>
                 </div>
                 <!-- Modal Detail -->
-                <div class="modal fade" id="detailCategories" tabindex="-1" role="dialog" aria-labelledby="detailCategories" aria-hidden="true">
+                <div class="modal fade" id="detailCategory" tabindex="-1" role="dialog" aria-labelledby="detailCategory" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="detailCategories">Detail
-                                    Information categories
+                                <h5 class="modal-title" id="detailCategory">Detail
+                                    Information category
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -179,28 +177,18 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                                     <table class="table table-striped">
                                         <tbody>
                                             <tr>
+                                                <td>Image</td>
+                                                <td>
+                                                    <img src="" height="150" width="150" id="displayImageDetail" style="margin-left: 10px; margin-bottom: 20px;">
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td>Category</td>
-                                                <td id="detailCategory"></td>
+                                                <td id="detailCategoryName"></td>
                                             </tr>
                                             <tr>
                                                 <td>Category description</td>
-                                                <td id="DetailCtgDescription"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Category image</td>
-                                                <td id="DetailCtgImage"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Category status</td>
-                                                <td id="DetailCtgStatus"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Category create time</td>
-                                                <td id="DetailCtgCreateTime"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Category update time</td>
-                                                <td id="DetailCtgUpdateTime"></td>
+                                                <td id="detailCtgDescription"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -237,12 +225,29 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                                         <label for="editCtgDescription">Description</label>
                                         <input type="text" class="form-control" id="editCtgDescription" required>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label for="editCtgImage">Image</label>
                                         <input type="file" class="form-control" id="editCtgImage" required>
                                         <img src="" height="50" width="50" id="displayImageEdit" style="margin-left: 10px;">
-                                    </div>
+                                    </div> -->
                                     <div class="form-group">
+                                        <div>
+                                            <p class=" font-secondary">Product Image</p>
+                                            <div class="input-group mb-3">
+                                                <div onload="GetFileInfo ()">
+                                                    <input type="file" class="custom-file-input" id="inputFile" name="editCtgImage" onchange="GetFileInfo ()">
+                                                    <label class="custom-file-label" for="inputFile">Choose file</label>
+                                                </div>
+                                            </div>
+                                            <div id="info" style="margin-top:10px"></div>
+                                        </div>
+                                        <img src="" height="50" width="50" id="displayImageEdit" style="margin-left: 10px;">
+                                        <input type="hidden" id="editCtgImageVal" name="editCtgImageVal">
+
+                                    </div>
+
+
+                                    <div class=" form-group">
                                         <label for="editCtgStatus">Status</label>
                                         <select id="editCtgStatus" class="form-control">
                                             <option value="1">Active</option>
@@ -264,12 +269,46 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                         </div>
                     </div>
                 </div>
+
         </section>
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
     <?php include "../partials/js_libs.php"; ?>
     <script>
         $(document).ready(function() {
+
+            $('#addCategoriesForm').validate({
+                rules: {
+                    nameCategories: {
+                        required: true,
+                        lettersOnly: true
+                    },
+                    descriptionCategories: {
+                        required: true,
+
+                    },
+                    imageCategories: {
+                        required: true,
+
+                    },
+
+
+
+                },
+                messages: {
+
+                    nameCategories: {
+                        required: "Please provide product name!",
+                        lettersOnly: " Please enter letter only!"
+                    },
+                    descriptionCategories: {
+                        required: "Please provide information!",
+                    },
+                    imageCategories: {
+                        required: "Please provide imamge!",
+                    },
+                },
+            })
             $('#table_manage_categories').DataTable();
         });
         document.addEventListener("DOMContentLoaded", function(e) {
@@ -304,11 +343,12 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                 Utils.api("get_categories_info", {
                     id: ctgId
                 }).then(ctg => {
-                    $("input#editCategory ").val(ctg.data.ctg_name)
-                    $("#editCtgDescription ").val(ctg.data.ctg_description)
+                    $("input#editCategory").val(ctg.data.ctg_name)
+                    $("#editCtgDescription").val(ctg.data.ctg_description)
                     $('#displayImageEdit').attr('src', pathFile.concat(ctg.data.ctg_image));
                     // $("img#displayImageEdit").attr('src', $("img#displayImageEdit").attr('src') + './image_categories/' + val(ctg.data.ctg_image));
-                    $("#editCtgStatus ").val(ctg.data.ctg_status)
+                    $("#editCtgStatus").val(ctg.data.ctg_status)
+                    $("#editCtgImageVal").val(ctg.data.ctg_image)
                     $('#editCategories').modal();
                 }).catch(err => {
 
@@ -320,6 +360,8 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                     editCategory: $("#editCategory").val(),
                     editCtgDescription: $("#editCtgDescription").val(),
                     editCtgStatus: $("#editCtgStatus").val(),
+                    editCtgImage: $(".editCtgImage").val(),
+                    editCtgImageNotchange: $("#editCtgImageVal").val(),
                 }).then(response => {
                     $("#editCategories").modal("hide");
                     swal("Notice", "Record is updated successfully!", "success").then(function(e) {
@@ -328,6 +370,24 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
                 }).catch(err => {
 
                 })
+            });
+
+            $(document).on('click', '.btn-detail-categories', function(e) {
+                e.preventDefault();
+                var pathFile = "../admin/image_categories/";
+                const ctgId = parseInt($(this).data("id"));
+                activeId = ctgId;
+                console.log(ctgId);
+                Utils.api("get_categories_info", {
+                    id: ctgId
+                }).then(ctg => {
+                    $('#displayImageDetail').attr('src', pathFile.concat(ctg.data.ctg_image));
+                    $("#detailCategoryName").text(ctg.data.ctg_name)
+                    $("#detailCtgDescription ").text(ctg.data.ctg_description)
+                    $('#detailCategory').modal();
+                }).catch(err => {
+
+                });
             });
         })
     </script>

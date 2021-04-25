@@ -34,6 +34,7 @@ while ($rowShop = mysqli_fetch_array($result)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
     <!-- font-cdn -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
     <!-- bootstrap 4 cdn -->
@@ -197,12 +198,13 @@ while ($rowShop = mysqli_fetch_array($result)) {
                                 </div>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">
                             </div>
+                            <label for="email" class="error"></label>
 
                         </div>
                         <div class="row">
                             <div class="col-md-5 mb-3">
                                 <label for="country">City</label>
-                                <select class="custom-select d-block w-100" name="calc_shipping_provinces" required="">
+                                <select class="custom-select d-block w-100" name="calc_shipping_provinces" required>
                                     <option value="">Province / City</option>
                                 </select>
                                 <input class="billing_address_1" name="" type="hidden" value="">
@@ -308,43 +310,82 @@ while ($rowShop = mysqli_fetch_array($result)) {
     <?php include "../partials/js_libs.php"; ?>
     <script src="./js/checkout.js"></script>
     <script>
-        // $(document).ready(function() {
-        //     $.validator.addMethod("lettersOnly", function(value, element) {
-        //         return this.optional(element) || /^[a-z," "]+$/i.test(value);
-        //     }, "Letters and spaces only please");
-        //     $('#formCheckoutProduct').validate({
-        //         rules: {
-        //             firstName: {
-        //                 required: true,
-        //                 lettersOnly: true,
-        //             },
-        //             lastName: {
-        //                 required: true,
-        //                 lettersOnly: true,
-        //             },
-        //             phoneNumber: {
-        //                 required: true,
-        //                 minlength: 6,
-        //                 number: true
-        //             }
+        $(document).ready(function() {
+            $.validator.addMethod("valueNotEquals", function(value, element, arg) {
+                return arg !== value;
+            }, "Value must not equal arg.");
 
-        //         },
-        //         messages: {
-        //             firstName: {
-        //                 required: "Please provide information!",
-        //                 lettersOnly: "Please provide only character in alphabet!",
-        //             },
-        //             lastName: {
-        //                 required: "Please provide information!",
-        //             },
-        //             phoneNumber: {
-        //                 required: "Please provide information!",
-        //                 minlength: "Please provide at least 6 characters.",
-        //             }
+            $.validator.addMethod("lettersOnly", function(value, element) {
+                return this.optional(element) || /^[a-z," "]+$/i.test(value);
+            }, "Letters and spaces only please");
+            $('#formCheckoutProduct').validate({
+                rules: {
+                    firstName: {
+                        required: true,
+                        lettersOnly: true,
+                    },
+                    lastName: {
+                        required: true,
+                        lettersOnly: true,
+                    },
+                    phoneNumber: {
+                        required: true,
+                        number: true,
+                        maxlength: 14
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    calc_shipping_provinces: {
+                        required: true
+                    },
+                    calc_shipping_district: {
+                        required: true
+                    },
+                    zipCode: {
+                        required: true
+                    },
+                    address1: {
+                        required: true
+                    }
 
-        //         },
-        //     })
-        // })
+
+                },
+                messages: {
+                    firstName: {
+                        required: "Please provide information!",
+                        lettersOnly: "Please provide only character in alphabet!",
+                    },
+                    lastName: {
+                        required: "Please provide information!",
+                        lettersOnly: "Please provide only character in alphabet!",
+                    },
+                    phoneNumber: {
+                        required: "Please provide your phone number!",
+                        minlength: "Please provide at less than 14 number.",
+                    },
+                    email: {
+                        required: "Please provide email!",
+                        email: "Please provide an email correct.",
+                    },
+                    calc_shipping_district: {
+                        required: "Please select a district!",
+                    },
+                    calc_shipping_provinces: {
+                        required: "Please select  a provinces!",
+                    },
+                    zipCode: {
+                        required: "Please provide  a zipCode!",
+                    },
+                    address1: {
+                        required: "Please provide  an address!",
+                    }
+
+
+                },
+            })
+        })
         $(document).on('click', '.buttonOnlinePayment', function(e) {
             e.preventDefault();
             console.log("data", $(this).serializeArray());
@@ -387,6 +428,16 @@ if (isset($_POST["buttonCheckout"])) {
         $order = $link->query("INSERT INTO `orders` (`id`, `order_user_id`, `order_shop_id`, `order_total_cost`, `order_total_amount`, `order_create_time`,`payment_order_status`,`shipping_order_status`) VALUES (NULL, '" . $cartUserId . "','" . $carts['shop_id'] . "', '" . $carts['total_price'] . "',  '" . $carts['total_amount'] . "', '" .  $timeInVietNam . "','1','1')");
         $orderId = ($link->insert_id);
         $shopIdProduct = $carts['shop_id'];
+
+
+        $selectUserMail = $link->query("SELECT user.email from user inner join shop on shop.shop_user_id = user.user_id where shop_id = '    $shopIdProduct '");
+        $emailShop = $selectUserMail->fetch_assoc();
+
+        $email = $emailShop['email'];
+        $message = "You already have an order for new seafood products with delivery payment method. Please visit http://ciliweb.infinityfreeapp.com/ website to check";
+        $subject = "Notification from Cili website";
+        $text_message    =   "...!";
+        send_mail($email, $subject, $message, $text_message);
 
         $cartCheckoutProduct  = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id = '$cartUserId' AND shop.shop_id = '$shopIdProduct' ");
         //var_dump($cartCheckoutProduct);

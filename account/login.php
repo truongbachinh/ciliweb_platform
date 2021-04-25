@@ -1,134 +1,197 @@
 <?php
-include "header.php";
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Login For User</title>
-
-
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-
-    <link rel="stylesheet" href="../account/library/fonts/icomoon/style.css">
-
-    <link rel="stylesheet" href="../account/library/css/owl.carousel.min.css">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../account/library/css/bootstrap.min.css">
-
-    <!-- Style -->
-    <link rel="stylesheet" href="../account/library/css/style.css">
-
+    <?php include "../partials/html_header.php"; ?>
     <!-- Add icon library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="../account/css/login.css">
+    <style>
+        a,
+        a:hover {
+            color: #333
+        }
+    </style>
 </head>
 
-<body>
-    <?php
-    session_start();
-    if (!empty($_SESSION['current_user'])) {
-        $currentUser = $_SESSION['current_user'];
+<body class="sidebar-pinned " style="overflow-x: hidden;">
 
-    ?>
-        <script type="text/javascript">
-            window.location = "../user/index.php";
-        </script>
-    <?php
-    } else {
-        include "../connect_db.php";
-        include "login_facebook/fb_connect.php";
-        include "login_google/goole_connect.php";
+    <main class="user-main">
 
-    ?>
-        <div class="d-lg-flex half">
-            <div class="contents order-1 order-md-2">
-                <div class="container">
-                    <div class="row align-items-center justify-content-center">
-                        <div class="col-md-7">
-                            <div class="mb-4">
-                                <h6>Welcome back!</h6>
-                                <h3><b>Sign in to your account</b></h3>
-                            </div>
-                            <form class="form-vertical" action="" method="post">
-                                <h6>Username or Email</h6>
-                                <div class="form-group first" style="border: 1px solid  #868080 !important;height: 50px !important; border-radius: 8px;">
-                                    <label class="lableSign" for="username">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username">
-                                </div>
-                                <h6 style="padding-top: 1% !important;">Password</h6>
-                                <div class="form-group last mb-3" style="border: 1px solid  #868080 !important;height: 50px !important; border-radius: 8px;">
-                                    <label class="lableSign" for="password">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password">
+        <!-- PLACE CODE INSIDE THIS AREA -->
 
-                                </div>
+        <body>
+            <main class="user-main">
 
-                                <div class="d-flex mb-5 align-items-center">
-                                    <label class="control control--checkbox mb-0"><span class="caption">Remember me</span>
-                                        <input type="checkbox" checked="checked" />
-                                        <div class="control__indicator" style="border-radius: 11px !important;"></div>
-                                    </label>
-                                    <span class="ml-auto"><a href="#" class="forgot-pass">Forgot Password?</a></span>
-                                </div>
-                                <div class="alert alert-danger" id="failure" style="margin-top: 10px; display: none">
-                                    <strong>Login false!</strong><br> The Username or passwrord error!
-                                </div>
-                                <input type="submit" value="Login" name="login" class="btn btn-block btn-success">
-                                <div class="break-heading">
-                                    or
-                                </div>
-                                <?php
-                                // đăng nhập bằng $loginUrl khi nó đã tồn tại
-                                if (isset($authUrl)) {
-                                ?>
-                                    <div class="social-login" style="margin-top: 3%;">
-                                        <a href="<?= $authUrl ?>" class="btn btn-primary d-flex justify-content-center align-items-center">
-                                            Sign-in with <span class="fa fa-google ml-2"></span>
-                                        </a>
-                                    </div>
-                                <?php
-                                }
-                                ?>
-                                <div class="social-login" style="margin-top: 3%;">
-                                    <a href="<?= $loginUrl ?>" class="btn btn-info d-flex justify-content-center align-items-center">
-                                        Sign-in with <span class="fa fa-facebook ml-2"></span>
-                                    </a>
-                                </div>
-                                <div class="social-login" style="margin-top: 10%;">
-                                    <span class="d-flex justify-content-center align-items-center">Dont have a account? <a href="register.php" class="ml-2 mt-2" style="color: #00bfff"> Sign Up</a></span>
-                                </div>
-                            </form>
+                <!-- PLACE CODE INSIDE THIS AREA -->
+
+                <div class="container-fluid">
+
+                    <?php
+                    include "../connect_db.php"
+                    ?>
+                    <div class="row ">
+                        <div class="col-lg-6 d-none d-md-block bg-cover" style="background-image: url('./images/ciliweb.png');">
+
                         </div>
+                        <div class="col-lg-6  bg-white">
+                            <div class="row align-items-center m-h-100">
+                                <div class="mx-auto col-md-8">
+                                    <div class="p-b-20 m-t-20 text-center">
+                                        <h3 class="admin-brand-content">
+                                            Login with account!
+                                        </h3>
+                                    </div>
+                                    <form action="" name="addUser" id="addU" method="POST" enctype="multipart/form-data">
+                                        <div class="form-col">
+                                            <div class="form-group">
+                                                <label for="usernameUserLogin">Username</label>
+                                                <input type="text" class="form-control" id="usernameUserLogin" name="usernameUserLogin" placeholder="Enter username..." required>
+                                            </div>
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <div class="form-group">
+                                                        <label for="passwordUserLogin">Password</label>
+                                                        <div class="input-group" id="show_hide_password">
+                                                            <input type="password" class="form-control" placeholder="Enter password" name="passwordUserLogin" id="passwordUserLogin" required>
+                                                            <label class="custom-input-label" for="inputFile">
+                                                                <div class="input-group-addon">
+                                                                    <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <label for="passwordUserLogin" class="error"></label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <label class="control control--checkbox mb-0"><span class="caption">Remember me</span>
+                                                    <input type="checkbox" checked="checked" />
+                                                    <div class="control__indicator" style="border-radius: 11px !important;"></div>
+                                                </label>
+                                                <span class="ml-auto"><a href="../account/forgot_password.php" class="forgot-pass">Forgot Password?</a></span>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-success" id="loginSuccess" style="margin-top: 10px; display: none">
+                                            <strong>Success!</strong> Login successfully!
+                                        </div>
+                                        <div class="alert alert-danger" id="loginFailure" style="margin-top: 10px; display: none">
+                                            <strong>Login false!</strong><br> The Username or passwrord error!
+                                        </div>
+                                        <hr>
+                                        <button type="submit" name="loginAccount" class="btn btn-success btn-block btn-lg">Login</button>
+                                        <div class="break-heading">
+                                            or
+                                        </div>
+                                        <?php
+                                        // đăng nhập bằng $loginUrl khi nó đã tồn tại
+                                        if (isset($authUrl)) {
+                                        ?>
+                                            <div class="social-login" style="margin-top: 3%;">
+                                                <a href="<?= $authUrl ?>" class="btn btn-primary d-flex justify-content-center align-items-center">
+                                                    Sign-in with <span class="fa fa-google ml-2"></span>
+                                                </a>
+                                            </div>
+                                        <?php
+                                        }
+                                        ?>
+                                        <div class="social-login" style="margin-top: 3%;">
+                                            <a href="<?= $authUrl ?>" class="btn btn-primary d-flex justify-content-center align-items-center">
+                                                Sign-in with <span class="fa fa-google ml-2"></span>
+                                            </a>
+                                        </div>
+                                        <div class="social-login" style="margin-top: 3%;">
+                                            <a href="<?= $loginUrl ?>" class="btn btn-info d-flex justify-content-center align-items-center">
+                                                Sign-in with <span class="fa fa-facebook ml-2"></span>
+                                            </a>
+                                        </div>
+                                        <div class="social-login" style="margin-top: 10%;">
+                                            <span class="d-flex justify-content-center align-items-center">Dont have a account? <a href="../account/register.php" class="ml-2 " style="color: #00bfff"> Sign Up</a></span>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+
                 </div>
-            </div>
-            <div class="bg order-2 order-md-1" style="background-image: url('images/ciliweb.png');"></div>
-        </div>
+            </main>
+        </body>
+        <!--/ PLACE CODE INSIDE THIS AREA -->
+    </main>
+    <?php include "../partials/js_libs.php"; ?>
 
 
+    <script>
+        $(document).ready(function() {
+            $("#show_hide_password a").on('click', function(event) {
+                event.preventDefault();
+                if ($('#show_hide_password input').attr("type") == "text") {
+                    $('#show_hide_password input').attr('type', 'password');
+                    $('#show_hide_password i').addClass("fa-eye-slash");
+                    $('#show_hide_password i').removeClass("fa-eye");
+                } else if ($('#show_hide_password input').attr("type") == "password") {
+                    $('#show_hide_password input').attr('type', 'text');
+                    $('#show_hide_password i').removeClass("fa-eye-slash");
+                    $('#show_hide_password i').addClass("fa-eye");
+                }
+            });
+        });
+        $(document).ready(function() {
 
-    <?php
-    }
-    ?>
+
+            $.validator.addMethod("lettersOnly", function(value, element) {
+                return this.optional(element) || /^[a-z," "]+$/i.test(value);
+            }, "Letters and spaces only please");
+            $('#addU').validate({
+                rules: {
+                    usernameUserLogin: {
+                        required: true,
+                        minlength: 5,
+                        maxlength: 32,
+                    },
+                    passwordUserLogin: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 32,
+                    },
+                },
+                messages: {
+                    usernameUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+
+
+                    },
+                    passwordUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+                    },
+                },
+            })
+        })
+    </script>
 </body>
-<script src="../account/library/js/jquery-3.3.1.min.js"></script>
-<script src="../account/library/js/popper.min.js"></script>
-<script src="../account/library/js/bootstrap.min.js"></script>
-<script src="../account/library/js/main.js"></script>
 
 </html>
 
-<?php
-if (isset($_POST["login"])) {
-    $sessionStatus = "Active now";
-    $username =  $_POST["username"];
 
-    $password =  md5($_POST["password"]);
+
+
+
+<?php
+if (isset($_POST["loginAccount"])) {
+    $sessionStatus = "Active now";
+    $username =  $_POST["usernameUserLogin"];
+    $password =  md5($_POST["passwordUserLogin"]);
 
     $count = 0;
     $res = mysqli_query($link, "SELECT user.* from user where username='$username' AND `password`='$password'");
@@ -137,10 +200,6 @@ if (isset($_POST["login"])) {
     $updateSessionStatus = $link->query("UPDATE `user` SET `session_status` = '$sessionStatus'  where username='$username' AND `password`='$password'");
 
     $count = mysqli_num_rows($res);
-    // var_dump($username);
-    // var_dump($password);
-    // var_dump($result);
-    // exit;
     while ($row = mysqli_fetch_array($result)) {
 
         $role = $row["user_role_id"];
@@ -151,7 +210,8 @@ if (isset($_POST["login"])) {
     if ($count == 0) {
 ?>
         <script type="text/javascript">
-            document.getElementById("failure").style.display = "block";
+            document.getElementById("loginFailure").style.display = "block";
+            document.getElementById("loginSuccess").style.display = "none";
         </script>
     <?php
     } elseif ($role == "1" &&  $status = "1") {
@@ -159,7 +219,14 @@ if (isset($_POST["login"])) {
         $userCurrent =  $_SESSION["current_user"] = $user;
     ?>
         <script type="text/javascript">
-            window.location = "../shop/index.php";
+            const checklog = document.getElementById("loginSuccess")
+            document.getElementById("loginSuccess").style.display = "block";
+            document.getElementById("loginFailure").style.display = "none";
+            if (checklog.style.display == "block") {
+                setTimeout(function() {
+                    window.location = "../shop/index.php";
+                }, 1000);
+            }
         </script>
     <?php
     } elseif ($role == "2" &&  $status = "1") {
@@ -168,7 +235,14 @@ if (isset($_POST["login"])) {
 
     ?>
         <script type="text/javascript">
-            window.location = "../user/index.php";
+            const checklog = document.getElementById("loginSuccess")
+            document.getElementById("loginSuccess").style.display = "block";
+            document.getElementById("loginFailure").style.display = "none";
+            if (checklog.style.display == "block") {
+                setTimeout(function() {
+                    window.location = "../user/index.php";
+                }, 1000);
+            }
         </script>
 <?php
 

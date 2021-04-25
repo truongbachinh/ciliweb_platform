@@ -1,129 +1,236 @@
 <?php
-include "../connect_db.php"
+include "../config_user.php";
+
+
 ?>
-<!doctype html>
-<html class="no-js" lang="en">
+
+
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Register Now</title>
+    <?php include "../partials/html_header.php"; ?>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-
-    <link rel="stylesheet" href="library/fonts/icomoon/style.css">
-    <link rel="stylesheet" href="library/css/owl.carousel.min.css">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="library/css/bootstrap.min.css">
-    <!-- Style -->
-    <link rel="stylesheet" href="library/css/style.css">
+    </link>
 </head>
 
-<body>
+<body class="sidebar-pinned " style="overflow-x: hidden;">
 
-    <body>
-        <div class="d-lg-flex half">
-            <div class="contents order-1 order-md-2">
-                <div class="container">
-                    <div class="row align-items-center justify-content-center">
-                        <div class="col-md-7">
-                            <div class="mb-4">
-                                <h3><b>Register your account</b></h3>
+    <main class="user-main">
+
+        <!-- PLACE CODE INSIDE THIS AREA -->
+
+        <div class="container-fluid">
+
+
+            <?php
+            include "../connect_db.php"
+            ?>
+
+
+            <div class="row ">
+                <div class="col-lg-5  bg-white">
+                    <div class="row align-items-center m-h-100">
+                        <div class="mx-auto col-md-8">
+                            <div class="p-b-20 text-center">
+                                <h3 class="admin-brand-content">
+                                    Register account!
+                                </h3>
                             </div>
-                            <form class="form" action="" method="post">
-                                <h6 style="padding-top: 2% !important;">Fullname</h6>
-                                <div class="form-group first" style="border: 1px solid  #868080 !important;height: 50px !important; border-radius: 8px;">
-                                    <label for="fullname">Fullname</label>
-                                    <input type="text" class="form-control" id="fullname" name="fullname">
-                                </div>
-                                <h6 style="padding-top: 2% !important;">Username</h6>
-                                <div class="form-group first" style="border: 1px solid  #868080 !important;height: 50px !important; border-radius: 8px;">
-                                    <label for="username">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username">
-                                </div>
-                                <h6>Email</h6>
-                                <div class="form-group first" style="border: 1px solid  #868080 !important;height: 50px !important; border-radius: 8px;">
-                                    <label for="email">Email</label>
-                                    <input type="text" class="form-control" id="email" name="email">
-                                </div>
-                                <h6 style="padding-top: 2% !important;">Password</h6>
-                                <div class="form-group last mb-3" style="border: 1px solid  #868080 !important;height: 50px !important; border-radius: 8px;">
-                                    <label for="password">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password">
+                            <form action="" name="addUser" id="addU" method="POST" enctype="multipart/form-data">
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="inputName1">Full name</label>
+                                        <input type="text" class="form-control" id="inputName1" name="fullnameUser" placeholder="Enter fullname" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="username">Username</label>
+                                        <input type="text" class="form-control" id="username" name="usernameUser" placeholder="Enter username..." required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputEmail1">Email</label>
+                                        <input type="email" class="form-control" id="inputEmail1" placeholder="Enter email" name="emailUser" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPass1">Password</label>
+                                        <input type="password" class="form-control" placeholder="Enter password" name="passwordUser" id="inputPass1" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPass2">Confirm Passs</label>
+                                        <input type="password" class="form-control" id="inputPass2" placeholder="Enter confirm password" name="confirmpasswordUser" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inp-role">Role</label>
+                                        <select name="selectRole" id="inp-role" class="form-control">
+                                            <option value="default">Select Role</option>
+                                            <option value="1">Provider-account</option>
+                                            <option value="2">Customer-account</option>
+                                        </select>
+                                    </div>
 
                                 </div>
-                                <br>
-                                <div class="control-group">
-                                    <label>Roles</label>
-                                    <select class="form-group" name="role" require>
-                                        <option selected value="student">--select role--</option>
-                                        <option value="1">Shop-account</option>
-                                        <option value="2">User-account</option>
-                                    </select>
+                                <div class="alert alert-success" id="registerSuccess" style="margin-top: 10px; display: none">
+                                    <strong>Success!</strong> Register account success!
                                 </div>
-                                <hr>
-                                <div class="alert alert-success" id="success" style="margin-top: 10px; display: none">
-                                    <strong>Success!</strong> Account Registration Successfully.
+                                <div class="alert alert-danger" id="checkUsername" style="margin-top: 10px; display: none">
+                                    <strong>Error!</strong> Username already exists, Please, enter another username!
                                 </div>
-                                <div class="alert alert-danger" id="failure" style="margin-top: 10px; display: none">
-                                    <strong>Already exist!</strong> The Username Alreadly Exits!
+                                <div class="alert alert-danger" id="checkMail" style="margin-top: 10px; display: none">
+                                    <strong>Error!</strong> Email already exists, Please, enter another email!
                                 </div>
-                                <input type="submit" value="Register" name="register" class="btn btn-block btn-success">
 
+                                <button type="submit" name="registerAccount" class="btn btn-primary btn-block btn-lg">Register</button>
                             </form>
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-7 d-none d-md-block bg-cover" style="background-image: url('./images/ciliweb.png');">
+
+                </div>
             </div>
-            <div class="bg order-2 order-md-1" style="background-image: url('images/ciliweb.png');"></div>
+
         </div>
-
-        <script src="library/js/jquery-3.3.1.min.js"></script>
-        <script src="library/js/popper.min.js"></script>
-        <script src="library/js/bootstrap.min.js"></script>
-        <script src="library/js/main.js"></script>
-
-        <?php
-        $button = '';
-        if (isset($_POST["register"])) {
-            $count = 0;
-            $result = $link->query("SELECT * from `user` where `username` ='$_POST[username]'");
-            $count = mysqli_num_rows($result);
-
-            $encryptPassword = md5("$_POST[password]");
-
-
-            if ($count > 0) {
-        ?>
-                <script type="text/javascript">
-                    document.getElementById("success").style.display = "none";
-                    document.getElementById("failure").style.display = "block";
-                </script>
-            <?php
-            } else {
-                $addAccount = $link->query("INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `fullname`, `user_status`, `user_role_id`, `user_create_time`) VALUES (NULL, '$_POST[username]', '$encryptPassword', '$_POST[email]', '$_POST[fullname]', '1', '$_POST[role]', '" . time() . "');");
-
-            ?>
-                <script type="text/javascript">
-                    const a = document.getElementById("success")
-                    document.getElementById("success").style.display = "block";
-                    document.getElementById("failure").style.display = "none";
-                    if (a.style.display == "block") {
-                        setTimeout(function() {
-                            window.location.href = "./login.php";
-                        }, 500);
-
-                    }
-                </script>
-        <?php
-            }
-        }
-        ?>
+    </main>
+</body>
 
 
 
-    </body>
+
+
+
+
+
+
+<!--/ PLACE CODE INSIDE THIS AREA -->
+
+<?php include "../partials/js_libs.php"; ?>
+
+
+<script>
+    $(document).ready(function() {
+
+        $.validator.addMethod("valueNotEquals", function(value, element, arg) {
+            return arg !== value;
+        }, "Value must not equal arg.");
+
+        $.validator.addMethod("lettersOnly", function(value, element) {
+            return this.optional(element) || /^[a-z," "]+$/i.test(value);
+        }, "Letters and spaces only please");
+        $('#addU').validate({
+            rules: {
+                fullnameUser: {
+                    required: true,
+                    lettersOnly: true,
+                },
+                usernameUser: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 32,
+
+
+                },
+                passwordUser: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 32,
+                },
+                confirmpasswordUser: {
+                    required: true,
+                    equalTo: '#inputPass1',
+
+                },
+                emailUser: {
+                    required: true,
+                    email: true,
+                },
+                selectRole: {
+                    valueNotEquals: "default"
+                }
+
+            },
+            messages: {
+                fullnameUser: {
+                    required: "Please provide information!",
+                    lettersOnly: "Please provide only character in alphabet!",
+                },
+                usernameUser: {
+                    required: "Please provide information!",
+                    minlength: "Please provide at least 6 characters.",
+                    maxlength: "Please provide at must 32 characters.",
+
+                },
+                passwordUser: {
+                    required: "Please provide information!",
+                    minlength: "Please provide at least 6 characters.",
+                    maxlength: "Please provide at must 32 characters.",
+                },
+                confirmpasswordUser: {
+                    required: "Please provide information!",
+                    equalTo: 'Not match with password',
+                },
+                emailUser: {
+                    required: "Please provide information!",
+                    email: "Please provide an email.",
+                },
+                selectRole: {
+                    valueNotEquals: "Please select an role!"
+                }
+            },
+        })
+    })
+</script>
+</body>
 
 </html>
+
+
+
+
+
+
+<?php
+
+if (isset($_POST["registerAccount"])) {
+    $encryptPassword = md5("$_POST[confirmpasswordUser]");
+    $result = $link->query("SELECT * from `user` where `username` = '$_POST[usernameUser]' or `email`='$_POST[emailUser]'");
+    $checkAccount = $result->fetch_assoc();
+    if (!empty($checkAccount) && $checkAccount['username'] == $_POST['usernameUser']) {
+?>
+        <script type="text/javascript">
+            document.getElementById("checkUsername").style.display = "block";
+            document.getElementById("checkMail").style.display = "none";
+            document.getElementById("registerSuccess").style.display = "none"
+        </script>
+    <?php
+    } elseif (!empty($checkAccount) && $checkAccount['email'] == $_POST['emailUser']) {
+
+    ?>
+        <script type="text/javascript">
+            document.getElementById("checkUsername").style.display = "none";
+            document.getElementById("checkMail").style.display = "block";
+            document.getElementById("registerSuccess").style.display = "none"
+        </script>
+    <?php
+
+    } else {
+
+        $addAccount = $link->query("INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `fullname`, `user_status`, `user_role_id`, `user_create_time`) VALUES (NULL, '$_POST[usernameUser]', '$encryptPassword', '$_POST[emailUser]', '$_POST[fullnameUser]', '1', '$_POST[selectRole]', '" . $timeInVietNam . "');");
+
+    ?>
+        <script type="text/javascript">
+            const a = document.getElementById("registerSuccess")
+            document.getElementById("registerSuccess").style.display = "block";
+            document.getElementById("checkUsername").style.display = "none";
+            document.getElementById("checkMail").style.display = "none";
+            if (a.style.display == "block") {
+                setTimeout(function() {
+                    window.location.href = "./login.php";
+                }, 2000);
+
+            }
+        </script>
+<?php
+    }
+}
+?>

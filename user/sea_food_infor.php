@@ -68,7 +68,7 @@ $shopUserId = $shopChat['user_id']
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
 <link rel="stylesheet" href="./css/sea_food_infor.css">
-<link rel="stylesheet" href="./css/chat.css">
+<!-- <link rel="stylesheet" href="./css/chat.css"> -->
 <div class="seafood-infor" style="margin-top: 100px; ">
 
     <div class="infor">
@@ -370,7 +370,7 @@ $shopUserId = $shopChat['user_id']
 
 
                                     <p>Content:<?= $reviewInfor['review_comment'] ?></p>
-                                    <small><?= date('Y-d-M H:i:s', strtotime($reviewInfor['review_time'])) ?></small>
+                                    <small><?= date('Y-M-d H:i:s', strtotime($reviewInfor['review_time'])) ?></small>
                                 </div>
                             </li>
 
@@ -385,7 +385,7 @@ $shopUserId = $shopChat['user_id']
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script src="./javascript/seafood_infor_chat.js"></script>
+<script src="../user/javascript/seafood_infor_chat.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {

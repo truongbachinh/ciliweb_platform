@@ -3,6 +3,14 @@ include "../config_admin.php";
 if (!isset($_SESSION['current_user'])) {
     header("location: ./account/login.php");
 }
+
+if (isset($_GET['view'])) {
+    $t = $_GET['view'];
+} else {
+    $t = '';
+}
+$adminId = $_SESSION['current_user']['admin_id'];
+
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +26,11 @@ if (!isset($_SESSION['current_user'])) {
         <?php include "../partials/header.php"; ?>
 
         <!-- PLACE CODE INSIDE THIS AREA -->
-
+        <?php
+        if ($t == 'changepassword') {
+            include('../account/change_password.php');
+        }
+        ?>
 
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>

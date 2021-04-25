@@ -40,14 +40,9 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group has-search">
-                                            <span class="fa fa-search form-control-feedback"></span>
-                                            <input type="text" class="form-control" placeholder="Search">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 ">
-                                        <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addRole"><i class="mdi mdi-clipboard-plus"></i> Add new product
+
+                                    <div class="col-md-12 ">
+                                        <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addProduct"><i class="mdi mdi-clipboard-plus"></i> Add new product
                                         </a>
                                     </div>
                                 </div>
@@ -90,7 +85,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                                             <?php } ?>
                                                         </td>
 
-                                                        <td><?= date("Y/d/m H:i:s", $row["p_date_create"]); ?></td>
+                                                        <td><?= date("Y-M-d H:i:s", strtotime($row["p_date_create"])); ?></td>
                                                         <!-- <?php
                                                                 if (!empty($row['p_date_update'] == 0)) {
 
@@ -99,7 +94,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
 
                                                         <?php
                                                                 } else {  ?>
-                                                            <td style="padding: 2.5%;"><?= date("Y/d/m H:i:s", $row["p_date_update"]); ?></td>
+                                                            <td style="padding: 2.5%;"><?= date("Y-M-d H:i:s", strtotime($row["p_date_update"])); ?></td>
                                                         <?php
                                                                 }
                                                         ?> -->
@@ -109,7 +104,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                                                 <button class="btn btn-info  btn-edit-product" role="button" data-id="<?= $row['p_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </button>
                                                                 <button class="btn btn-danger btn-delete-product" role="button" data-id="<?= $row['p_id'] ?>"><i class="mdi mdi-delete"></i>
                                                                 </button>
-                                                                <button class="btn btn-primary btn-detail-product" role="button" data-id="<?= $row['ctg_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </button>
+                                                                <button class="btn btn-primary btn-detail-product" role="button" data-id="<?= $row['p_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </button>
 
                                                             </div>
                                                         </td>
@@ -127,7 +122,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                         </div>
                     </div>
                 </div>
-                <!-- Modal add role -->
+                <!-- Modal add  -->
                 <div class="modal fade" id="addProduct" tabindex="-1" role="dialog" aria-labelledby="addProduct" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -139,35 +134,60 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="" name="manageProduct" method="POST" enctype="multipart/form-data">
+                                <form action="" name="manageProduct" id="addNewProduct" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
-                                        <label class="control-label">Product Name :</label>
+                                        <label class="control-label">Product Name</label>
                                         <input type="text" class="form-control" id="inputNameProduct" name="nameProduct" placeholder="Enter name of product" required>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Product Description :</label>
+                                        <label class="control-label">Product Description</label>
                                         <input type="text" class="form-control" id="descriptionProduct" name="descriptionProduct" placeholder="Enter name of topic" required>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Product Fresh :</label>
-                                        <input type="number" class="form-control" id="freshProduct" name="freshProduct" placeholder="Enter fresh " required>
+                                        <label class="control-label">Product Fresh</label>
+                                        <input type="number" class="form-control" id="freshProduct" min="1" max="10" name="freshProduct" placeholder="Enter fresh " required>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Product Quantity :</label>
+                                        <label class="control-label">Product Quantity</label>
                                         <input type="number" class="form-control" id="quantityProduct" name="quantityProduct" placeholder="Enter quantity" required>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Product price :</label>
+                                        <label class="control-label">Product price</label>
                                         <input type="number" class="form-control" id="priceProduct" name="priceProduct" placeholder="Enter price" required>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label class="control-label">Product Image :</label>
                                         <input type="file" class="form-control" id="imageProduct" name="imageProduct" required>
+                                    </div> -->
+
+                                    <div class="form-group">
+                                        <div>
+                                            <p class=" font-secondary">Product Image</p>
+                                            <div class="input-group mb-3">
+                                                <div onload="GetFileInfo ()">
+                                                    <input type="file" class="custom-file-input" id="inputFile" name="imageProduct" onchange="GetFileInfo ()">
+                                                    <label class="custom-file-label" for="inputFile">Choose file</label>
+                                                </div>
+                                            </div>
+                                            <div id="info" style="margin-top:10px"></div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Product Image Library :</label>
                                         <input type="file" class="form-control" id="imageProductLibrary" name="imageProductLibrary[]" multiple required>
                                     </div>
+                                    <!-- <div class="form-group">
+                                        <div>
+                                            <p class=" font-secondary">Product Image Library</p>
+                                            <div class="input-group mb-3">
+                                                <div onload="GetFileInfo ()">
+                                                    <input type="file" class="custom-file-input" id="inputFiles" name="imageProductLibrary[]" multiple onchange="GetFileInfo ()">
+                                                    <label class="custom-file-label" for="inputFiles">Choose file</label>
+                                                </div>
+                                            </div>
+                                            <div id="info" style="margin-top:10px"></div>
+                                        </div>
+                                    </div> -->
                                     <input type="submit" class="btn btn-primary btn-md float-right" name="addProduct" value="Create product">
                                 </form>
                             </div>
@@ -191,28 +211,19 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                     <table class="table table-striped">
                                         <tbody>
                                             <tr>
-                                                <td>Category</td>
-                                                <td id="detailCategory"></td>
+                                                <td>Product name</td>
+                                                <td id="detailProductName"></td>
                                             </tr>
                                             <tr>
-                                                <td>Category description</td>
-                                                <td id="DetailCtgDescription"></td>
+                                                <td>Product description</td>
+                                                <td id="detailProductDescription"></td>
                                             </tr>
                                             <tr>
-                                                <td>Category image</td>
-                                                <td id="DetailCtgImage"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Category status</td>
-                                                <td id="DetailCtgStatus"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Category create time</td>
-                                                <td id="DetailCtgCreateTime"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Category update time</td>
-                                                <td id="DetailCtgUpdateTime"></td>
+
+                                                <div>
+                                                    <img src="" alt="" id="detailListProductImage" width="100" height="100" style="display: flex; flex-direction:row; margin: 23px 16px;" />
+                                                    <!-- <img src="" class="avatar-img " height="50" width="50" alt="No avatar" id="detailListProductImage"> -->
+                                                </div>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -228,6 +239,50 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                         </div>
                     </div>
                 </div>
+
+                <div class="modal fade" id="editProduct" tabindex="-1" role="dialog" aria-labelledby="editProduct" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editProduct">Edit Product Information</h5>
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" id="editProductVali">
+                                    <div class="form-group">
+                                        <label for="editProductName">Product name</label>
+                                        <input type="text" class="form-control" id="editProductName" name="editProductName">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editProductQuantity">Product quantity</label>
+                                        <input type="number" class="form-control" id="editProductQuantity" name="editProductQuantity">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editProductFresh">Product fresh</label>
+                                        <input type="number" max="10" min="1" class="form-control" id="editProductFresh" name="editProductFresh">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editProductPrice">Product price</label>
+                                        <input type="number" class="form-control" id="editProductPrice" name="editProductPrice">
+                                    </div>
+                                    <div class="model-footer">
+                                        <button type="button" class="btn btn-warning btn-update-product">
+                                            Save Changes
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                            Close
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
         </section>
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
@@ -236,6 +291,172 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
 
     <script>
         $(document).ready(function() {
+
+
+
+            $.validator.addMethod("lettersOnly", function(value, element) {
+                return this.optional(element) || /^[a-z," "]+$/i.test(value);
+            }, "Letters and spaces only please");
+
+            $('#editProductVali').validate({
+                rules: {
+                    editProductName: {
+                        required: true,
+                        lettersOnly: true
+                    },
+                    editProductQuantity: {
+                        required: true,
+                        number: true
+                    },
+                    editProductFresh: {
+                        required: true,
+                        number: true
+                    },
+
+                    editProductPrice: {
+                        required: true,
+                        number: true
+                    },
+
+                },
+                messages: {
+
+                    editProductName: {
+                        required: "Please provide product name!",
+                        lettersOnly: " Please enter letter only!"
+                    },
+                    editProductQuantity: {
+                        required: "Please provide information!",
+                    },
+                    editProductFresh: {
+                        required: "Please provide information!",
+                        number: "Please provide only number!",
+                    },
+                    editProductPrice: {
+                        required: "Please provide information!",
+                        number: "Please provide only number!",
+                    },
+                    editProductPrice: {
+                        required: "Please provide information!",
+                        number: "Please provide only number!",
+                    },
+
+                },
+            })
+
+
+
+            $('#addNewProduct').validate({
+                rules: {
+                    nameProduct: {
+                        required: true,
+                        lettersOnly: true
+                    },
+                    descriptionProduct: {
+                        required: true,
+
+                    },
+                    freshProduct: {
+                        required: true,
+                        number: true,
+
+                    },
+                    quantityProduct: {
+                        required: true,
+                        number: true
+                    },
+                    priceProduct: {
+                        required: true,
+                        number: true
+                    },
+
+                    imageProduct: {
+                        required: true,
+                    },
+
+                },
+                messages: {
+
+                    nameProduct: {
+                        required: "Please provide product name!",
+                        lettersOnly: " Please enter letter only!"
+                    },
+                    descriptionProduct: {
+                        required: "Please provide information!",
+                    },
+                    freshProduct: {
+                        required: "Please provide information!",
+                        number: "Please provide only number!",
+                    },
+                    quantityProduct: {
+                        required: "Please provide information!",
+                        number: "Please provide only number!",
+                    },
+                    priceProduct: {
+                        required: "Please provide information!",
+                        number: "Please provide only number!",
+                    },
+                    imageProduct: {
+                        required: "Please provide image!",
+                    },
+
+
+
+                    usernameUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+
+
+                    },
+                    passwordUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+                    },
+                    usernameUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+
+
+                    },
+                    passwordUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+                    },
+                    usernameUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+
+
+                    },
+                    passwordUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+                    },
+                    usernameUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+
+
+                    },
+                    passwordUserLogin: {
+                        required: "Please provide information!",
+                        minlength: "Please provide at least 6 characters.",
+                        maxlength: "Please provide at must 32 characters.",
+                    },
+                },
+            })
+
+
+
+
+
             $('#table_id').DataTable();
         });
         document.addEventListener("DOMContentLoaded", function(e) {
@@ -255,31 +476,68 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                             id: $(this).data('id'),
                         }).then(response => {
                             swal("Notice", response.msg, "success").then(function(e) {
-                                location.replace("./view_product_in_categories.php?idsh=<?= $shopId ?>&idctg=<?= $idCtg ?>");
+                                location.reload()
                             });
                         }).catch(err => {})
                     }
                 });
             });
             $(document).on('click', '.btn-detail-product', function(e) {
-                $('#detailProduct').modal();
-                // e.preventDefault();
-                // var pathFile = "../shop/image_products/";
-                // const productId = parseInt($(this).data("id"));
-                // console.log(productId)
-                // Utils.api('get_product_info_detail', {
-                //     id: productId
-                // }).then(response => {
-                //     // $('#detailProductCategory').text(response.data.ctg_name);
-                //     $('#detailProductName').text(response.data.p_name);
-                //     $('#detailProductDescription').text(response.data.p_description);
-                //     $("#detailImage").attr("src", pathFile.concat(response.data.img_name));
-                //     $('#detailUpdateTime').text(response.data.p_date_update);
-                //     $('#detailProduct').modal();
-                // }).catch(err => {
 
-                // })
+                e.preventDefault();
+                var pathFile = "../shop/image_products/";
+                const productId = parseInt($(this).data("id"));
+                console.log(productId)
+                Utils.api('get_product_detail', {
+                    id: productId
+                }).then(response => {
+                    // $('#detailProductCategory').text(response.data.ctg_name);
+                    $('#detailProductName').text(response.data.p_name);
+                    $('#detailProductDescription').text(response.data.p_description);
+                    $("#detailListProductImage").attr("src", pathFile.concat(response.data.p_image));
+                    $('#detailProduct').modal();
+                }).catch(err => {
+
+                })
             });
+
+            $(document).on('click', '.btn-edit-product', function(e) {
+                e.preventDefault();
+                const productId = parseInt($(this).data("id"));
+                activeId = productId;
+                console.log(productId);
+                Utils.api("get_product_edit", {
+                    id: productId
+                }).then(response => {
+                    $('#editProductName').val(response.data.p_name);
+                    $('#editProductQuantity').val(response.data.p_quantity);
+                    $("#editProductFresh").val(response.data.p_fresh);
+                    $('#editProductPrice').val(response.data.p_price);
+                    $('#editProduct').modal();
+                }).catch(err => {
+
+                });
+            });
+            $(document).on('click', '.btn-update-product', function(e) {
+                Utils.api("update_product_info", {
+                    id: activeId,
+                    editProductName: $("#editProductName").val(),
+                    editProductQuantity: $("#editProductQuantity").val(),
+                    editProductFresh: $("#editProductFresh").val(),
+                    editProductPrice: $("#editProductPrice").val(),
+                }).then(response => {
+                    $("#editProduct").modal("hide");
+                    swal("Notice", "Record is updated successfully!", "success").then(function(e) {
+                        location.reload()
+                    });
+                }).catch(err => {
+
+                })
+            });
+
+
+
+
         })
     </script>
 </body>
@@ -412,7 +670,7 @@ if (isset($_POST["addProduct"])) {
     ?>
         <script type="text/javascript">
             alert("error !");
-            window.location.replace("./view_product_in_categories.php?idsh=<?= $shopId ?>&idctg=<?= $idCtg ?>.php");
+            window.location.replace("./view_product_in_categories.php?idsh=<?= $shopId ?>&idctg=<?= $idCtg ?>");
         </script>
 <?php
     }

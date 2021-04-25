@@ -119,7 +119,7 @@ if (!isset($_SESSION['current_user'])) {
                 var pathFile = "../user/avatar/";
                 const userId = parseInt($(this).data("id"));
                 console.log("addd", userId);
-                $('#chatToUserForm').modal();
+                // $('#chatToUserForm').modal();
                 Utils.api('get_user_chat_detail', {
                     id: userId
                 }).then(response => {
@@ -143,7 +143,7 @@ if (!isset($_SESSION['current_user'])) {
             window.location.replace = "./chat_to_user.php";
         }
     </script>
-    <script src="./javascript/chat.js"></script>
+    <script src="../user/javascript/chat.js"></script>
 
 
 </body>

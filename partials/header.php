@@ -2,11 +2,6 @@
     <a href="#" class="sidebar-toggle" data-toggleclass="sidebar-open" data-target="body"> </a>
     <nav class=" ml-auto">
         <ul class="nav align-items-center m-r-30">
-            <li class=nav-item>
-                <div class="d-flex p-all-15  justify-content-between">
-                    <a href="#!" class="nar-link"><i class="mdi mdi-24px mdi-chat"></i>
-                        <!-- <span class="notification-counter"></span></a> -->
-            </li>
 
             <?php if (!empty($_SESSION["current_user"]["username"])) : ?>
                 <li class="nav-item dropdown ">
@@ -16,16 +11,15 @@
                         </div>
                     </a>
                     <div class="dropdown-menu  dropdown-menu-right">
-                        <a href="/user/profile.php" class="dropdown-item"> Profile</a>
-                        <a href="/user/change-password.php" class="dropdown-item"> Reset Password</a>
-                        <a class="dropdown-item" href=""> Help </a>
+                        <a href="../admin/index.php?view=changepassword" class="dropdown-item"> Reset Password</a>
+
                         <div class="dropdown-divider"></div>
-                        <a href="../admin/account/logout.php" class="dropdown-item"> Logout</a>
+                        <a href="../admin/logout.php" class="dropdown-item"> Logout</a>
                     </div>
                 </li>
                 <div class="nav-item m-r-3">
                     <a href="#">
-                        <b><?= $_SESSION['current_user']['username'] ?></b>
+                        <b>Administrator</b>
                     </a>
                 </div>
             <?php elseif (!empty($_SESSION["current_user"]["username"])) : ?>

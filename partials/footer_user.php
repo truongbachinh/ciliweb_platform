@@ -117,6 +117,7 @@
     //         })
     //     }
     // }
+
     $(".buy-form").submit(function(event) {
         event.preventDefault();
         console.log("data", $(this).serializeArray());
@@ -127,33 +128,28 @@
             success: function(response) {
                 response = JSON.parse(response);
                 if (response.status == 0) {
-                    window.location.replace("../account/login.php");
+
                 } else {
 
                     swal("Notice", response.message, "success");
                     setInterval(function() {
-                        window.location.replace("../cart/cart.php");
+
                     }, 1000);
-                    // alert(response.message);
+
                     $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
                         cartCountHTML) {
                         console.log("cart-count", cartCountHTML);
                         $('#cartCountHeader').html(cartCountHTML);
 
                     })
-
-
                 }
             }
-
         })
-
-
     })
+
     $(".buy-now-form").submit(function(event) {
         event.preventDefault();
         console.log("data", $(this).serializeArray());
-
         $.ajax({
             type: "POST",
             url: '../cart/process_cart.php?view=add_to_cart',
@@ -161,11 +157,9 @@
             success: function(response) {
                 response = JSON.parse(response);
                 if (response.status == 0) {
-                    window.location.replace("../account/login.php");
+                    swal("Notice", response.message, "warning");
                 } else {
-
                     swal("Notice", response.message, "success");
-                    // alert(response.message);
                     $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
                         cartCountHTML) {
                         console.log("cart-count", cartCountHTML);
@@ -173,10 +167,7 @@
                     })
                 }
             }
-
         })
-
-
     })
 
     function updateQuantity(quantity) {
@@ -250,7 +241,7 @@
             $("#idOrderUser").val(response.data.id)
             $("#updateOrderId").html(response.data.id)
             $("#updateOrderAccount").html(response.data.username)
-            // $("#updateOrderTime").html(date("Y-d-m, H:i:s", response.data.order_create_time))
+            $("#updateOrderTime").html(response.data.order_create_time)
             $("#updateShippingStatus").val(response.data.shipping_order_status)
             $('#editOrderUser').modal();
             $('#editOrderUser .btn-update-order').click(() => {
@@ -264,9 +255,7 @@
                     $('#feedbackForm').modal();
                 });
             });
-        }).catch(err => {
-
-        });
+        }).catch(err => {});
     }
 
     // $(document).on('click', '.btn-detail-shop', function(e) {
@@ -360,4 +349,4 @@
     }
 </script>
 
-<script src="./javascript/chat.js"></script>
+<script src="../user/javascript/chat.js"></script>

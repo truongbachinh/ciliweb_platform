@@ -26,7 +26,7 @@
                     </a>
                 </li>
             <?php else : ?>
-                <?php if ($currentUser['username'] == "admin") : ?>
+                <?php if ($currentUser['role'] == "admin") : ?>
                     <li class="menu-item ">
                         <a href="../admin/index.php" class=" menu-link">
                             <span class="menu-label">
@@ -85,6 +85,26 @@
                                     </span>
                                     <span class="menu-icon">
                                         <i class="mdi mdi-briefcase-plus mdi-24px "></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="../admin/chart_analysis.php" class=" menu-link">
+                                    <span class="menu-label">
+                                        <span class="menu-name">Chart analysis</span>
+                                    </span>
+                                    <span class="menu-icon">
+                                        <i class="mdi mdi-chart-bar mdi-24px "></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="../admin/backup_database.php" class=" menu-link">
+                                    <span class="menu-label">
+                                        <span class="menu-name">Backup Database</span>
+                                    </span>
+                                    <span class="menu-icon">
+                                        <i class="mdi mdi-file-restore mdi-24px "></i>
                                     </span>
                                 </a>
                             </li>

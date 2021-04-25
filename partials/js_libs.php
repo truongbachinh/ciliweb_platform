@@ -35,3 +35,6 @@
 
 <!-- Fancybox -->
 <script src="../assets/vendor/jquery/jquery.fancybox.js"></script>
+
+<!-- Check File -->
+<script src="../assets/js/checkFile.js"></script>

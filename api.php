@@ -15,6 +15,72 @@ $action = @$_POST['action'];
 
 if ($isLoggedIn) {
     switch ($action) {
+        case "get_order_shipping_info":
+            $id = $_POST['id'];
+            $query = $link->query("SELECT orders.*, user.* from `orders` 
+            inner join user on user.user_id = orders.order_user_id where `id` = '$id'");
+            if ($query->num_rows == 0) {
+                $error = 1;
+                $msg = "This file is not available.";
+            } else {
+                $data = $query->fetch_assoc();
+            }
+            break;
+
+        case "update_order_shipping_infor":
+            $id = $_POST['id'];
+            $queryOrder = $link->query("SELECT orders.*, user.* FROM `orders` 
+            INNER JOIN user ON user.user_id = orders.order_user_id where `id` = '$id'");
+            $orderInfor = mysqli_fetch_assoc($queryOrder);
+            $user_order = $orderInfor["username"];
+            $total_money_order = $orderInfor["order_total_cost"];
+            $order_id_paymeny = time();
+            $shippingCreateTime = $timeInVietNam;
+            $current = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh'));
+            $timePayment = $current->format('Y-m-d H:i:s');
+            $orderShipping = $_POST['updateOrderShipping'];
+            if ($orderShipping == 2) {
+                $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping',
+                 `shipping_create_time` = '$shippingCreateTime' WHERE `id` = $id");
+            } elseif ($orderShipping == 3) {
+                $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping',
+                 `shipping_receive_time` = '$shippingCreateTime' WHERE `id` = $id");
+            } elseif ($orderShipping == 4) {
+                $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping',
+                 `shipping_cancle_time` = '$shippingCreateTime' WHERE `id` = $id");
+            }
+
+            if ($update) {
+                $msg = "Record updated successfully";
+                $queryEmail = $link->query("SELECT orders.*, user.email FROM orders 
+                INNER JOIN `user` ON user.user_id = orders.order_user_id where orders.id = '$id'");
+                $userMail = $queryEmail->fetch_assoc();
+                $email = $userMail["email"];
+                $message = "Shop has sent seafood for you";
+                $subject = "Notification from Cili website";
+                $text_message    =   "hello";
+                send_mail($email, $subject, $message, $text_message);
+                if ($orderInfor["payment_order_status"] == 2 && $orderShipping == 4) {
+                    $sql = "SELECT * FROM payments WHERE payment_order_id = '$id'";
+                    if (isset($sql)) {
+                        $query = mysqli_query($link, $sql);
+                        $row = mysqli_num_rows($query);
+                    }
+                    if ($row > 0) {
+                        $updatePayment  = $link->query("DELETE from payments WHERE  `payment_order_id` = '$id'");
+                    }
+                }
+                if ($update) {
+                    $msg = "Record updated successfully";
+                }
+            } else {
+                $error = 400;
+                $msg = "Error updating record: " . $link->error;
+            }
+            break;
+
+
+
         case "delete_user_info":
             $id = $_POST['id'];
             $query = $link->query("DELETE FROM `user` WHERE `user_id` = '$id'");
@@ -132,19 +198,36 @@ if ($isLoggedIn) {
                 $error = 1;
                 $msg = "This file is not available.";
             } else {
-                $data = $query->fetch_assoc();
+                $data[] = $query->fetch_array();
             }
             break;
-        case "get_order_shipping_info":
+
+        case "get_product_detail":
             $id = $_POST['id'];
-            $query = $link->query("SELECT orders.*, user.* from `orders` inner join user on user.user_id = orders.order_user_id where `id` = '$id'");
+            // $query = $link->query("SELECT products.p_name, products.p_description, image_library.* from products INNER JOIN image_library ON image_library.img_p_id = products.p_id WHERE `p_id` = '$id'");
+            $query = $link->query("SELECT products.* from products WHERE `p_id` = '$id'");
             if ($query->num_rows == 0) {
                 $error = 1;
                 $msg = "This file is not available.";
             } else {
+
+                $data = $query->fetch_array();
+            }
+            break;
+
+        case "get_product_edit":
+            $id = $_POST['id'];
+            // $query = $link->query("SELECT products.p_name, products.p_description, image_library.* from products INNER JOIN image_library ON image_library.img_p_id = products.p_id WHERE `p_id` = '$id'");
+            $query = $link->query("SELECT products.* from products WHERE `p_id` = '$id'");
+            if ($query->num_rows == 0) {
+                $error = 1;
+                $msg = "This file is not available.";
+            } else {
+
                 $data = $query->fetch_assoc();
             }
             break;
+
         case "get_order_user_shipping_info":
             $id = $_POST['id'];
             $query = $link->query("SELECT orders.*, user.* from `orders` inner join user on user.user_id = orders.order_user_id where `id` = '$id'");
@@ -370,9 +453,34 @@ if ($isLoggedIn) {
             $category = $_POST['editCategory'];
             $ctgDescription = $_POST['editCtgDescription'];
             $ctgStatus = $_POST['editCtgStatus'];
+            if (isset($_POST['editCtgImage'])) {
+                $ctgImage = $_POST['editCtgImage'];
+            } else {
+                $ctgImage =  $_POST['editCtgImageNotchange'];
+            }
+
+
             $ctgTimeUpdate = $timeInVietNam;
-            $stmt = $link->prepare("UPDATE `categories` SET `ctg_name`=?,`ctg_description`=?,`ctg_status`=?,`ctg_update_time`=? WHERE `ctg_id`=?");
-            $stmt->bind_param("ssssi", $category, $ctgDescription, $ctgStatus, $ctgTimeUpdate, $id);
+            $stmt = $link->prepare("UPDATE `categories` SET `ctg_name`=?,`ctg_image`=?,`ctg_description`=?,`ctg_status`=?,`ctg_update_time`=? WHERE `ctg_id`=?");
+            $stmt->bind_param("sssssi", $category, $ctgImage, $ctgDescription, $ctgStatus, $ctgTimeUpdate, $id);
+            if ($stmt->execute()) {
+                $msg = "Record updated successfully";
+            } else {
+                $error = 400;
+                $msg = "Error delete record: " . $link->error;
+            }
+
+            break;
+        case "update_product_info":
+
+            $id = $_POST['id'];
+            $editProductName = $_POST['editProductName'];
+            $editProductQuantity = $_POST['editProductQuantity'];
+            $editProductFresh = $_POST['editProductFresh'];
+            $editProductPrice = $_POST['editProductPrice'];
+            $productUpdateTime = $timeInVietNam;
+            $stmt = $link->prepare("UPDATE `products` SET `p_name`=?,`p_quantity`=?,`p_fresh`=?,`p_price`=?,`p_date_update`=? WHERE `p_id`=?");
+            $stmt->bind_param("sssssi", $editProductName, $editProductQuantity, $editProductFresh, $editProductPrice,  $productUpdateTime, $id);
             if ($stmt->execute()) {
                 $msg = "Record updated successfully";
             } else {
@@ -380,7 +488,6 @@ if ($isLoggedIn) {
                 $msg = "Error delete record: " . $link->error;
             }
             break;
-
         case "chat_to_shop":
             $talker = $_POST['id'];
             $userId = $_SESSION["current_user"]["user_id"];

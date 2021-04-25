@@ -6,7 +6,19 @@ ob_start();
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-touch-fullscreen" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title><?= $pageTitle ?></title>
+
+
+<?php
+if (isset($pageTitle)) {
+?>
+    <title><?= $pageTitle ?></title>
+<?php
+} else {
+?>
+    <title> CILI ecommerce website</title>
+<?php
+}
+?>
 <!-- <link rel="icon" type="image/x-icon" href="../assets/img/logo.png" />
 <link rel="icon" href="../assets/img/logo.png" type="image/png" sizes="16x16"> -->
 <link rel="stylesheet" href="../assets/vendor/pace/pace.css">

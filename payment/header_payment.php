@@ -1,5 +1,6 @@
 <!-- Main Navigation -->
-<link rel="stylesheet" href="./css/header_payment.css">
+
+<link rel="stylesheet" href="../payment/css/header_payment.css">
 <?php
 // include "../config_user.php";
 
@@ -12,12 +13,13 @@ if (!empty($_SESSION["current_user_social"]['fullname'])) {
     $userId = $_SESSION["current_user_social"]['user_id'];
 }
 
-if (!isset($resultUserInfor)) {
-    $resultUserInfor = mysqli_query($link, "SELECT  user.*, user_infor.*  from user_infor INNER JOIN user ON user.user_id = user_infor.ui_user_id WHERE `user_id` = '$userId'");
-}
-if (isset($resultUserInfor)) {
-    $rowUser = mysqli_fetch_array($resultUserInfor, MYSQLI_ASSOC);
-}
+// if (!empty($resultUserInfor)) {
+$resultUserInfor = mysqli_query($link, "SELECT  user.*, user_infor.*  from user_infor INNER JOIN user ON user.user_id = user_infor.ui_user_id WHERE `user_id` = '$userId'");
+// }
+// if (!empty($resultUserInfor)) {
+$rowUser = mysqli_fetch_assoc($resultUserInfor);
+// }
+
 if (!empty($_SESSION["current_user"])) {
 ?>
     <div class="header-content">

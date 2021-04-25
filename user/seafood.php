@@ -44,10 +44,11 @@
                 <?php while ($productInfor = $query->fetch_assoc()) {
 
                     $idProductSold  = $productInfor['p_id'];
-                    $queryTotalSold = $link->query("SELECT SUM(order_items.quantity) as total_sold FROM order_items INNER JOIN orders ON orders.id = order_items.order_id WHERE order_items.order_product_id = ' $idProductSold ' and orders.shipping_order_status = '3'");
+                    $queryTotalSold = $link->query("SELECT SUM(order_items.quantity) as total_sold FROM order_items  WHERE order_items.order_product_id = ' $idProductSold '");
                     $totalSold = $queryTotalSold->fetch_assoc();
                     $totalSoldOfShop = $totalSold['total_sold'];
                     $totalProduct = $productInfor['p_quantity'];
+
                     if ($totalProduct != 0) {
                         $with = $totalSoldOfShop / $totalProduct * 100;
                         $widthBar = $with . '%';
@@ -93,7 +94,8 @@
                     </div>
 
 
-                <?php } ?>
+                <?php }
+                ?>
             </div>
 
             <!-- Display pagination links -->

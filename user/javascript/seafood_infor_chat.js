@@ -21,7 +21,7 @@ if (inputField.value != "") {
 
 sendBtn.onclick = () => {
 let xhr = new XMLHttpRequest();
-xhr.open("POST", "../php_chat/user_insert_chat.php", true);
+xhr.open("POST", "../php_conversation/user_insert_conversation.php", true);
 xhr.onload = () => {
     if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
@@ -44,7 +44,7 @@ chatBox.classList.remove("active");
 setInterval(() => {
 console.log(incoming_id);
 let xhr = new XMLHttpRequest();
-xhr.open("POST", "../php_chat/user_get_chat.php", true);
+xhr.open("POST", "../php_conversation/user_get_conversation.php", true);
 xhr.onload = () => {
     if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {

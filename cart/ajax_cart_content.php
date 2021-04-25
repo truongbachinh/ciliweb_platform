@@ -58,48 +58,28 @@
                                 $count = 0;
                                 $i = 1;
                                 foreach ($myCartProduct  as $rowMyCartProduct) {
-
-                                    $selectQuantity  = $link->query("SELECT products.p_id, products.p_quantity FROM products where p_id =$rowMyCartProduct[p_id] ");
-                                    $quantityP = mysqli_fetch_array($selectQuantity);
-                                    // print_r($quan);
-                                    if ($quantityP["p_quantity"] < $rowMyCartProduct["cart_quantity"]) {
-                                        $deleteProduct = $link->query("DELETE FROM cart where cart_product_id = $quantityP[p_id]");
-                                    }
+                                    // $selectQuantity  = $link->query("SELECT products.p_id, products.p_quantity FROM products where p_id =$rowMyCartProduct[p_id] ");
+                                    // $quantityP = mysqli_fetch_array($selectQuantity);
+                                    // // print_r($quan);
+                                    // if ($quantityP["p_quantity"] < $rowMyCartProduct["cart_quantity"]) {
+                                    //     $deleteProduct = $link->query("DELETE FROM cart where cart_product_id = $quantityP[p_id]");
+                                    // }
                                     // var_dump($deleteProduct);
-
                                 ?>
                                     <tr>
                                         <td><?= $i++ ?></td>
                                         <td><?= $rowMyCartProduct['p_name'] ?></td>
                                         <td><img src="../shop/image_products/<?= $rowMyCartProduct['p_image'] ?>" width="60" height="70"></td>
                                         <td>
-                                            <!-- <div class="input-group" id="quantity-product">
-                                                <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-danger btn-number" data-type="minus" data-field="quantity[<?= $rowMyCartProduct['cart_id'] ?>]">
-                                                        <span><i class="fas fa-minus"></i></span>
-                                                    </button>
-                                                </span>
-                                                <input type="text" oninput="javascript:updateQuantity(this.value)" name="quantity[<?= $rowMyCartProduct['cart_id'] ?>]" class="form-control input-number" value="<?= $rowMyCartProduct["cart_quantity"] ?>" min="1" max="<?= $rowMyCartProduct['p_quantity'] ?>">
-                                                <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quantity[<?= $rowMyCartProduct['cart_id'] ?>]">
-                                                        <span><i class="fas fa-plus"></i></span>
-                                                    </button>
-                                                </span>
-                                            </div> -->
-
-
-                                            <input type="number" oninput="javascript:updateQuantity(this.value)" value="<?= $rowMyCartProduct["cart_quantity"] ?>" name="quantity[<?= $rowMyCartProduct['cart_id'] ?>]" min="1" max="<?= $rowMyCartProduct['p_quantity'] ?>">
+                                            <input id="quantityPro" type="number" oninput="javascript:updateQuantity(this.value)" value="<?= $rowMyCartProduct["cart_quantity"] ?>" name="quantity[<?= $rowMyCartProduct['cart_id'] ?>]" min="1" max="<?= $rowMyCartProduct['p_quantity'] ?>">
                                         </td>
                                         <td><?= number_format($cost = $rowMyCartProduct["cart_quantity"] *  $rowMyCartProduct["p_price"], 0, ",", ".")   ?>VNĐ</td>
                                         <td><a href="javascript:deleteCartItem(<?= $rowMyCartProduct['cart_id'] ?>)"><i class="mdi mdi-delete-empty mdi:20px"></i></a></td>
                                     </tr>
-
-
                                 <?php
                                     // var_dump($cost);
                                     $total += $cost;
                                 }
-
                                 ?>
                                 <tr>
                                     <td>Total Cost</td>
@@ -109,23 +89,13 @@
                                     <td><?= number_format($total, 0, ",", ".") ?></td>
                                     <td>Delete</td>
                                 </tr>
-
                             <?php
                             $totalCost += $total;
                             $totalCostAmoutShop += $totalCost;
                         }
-
                             ?>
-
                         <?php
-
-
-
                     }
-
-
-
-
                         ?>
                             </tbody>
                         </table>
@@ -152,6 +122,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
+
+        $('#updateCartProduct').validate({
+            rules: {
+                quantityPro: {
+                    required: true,
+                },
+            },
+        })
 
         var $item = $('div#view-list-libImg'), //Cache your DOM selector
             visible = 3, //Set the number of items that will be visible
