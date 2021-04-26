@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "../connect_db.php"
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,101 +27,112 @@ session_start();
 
         <body>
             <main class="user-main">
-
                 <!-- PLACE CODE INSIDE THIS AREA -->
 
-                <div class="container-fluid">
+                <?php
+                if (!empty($_SESSION['current_user'])) {
+                    $userCurrent =  $_SESSION["current_user"];
+                ?>
+                    <script type="text/javascript">
+                        window.location = "../user/index.php";
+                    </script>
+                <?php
+                } else {
 
-                    <?php
-                    include "../connect_db.php"
-                    ?>
-                    <div class="row ">
-                        <div class="col-lg-6 d-none d-md-block bg-cover" style="background-image: url('./images/ciliweb.png');">
 
-                        </div>
-                        <div class="col-lg-6  bg-white">
-                            <div class="row align-items-center m-h-100">
-                                <div class="mx-auto col-md-8">
-                                    <div class="p-b-20 m-t-20 text-center">
-                                        <h3 class="admin-brand-content">
-                                            Login with account!
-                                        </h3>
-                                    </div>
-                                    <form action="" name="addUser" id="addU" method="POST" enctype="multipart/form-data">
-                                        <div class="form-col">
-                                            <div class="form-group">
-                                                <label for="usernameUserLogin">Username</label>
-                                                <input type="text" class="form-control" id="usernameUserLogin" name="usernameUserLogin" placeholder="Enter username..." required>
-                                            </div>
-                                            <div class="panel panel-default">
-                                                <div class="panel-body">
-                                                    <div class="form-group">
-                                                        <label for="passwordUserLogin">Password</label>
-                                                        <div class="input-group" id="show_hide_password">
-                                                            <input type="password" class="form-control" placeholder="Enter password" name="passwordUserLogin" id="passwordUserLogin" required>
-                                                            <label class="custom-input-label" for="inputFile">
-                                                                <div class="input-group-addon">
-                                                                    <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
-                                                                </div>
-                                                            </label>
+
+                    include('../login_facebook/fb_connect.php');
+                    include('../login_google/goole_connect.php');
+                ?>
+                    <div class="container-fluid">
+
+                        <div class="row ">
+                            <div class="col-lg-6 d-none d-md-block bg-cover" style="background-image: url('./images/ciliweb.png');">
+
+                            </div>
+                            <div class="col-lg-6  bg-white">
+                                <div class="row align-items-center m-h-100">
+                                    <div class="mx-auto col-md-8">
+                                        <div class="p-b-20 m-t-20 text-center">
+                                            <h3 class="admin-brand-content">
+                                                Login with account!
+                                            </h3>
+                                        </div>
+                                        <form action="" name="addUser" id="addU" method="POST" enctype="multipart/form-data">
+                                            <div class="form-col">
+                                                <div class="form-group">
+                                                    <label for="usernameUserLogin">Username</label>
+                                                    <input type="text" class="form-control" id="usernameUserLogin" name="usernameUserLogin" placeholder="Enter username..." required>
+                                                </div>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <label for="passwordUserLogin">Password</label>
+                                                            <div class="input-group" id="show_hide_password">
+                                                                <input type="password" class="form-control" placeholder="Enter password" name="passwordUserLogin" id="passwordUserLogin" required>
+                                                                <label class="custom-input-label" for="inputFile">
+                                                                    <div class="input-group-addon">
+                                                                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                                                    </div>
+                                                                </label>
+                                                            </div>
                                                         </div>
+                                                        <label for="passwordUserLogin" class="error"></label>
                                                     </div>
-                                                    <label for="passwordUserLogin" class="error"></label>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <label class="control control--checkbox mb-0"><span class="caption">Remember me</span>
+                                                        <input type="checkbox" checked="checked" />
+                                                        <div class="control__indicator" style="border-radius: 11px !important;"></div>
+                                                    </label>
+                                                    <span class="ml-auto"><a href="../account/forgot_password.php" class="forgot-pass">Forgot Password?</a></span>
                                                 </div>
                                             </div>
-                                            <div class="d-flex align-items-center">
-                                                <label class="control control--checkbox mb-0"><span class="caption">Remember me</span>
-                                                    <input type="checkbox" checked="checked" />
-                                                    <div class="control__indicator" style="border-radius: 11px !important;"></div>
-                                                </label>
-                                                <span class="ml-auto"><a href="../account/forgot_password.php" class="forgot-pass">Forgot Password?</a></span>
+                                            <div class="alert alert-success" id="loginSuccess" style="margin-top: 10px; display: none">
+                                                <strong>Success!</strong> Login successfully!
                                             </div>
-                                        </div>
-                                        <div class="alert alert-success" id="loginSuccess" style="margin-top: 10px; display: none">
-                                            <strong>Success!</strong> Login successfully!
-                                        </div>
-                                        <div class="alert alert-danger" id="loginFailure" style="margin-top: 10px; display: none">
-                                            <strong>Login false!</strong><br> The Username or passwrord error!
-                                        </div>
-                                        <hr>
-                                        <button type="submit" name="loginAccount" class="btn btn-success btn-block btn-lg">Login</button>
-                                        <div class="break-heading">
-                                            or
-                                        </div>
-                                        <?php
-                                        // đăng nhập bằng $loginUrl khi nó đã tồn tại
-                                        if (isset($authUrl)) {
-                                        ?>
+                                            <div class="alert alert-danger" id="loginFailure" style="margin-top: 10px; display: none">
+                                                <strong>Login false!</strong><br> The Username or passwrord error!
+                                            </div>
+                                            <hr>
+                                            <button type="submit" name="loginAccount" class="btn btn-success btn-block btn-lg">Login</button>
+                                            <div class="break-heading">
+                                                or
+                                            </div>
+
+                                            <!-- login with facebook -->
                                             <div class="social-login" style="margin-top: 3%;">
-                                                <a href="<?= $authUrl ?>" class="btn btn-primary d-flex justify-content-center align-items-center">
-                                                    Sign-in with <span class="fa fa-google ml-2"></span>
+                                                <a href="<?= $loginUrl ?>" class="btn btn-info d-flex justify-content-center align-items-center">
+                                                    Sign-in with <span class="fa fa-facebook ml-2"></span>
                                                 </a>
                                             </div>
-                                        <?php
-                                        }
-                                        ?>
-                                        <div class="social-login" style="margin-top: 3%;">
-                                            <a href="<?= $authUrl ?>" class="btn btn-primary d-flex justify-content-center align-items-center">
-                                                Sign-in with <span class="fa fa-google ml-2"></span>
-                                            </a>
-                                        </div>
-                                        <div class="social-login" style="margin-top: 3%;">
-                                            <a href="<?= $loginUrl ?>" class="btn btn-info d-flex justify-content-center align-items-center">
-                                                Sign-in with <span class="fa fa-facebook ml-2"></span>
-                                            </a>
-                                        </div>
-                                        <div class="social-login" style="margin-top: 10%;">
-                                            <span class="d-flex justify-content-center align-items-center">Dont have a account? <a href="../account/register.php" class="ml-2 " style="color: #00bfff"> Sign Up</a></span>
-                                        </div>
-                                    </form>
-                                    <hr>
+                                            <!-- login with goole -->
+                                            <?php
+                                            if (isset($authUrl)) {
+                                            ?>
+                                                <div class="social-login" style="margin-top: 3%;">
+                                                    <a href="<?= $authUrl ?>" class="btn btn-primary d-flex justify-content-center align-items-center">
+                                                        Sign-in with <span class="fa fa-google ml-2"></span>
+                                                    </a>
+                                                </div>
+                                            <?php
+                                            }
+                                            ?>
+                                            <div class="social-login" style="margin-top: 10%;">
+                                                <span class="d-flex justify-content-center align-items-center">Dont have a account? <a href="../account/register.php" class="ml-2 " style="color: #00bfff"> Sign Up</a></span>
+                                            </div>
+                                        </form>
+                                        <hr>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
 
                     </div>
-
-                </div>
+                <?php
+                }
+                ?>
             </main>
         </body>
         <!--/ PLACE CODE INSIDE THIS AREA -->

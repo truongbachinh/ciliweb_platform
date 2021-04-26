@@ -145,7 +145,7 @@ include "../mail_process.php";
 if (isset($_POST["forgotButton"])) {
 
 
-    // $result = $link->query("SELECT * from `user` where `username` = '$_POST[usernameUser]' AND `email`='$_POST[emailUser]'");
+
     $result = $link->query("SELECT user.email , user.password FROM `user` where `username` = '$_POST[usernameUser]' AND `email`='$_POST[emailUser]'");
     $checkAccount = $result->fetch_assoc();
     if (empty($checkAccount)) {

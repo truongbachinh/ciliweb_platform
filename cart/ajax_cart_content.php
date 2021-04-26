@@ -3,14 +3,11 @@
     if (!isset($_SESSION)) {
         include "../config_user.php";
     }
-    if (!empty($_SESSION["current_user"]['username'])) {
+    if (!empty($_SESSION["current_user"])) {
 
         $cartUserId = $_SESSION["current_user"]['user_id'];
     }
-    if (!empty($_SESSION["current_user_social"]['fullname'])) {
 
-        $cartUserId = $_SESSION["current_user_social"]['user_id'];
-    }
     if (!empty($cartUserId)) {
 
         $result = $link->query("SELECT cart.*, products.*, shop.* from cart INNER JOIN products on cart.cart_product_id = products.p_id INNER JOIN shop ON shop.shop_id = products.p_shop_id where cart_user_id ='$cartUserId' GROUP BY shop.shop_id");

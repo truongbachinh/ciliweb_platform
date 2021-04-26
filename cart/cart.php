@@ -1,15 +1,12 @@
 <?php
 include "../config_user.php";
 
-if (!empty($_SESSION["current_user"]['username'])) {
+if (!empty($_SESSION["current_user"])) {
 
     $cartUserId = $_SESSION["current_user"]['user_id'];
 }
-if (!empty($_SESSION["current_user_social"]['fullname'])) {
 
-    $cartUserId = $_SESSION["current_user_social"]['user_id'];
-}
-if (isset($_SESSION["current_user"]['username']) || isset($_SESSION["current_user"]['fullname'])) {
+if (isset($_SESSION["current_user"])) {
     $error = false;
     $success = false;
     if (isset($_GET["view"])) {

@@ -29,6 +29,8 @@ $adminId = $_SESSION['current_user']['admin_id'];
         <?php
         if ($t == 'changepassword') {
             include('../account/change_password.php');
+        } elseif ($t == 'forgotpassword') {
+            include('../admin/forgot_password.php');
         }
         ?>
 

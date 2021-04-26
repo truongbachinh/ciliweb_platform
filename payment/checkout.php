@@ -3,14 +3,17 @@ include "../config.php";
 include "../mailer/class.phpmailer.php";
 include "../mail_process.php";
 
-if (!empty($_SESSION["current_user"]['username'])) {
+if (!empty($_SESSION["current_user"])) {
 
     $cartUserId = $_SESSION["current_user"]['user_id'];
+} else {
+?>
+    <script>
+        window.location.replace("../account/login.php");
+    </script>
+<?php
 }
-if (!empty($_SESSION["current_user_social"]['fullname'])) {
 
-    $cartUserId = $_SESSION["current_user_social"]['user_id'];
-}
 $resultCart = $link->query("SELECT shop.*, cart.*, products.* FROM cart INNER JOIN products ON products.p_id = cart.cart_product_id INNER JOIN shop ON shop.shop_id = products.p_shop_id WHERE cart.cart_user_id   = '$cartUserId'");
 $cartInforCheckout = array();
 while ($rowC = mysqli_fetch_array($resultCart)) {

@@ -1,13 +1,13 @@
 <?php
 
 //Google Code
-require_once('Google/libraries/Google/autoload.php');
+require_once('../login_google/Google/libraries/Google/autoload.php');
 
 //Insert your cient ID and secret 
 //You can get it from : https://console.developers.google.com/
-$client_id = '649584236769-m6ihg5eb482gdl61gpv8kmmtr6hnqhc1.apps.googleusercontent.com';
-$client_secret = 'JtwPZW5XU4kXS-AtYHXgdj3e';
-$redirect_uri = 'https://ciliweb.vn/ciliweb_project/user/account/login.php';
+$client_id = '1011487101177-0g0sr0ltspourn1mojku0up6kmhhmpbq.apps.googleusercontent.com';
+$client_secret = 'gF8ukFgQcGVrwtVFOeHEYN43';
+$redirect_uri = 'https://ciliweb.vn/ciliweb_platform/account/login.php';
 
 //incase of logout request, just unset the session var
 //if (isset($_GET['logout'])) {
@@ -44,16 +44,14 @@ $service = new Google_Service_Oauth2($client);
  */
 
 if (isset($_GET['code'])) {
-    //kiểm tra code có tồn tại 
-    // var_dump($_GET['code']);
-    // exit;
-
+    // kiểm tra code có tồn tại 
     $client->authenticate($_GET['code']);
     $_SESSION['access_token'] = $client->getAccessToken();
     //getAccessToken(); để lấy token đăng nhập
     header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
     exit;
 }
+
 /* * **********************************************
   If we have an access token, we can make
   requests, else we generate an authentication URL.
@@ -71,7 +69,7 @@ if ($client->isAccessTokenExpired()) {
 if (!isset($authUrl)) {
     $googleUser = $service->userinfo->get(); //get user info 
     if (!empty($googleUser)) {
-        include '../login_facebook/login_with_token.php';
+        include '../login_social.php';
         loginFromSocialCallBack($googleUser);
     }
 }

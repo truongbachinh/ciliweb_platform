@@ -1,5 +1,8 @@
 <?php
 session_start();
+include "../connect_db.php";
+include "../mailer/class.phpmailer.php";
+include "../mail_process.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,10 +33,6 @@ session_start();
                 <!-- PLACE CODE INSIDE THIS AREA -->
 
                 <div class="container-fluid">
-
-                    <?php
-                    include "../connect_db.php"
-                    ?>
                     <div class="row ">
                         <div class="col-lg-6 d-none d-md-block bg-cover" style="background-image: url('../images/ciliweb.png');">
 
@@ -73,7 +72,6 @@ session_start();
                                                     <input type="checkbox" checked="checked" />
                                                     <div class="control__indicator" style="border-radius: 11px !important;"></div>
                                                 </label>
-                                                <span class="ml-auto"><a href="../account/forgot_password.php" class="forgot-pass">Forgot Password?</a></span>
                                             </div>
                                         </div>
                                         <div class="alert alert-success" id="loginSuccess" style="margin-top: 10px; display: none">
@@ -84,8 +82,13 @@ session_start();
                                         </div>
                                         <hr>
                                         <button type="submit" name="loginAccount" class="btn btn-success btn-block btn-lg">Login</button>
+                                        <div class="break-heading">
+                                            or
+                                        </div>
                                     </form>
-                                    <hr>
+                                    <form action="" name="forgot" id="forgot" method="POST">
+                                        <button type="submit" name="forgotAccount" class="btn btn-outline-info btn-block btn-lg">Forgot password</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -184,5 +187,33 @@ if (isset($_POST["loginAccount"])) {
         </script>
 <?php
     }
+}
+?>
+
+
+
+
+
+<?php
+if (isset($_POST["forgotAccount"])) {
+    $resultMail = $link->query("SELECT `username` , `password` FROM `admin`");
+    $checkAccount = $resultMail->fetch_assoc();
+    $email =   $checkAccount['username'];
+    $message = 'You password is: ' . $checkAccount['password'] .
+        '' .
+        ' Please go to https://www.md5decrypt.org/ and decrypt the password here. Your passwords are encrypted to make sure your account is untouchable';
+    $subject = "Notification from Cili website";
+    $text_message    =   "hello";
+    send_mail($email, $subject, $message, $text_message);
+
+?>
+    <script type="text/javascript">
+        swal("Notice", "Password has been sent. Please check your email!", "success");
+        setTimeout(function() {
+            window.location.href = "../admin/login.php";
+        }, 3000);
+    </script>
+
+<?php
 }
 ?>

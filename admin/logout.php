@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "../../connect_db.php";
+include "../connect_db.php";
 unset($_SESSION['current_user']);
 session_destroy();
 

@@ -12,7 +12,6 @@
                     </a>
                     <div class="dropdown-menu  dropdown-menu-right">
                         <a href="../admin/index.php?view=changepassword" class="dropdown-item"> Reset Password</a>
-
                         <div class="dropdown-divider"></div>
                         <a href="../admin/logout.php" class="dropdown-item"> Logout</a>
                     </div>

@@ -1,7 +1,7 @@
 <?php
 
-include 'Facebook/autoload.php';
-include('fb_config.php');
+include '../login_facebook/Facebook/autoload.php';
+include('../login_facebook/fb_config.php');
 $helper = $fb->getRedirectLoginHelper();
 if (isset($_GET['state'])) {
     $helper->getPersistentDataHandler()->set('state', $_GET['state']);
@@ -47,6 +47,6 @@ try {
 $fbUser = $response->getGraphUser();
 
 if (!empty($fbUser)) {
-    include 'login_with_token.php';
+    include '../login_social.php';
     loginFromSocialCallBack($fbUser);
 }

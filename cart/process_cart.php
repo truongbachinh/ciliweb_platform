@@ -2,15 +2,20 @@
 session_start();
 include "../connect_db.php";
 
-
-if (!empty($_SESSION["current_user"]['username'])) {
+if (!isset($_SESSION)) {
+    include "../account/login.php";
+}
+if (!empty($_SESSION["current_user"])) {
 
     $cartUserId = $_SESSION["current_user"]['user_id'];
+} else {
+?>
+    <script>
+        location.replace("../account/login.php");
+    </script>
+<?php
 }
-if (!empty($_SESSION["current_user_social"]['fullname'])) {
 
-    $cartUserId = $_SESSION["current_user_social"]['user_id'];
-}
 
 switch ($_GET['view']) {
     case "add_to_cart":
