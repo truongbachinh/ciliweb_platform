@@ -1,6 +1,5 @@
 <?php
-session_start();
-include "../connect_db.php";
+include "../config_user.php";
 
 if (!isset($_SESSION)) {
     include "../account/login.php";
@@ -8,12 +7,6 @@ if (!isset($_SESSION)) {
 if (!empty($_SESSION["current_user"])) {
 
     $cartUserId = $_SESSION["current_user"]['user_id'];
-} else {
-?>
-    <script>
-        location.replace("../account/login.php");
-    </script>
-<?php
 }
 
 
@@ -76,6 +69,14 @@ switch ($_GET['view']) {
         echo json_encode(array(
             'status' => $deleteCart,
             'message' => "delete product oke"
+        ));
+        break;
+    case "delete_all_item";
+
+        $deleteAllItem =  $link->query("DELETE  FROM `cart`  WHERE `cart_user_id` = $cartUserId ");
+        echo json_encode(array(
+            'status' => $deleteAllItem,
+            'message' => "Delete product of shop successfully"
         ));
         break;
     case "update_cart";

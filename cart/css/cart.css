@@ -32,3 +32,9 @@
     color: red;
     font-size: 16px;
 }
+.verticalLine {
+    border-left: 2px solid #f9b34c;
+    margin: 10px 2px 8px 2px;
+    margin-left: 12px;
+    
+  }

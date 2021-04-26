@@ -166,7 +166,7 @@ $dataPoints2s = array(
 
         <!-- PLACE CODE INSIDE THIS AREA -->
 
-        <section class="manage-topic">
+        <section class="manage-page">
             <div class="container m-t-30">
                 <div class="row d-fex justify-content-lg-around">
                     <div class="col-lg-6 col-md-6">

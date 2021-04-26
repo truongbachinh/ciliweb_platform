@@ -9,7 +9,7 @@ if (isset($_POST['page'])) {
     // Set some useful configuration 
     $baseURL = 'getData.php';
     $offset = !empty($_POST['page']) ? $_POST['page'] : 0;
-    $limit = 10;
+    $limit = 15;
 
     // Set conditions for search 
     $whereSQL = $orderSQL = $and = '';

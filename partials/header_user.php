@@ -92,11 +92,46 @@ ob_start();
                                         <div class="input">
                                             <div class="input-group">
                                                 <input type="text" class="form-control empty d-flex justify-content-center search-box" id="keywords" placeholder="Type keywords..." onkeyup="searchFilterDelay();" />
+                                                <div style="position: relative; cursor: pointer">
+                                                    <i style="position: absolute; z-index:1; " class=" fa fa-microphone fa-lg iconVoice" onclick='startRecording(); '></i>
+                                                    <input type='button' class="inputVoice cursor-pointer form-control empty d-flex justify-content-center search-box col-1" id='start'>
+                                                </div>
                                                 <select class="form-control empty d-flex justify-content-center search-box col-2" id="sortBy" onchange="searchFilter();">
                                                     <option value="">Sort by Price</option>
                                                     <option value="asc"> Low to high</option>
                                                     <option value="desc">High to low</option>
                                                 </select>
+                                                <?php
+                                                ?>
+                                                <script>
+                                                    var recognition = new webkitSpeechRecognition();
+
+                                                    recognition.onresult = function(event) {
+                                                        var saidText = "";
+                                                        for (var i = event.resultIndex; i < event.results.length; i++) {
+                                                            if (event.results[i].isFinal) {
+                                                                saidText = event.results[i][0].transcript;
+                                                            } else {
+                                                                saidText += event.results[i][0].transcript;
+                                                            }
+                                                        }
+                                                        // Update Textbox value
+                                                        document.getElementById('keywords').value = saidText;
+                                                        // Search Posts
+                                                        searchFilterDelay(saidText);
+                                                    }
+
+                                                    function startRecording() {
+                                                        recognition.start();
+                                                    }
+
+                                                    function endRecording() {
+                                                        recognition.end();
+                                                    }
+                                                </script>
+                                                <?php
+
+                                                ?>
                                             </div>
                                         </div>
                                     </form>
@@ -158,6 +193,7 @@ ob_start();
                                         <div class="input">
                                             <div class="input-group">
                                                 <input type="search" class="form-control empty d-flex justify-content-center" id="searchNameFood" value="<?php if (isset($_POST['searchText'])) echo $_POST['searchText'] ?>" placeholder="Search seafood..." />
+
 
                                                 <!-- <span class="input-group-text border-0" id="search-addon">
                                         <i class="fas fa-search"></i>

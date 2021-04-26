@@ -123,19 +123,12 @@ if ($chartSearch != null) {
 
         <!-- PLACE CODE INSIDE THIS AREA -->
 
-        <section class="manage-topic">
+        <section class="manage-page">
             <div class="container m-t-30">
                 <div class="row d-fex justify-content-lg-between">
                     <div class="col-lg-2 col-md-6">
                         <div class="card m-b-30 ">
                             <div class="card-body">
-                                <div class="pb-2 text-center">
-                                    <div class="avatar avatar-lg">
-                                        <div class="avatar-title bg-soft-primary rounded-circle">
-                                            <i class="fe fe-user"></i>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div>
                                     <p class="text-muted text-overline m-0 text-center">Total of user has order product</p>
                                     <h3 class="fw-400 text-center m-t-10">
@@ -148,13 +141,6 @@ if ($chartSearch != null) {
                     <div class="col-lg-2 col-md-6">
                         <div class="card m-b-30">
                             <div class="card-body">
-                                <div class="pb-2 text-center">
-                                    <div class="avatar avatar-lg">
-                                        <div class="avatar-title bg-soft-primary rounded-circle">
-                                            <i class="fe fe-user"></i>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div>
                                     <p class=" text-center text-muted text-overline m-0">Total of orders has confirm</p>
                                     <h3 class="fw-400 text-center m-t-10"> <?= $totalOrder ?></h3>
@@ -165,13 +151,6 @@ if ($chartSearch != null) {
                     <div class="col-lg-2 col-md-6">
                         <div class="card m-b-30">
                             <div class="card-body">
-                                <div class="pb-2 text-center">
-                                    <div class="avatar avatar-lg">
-                                        <div class="avatar-title bg-soft-primary rounded-circle">
-                                            <i class="fe fe-user"></i>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div>
                                     <p class="text-muted text-overline m-0 text-center">Total of orders not shipped </p>
                                     <h3 class="fw-400 text-center m-t-10"><?= $totalOrdeNotShip ?> </h3>
@@ -182,13 +161,6 @@ if ($chartSearch != null) {
                     <div class="col-lg-2 col-md-6">
                         <div class="card m-b-30">
                             <div class="card-body">
-                                <div class="pb-2 text-center">
-                                    <div class="avatar avatar-lg">
-                                        <div class="avatar-title bg-soft-primary rounded-circle">
-                                            <i class="fe fe-user"></i>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div>
                                     <p class="text-muted text-overline m-0 text-center">Total of orders shipped</p>
                                     <h3 class="fw-400 text-center m-t-10"> <?= $totalOrdeShiped ?></h3>
@@ -199,13 +171,6 @@ if ($chartSearch != null) {
                     <div class="col-lg-2 col-md-6">
                         <div class="card m-b-30">
                             <div class="card-body">
-                                <div class="pb-2 text-center">
-                                    <div class="avatar avatar-lg">
-                                        <div class="avatar-title bg-soft-primary rounded-circle">
-                                            <i class="fe fe-user"></i>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div>
                                     <p class="text-center text-muted text-overline m-0">Total of orders receive</p>
                                     <h3 class="text-center fw-400 m-t-10"> <?= $totalOrdeReceive ?></h3>
@@ -216,13 +181,7 @@ if ($chartSearch != null) {
                     <div class="col-lg-2 col-md-6">
                         <div class="card m-b-30">
                             <div class="card-body">
-                                <div class="pb-2 text-center">
-                                    <div class="avatar avatar-lg">
-                                        <div class="avatar-title bg-soft-primary rounded-circle">
-                                            <i class="fe fe-user"></i>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div>
                                     <p class="text-muted text-overline m-0 text-center">Total of ordes cancle</p>
                                     <h3 class="fw-400 text-center m-t-10"><?= $totalOrdeCancle ?> </h3>
@@ -251,7 +210,7 @@ if ($chartSearch != null) {
                                                             <option value="order_address.oda_city">Top 10 of City</option>
                                                             <option value="orders.order_user_id">Top 10 of User buy</option>
                                                             <option value="order.product">Top 10 best selling products</option>
-                                                            <option value="4">Oder total money</option>
+
                                                         </select>
                                                     </div>
                                                     <div class="search">

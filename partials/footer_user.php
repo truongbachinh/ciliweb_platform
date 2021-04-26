@@ -68,56 +68,6 @@
     }
 
 
-
-
-
-
-
-    // $.fn.serializeObject = function() {
-    //     var o = {};
-    //     var a = this.serializeArray();
-    //     $.each(a, function() {
-    //         if (o[this.name] !== undefined) {
-    //             if (!o[this.name].push) {
-    //                 o[this.name] = [o[this.name]];
-    //             }
-    //             o[this.name].push(this.value || '');
-    //         } else {
-    //             o[this.name] = this.value || '';
-    //         }
-    //     });
-    //     return o;
-    // };
-
-    // function updateQuantity(quantity) {
-    //     if (quantity != "") {
-    //         var dataCart = $('#updateCartProduct').serializeObject();
-    //         dataCart = JSON.stringify(dataCart);
-    //         $.ajax({
-    //             type: "POST",
-    //             contentType: "application/json; charset=utf-8",
-    //             dataType: 'JSON',
-    //             url: 'process_cart.php?view=update_cart',
-    //             data: dataCart,
-    //             success: function(res) {
-    //                 if (res) {
-    //                     var response = parseJSON(res);
-    //                     if (responses.status == 0) {
-
-
-    //                     } else {
-    //                         $.get('ajax_cart_content.php', function(cartContentHTML) {
-    //                             console.log("cart-count", cartContentHTML);
-    //                             $('#cart-form').html(cartContentHTML);
-    //                         })
-
-    //                     }
-    //                 }
-    //             }
-    //         })
-    //     }
-    // }
-
     $(".buy-form").submit(function(event) {
         event.preventDefault();
         console.log("data", $(this).serializeArray());
@@ -130,12 +80,7 @@
                 if (response.status == 0) {
 
                 } else {
-
-                    swal("Notice", response.message, "success");
-                    setInterval(function() {
-
-                    }, 1000);
-
+                    window.location.replace("../cart/cart.php");
                     $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
                         cartCountHTML) {
                         console.log("cart-count", cartCountHTML);
@@ -199,6 +144,34 @@
                 }
             })
         }
+    }
+
+    function deleteAllItem() {
+
+        $.ajax({
+            type: "POST",
+            url: '../cart/process_cart.php?view=delete_all_item',
+            success: function(response) {
+                response = JSON.parse(response);
+                if (response.status == 0) {
+                    console.log("error")
+                } else {
+                    swal("Notice", "Delete product successfully!", "success");
+                    $.get('../cart/ajax_cart_content.php', function(cartContentHTML) {
+                        console.log("cart-count", cartContentHTML);
+                        $('#cart-form').html(cartContentHTML);
+                    })
+                    $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
+                        cartCountHTML) {
+                        console.log("cart-count", cartCountHTML);
+                        $('#cartCountHeader').html(cartCountHTML);
+                    })
+
+
+                }
+            }
+
+        })
     }
 
     function deleteCartItem(productId) {

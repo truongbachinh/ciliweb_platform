@@ -31,12 +31,18 @@
                         while ($rowCartProduct = mysqli_fetch_array($cartProduct)) {
                             $myCartProduct[] =  $rowCartProduct;
                         }  ?>
-                        <table class="table table-hover table-bordered table-striped" style="text-align: center; background-color:blanchedalmond !important">
-                            <div id="cart-shop">
-                                <div><img src="../shop/image_shop/<?= $rowShop['shop_avatar'] ?>" width="60" height="70"></div>
-                                <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Order of shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $rowShop['shop_name'] . "</font>" ?></a></i></div>
+                        <table class="table table-hover table-bordered table-light" style="text-align: center; ">
+
+                            <div class="card" style="width: 20rem; margin-top: 60px; ">
+
+                                <div class="card-body">
+                                    <div>Order of shop <i class="mdi mdi-chevron-right mdi-14px "></i><?php echo "<span>" . $rowShop['shop_name'] . "</span>" ?></a></i></div>
+                                </div>
                             </div>
-                            <thead>
+                            <div id="breadcrumb" style="width:25%">
+                            </div>
+
+                            <thead class="thead-success">
                                 <tr>
                                     <!-- <th>Select</th> -->
                                     <th>NO.</th>
@@ -70,8 +76,12 @@
                                         <td>
                                             <input id="quantityPro" type="number" oninput="javascript:updateQuantity(this.value)" value="<?= $rowMyCartProduct["cart_quantity"] ?>" name="quantity[<?= $rowMyCartProduct['cart_id'] ?>]" min="1" max="<?= $rowMyCartProduct['p_quantity'] ?>">
                                         </td>
-                                        <td><?= number_format($cost = $rowMyCartProduct["cart_quantity"] *  $rowMyCartProduct["p_price"], 0, ",", ".")   ?>VNĐ</td>
-                                        <td><a href="javascript:deleteCartItem(<?= $rowMyCartProduct['cart_id'] ?>)"><i class="mdi mdi-delete-empty mdi:20px"></i></a></td>
+                                        <td><?= number_format($cost = $rowMyCartProduct["cart_quantity"] *  $rowMyCartProduct["p_price"], 0, ",", ".")   ?> VNĐ</td>
+                                        <td>
+                                            <a class="btn btn-danger " role="button" href="javascript:deleteCartItem(<?= $rowMyCartProduct['cart_id'] ?>)"><i class="mdi mdi-delete"></i>
+                                        </td>
+
+                                        <!-- <td><a href="javascript:deleteCartItem(<?= $rowMyCartProduct['cart_id'] ?>)"><i class="mdi mdi-delete-empty mdi:20px"></i></a></td> -->
                                     </tr>
                                 <?php
                                     // var_dump($cost);
@@ -83,8 +93,10 @@
                                     <td> &nbsp;</td>
                                     <td> &nbsp;</td>
                                     <td> &nbsp;</td>
-                                    <td><?= number_format($total, 0, ",", ".") ?></td>
-                                    <td>Delete</td>
+                                    <td>
+                                        <p style="color:red"><?= number_format($total, 0, ",", ".") ?> VNĐ</p>
+                                    </td>
+
                                 </tr>
                             <?php
                             $totalCost += $total;
@@ -96,25 +108,29 @@
                         ?>
                             </tbody>
                         </table>
+                        <?php
+                        if (!empty($totalCostAmoutShop)) { ?>
+                            <div class="total-cost-all" style="float:right">
+                                <a class="btn btn-danger  m-r-50" role="button" href="javascript:deleteAllItem()"><i class="mdi mdi-delete-empty"></i></a>
 
-                        <div class="total-cost-all" style="float:right">
-                            <?php
-                            if (!empty($totalCostAmoutShop)) {
-                            ?>
-                                <span><b>Total cost</b></span>&emsp;&emsp;<span><?= number_format($totalCostAmoutShop, 0, ",", ".") ?>VNĐ</span>
 
-                            <?php
-                            }
-                            ?>
+                                <span><b>Total cost</b></span>&emsp;&emsp;<span style="color:red"><?= number_format($totalCostAmoutShop, 0, ",", ".") ?>VNĐ</span>
 
-                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-                            <input type="submit" class="btn btn-success" name="checkoutCart" value="Checkout"></input>
-                        </div>
 
+
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                                <input type="submit" class="btn btn-success" name="checkoutCart" value="Checkout">
+                            </div>
+                        <?php
+                        }
+                        ?>
             </div>
-        </form>
+
     </div>
+    </form>
+</div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>

@@ -72,7 +72,7 @@ $shopUserId = $shopChat['user_id']
 <div class="seafood-infor" style="margin-top: 100px; ">
 
     <div class="infor">
-        <div id="breadcrumb" style="width: 30%;"><i class="fa fas-home" style="margin-left: 9px;"> Sản phẩm của shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $line_food["shop_name"] . "</font>" ?></a></i>
+        <div id="breadcrumb" style="width: 100%;">Product of <i class="mdi mdi-chevron-right mdi-14px "></i><?php echo "<span>" . $line_food["shop_name"] . "</span>" ?></a></i>
         </div>
         <form action="../cart/cart.php?view=add_to_cart" class="buy-form" method="post" enctype="multipart/form-data">
             <div class="row m-t-20">
@@ -93,16 +93,17 @@ $shopUserId = $shopChat['user_id']
                                         <i class="mdi mdi-chevron-right mdi:24px" aria-hidden="true" id="arrow-button"></i>
                                     </div>
                                     <div class="list">
-                                        <div class="list-group list-group-horizontal col-lg-9 d-md-flex" id="view-list-libImg">
+                                        <div class="list-group list-group-horizontal col-lg-9" id="view-list-libImg">
                                             <div class="galleryProduct d-flex">
                                                 <?php
                                                 if ($sql_img->num_rows > 0) {
                                                     while ($row = $sql_img->fetch_assoc()) {
                                                         $imageURL = '../shop/image_library/' . $row["img_name"];
                                                 ?>
-                                                        <div>
+
+                                                        <div class="card" style="background: none;">
                                                             <a href="<?= $imageURL ?>" data-fancybox="galleryProduct">
-                                                                <img src="<?php echo $imageURL; ?>" alt="" class="img-fluid m-r-10" id="img-view-details" />
+                                                                <img src="<?php echo $imageURL; ?>" alt="" class="img-fluid " style="max-width: 100%;" height="100px" id="img-view-details" />
                                                             </a>
                                                         </div> <?php }
                                                         } else { ?>
@@ -208,9 +209,9 @@ $shopUserId = $shopChat['user_id']
 
                             </input>
                             <!-- <a href="" class="btn btn-info  btn-show-shop-chat" role="button" data-id="<?= $shopUserId ?>"><i class="mdi mdi-chat"></i> </a> -->
-                            <div class="verticalLine">
-                            </div>
-                            <input type="submit" name="buyProduct" class="btn btn-outline-danger " onclick="orderNow()" id="btn-danger-now" value="Order Now">
+                            <!-- <div class="verticalLine">
+                            </div> -->
+                            <!-- <input type="submit" name="buyProduct" class="btn btn-outline-danger " onclick="orderNow()" id="btn-danger-now" value="Order Now"> -->
                             <div class="verticalLine">
                             </div>
                             <input type="submit" name="buyProduct" class="btn btn-danger " id="btn-danger" value="Add To Cart">
@@ -358,7 +359,7 @@ $shopUserId = $shopChat['user_id']
                                         if (in_array($fileType, $allowTypeVideos)) {
                                         ?>
                                             <video width="150" height="150" controls>
-                                                <source src="<?php$imageReviewURL ?>" type="video/mp4">
+                                                <source src="<?php $imageReviewURL ?>" type="video/mp4">
                                             </video>
                                         <?php
                                         }

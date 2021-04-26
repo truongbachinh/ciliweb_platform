@@ -11,14 +11,14 @@ class Pagination
     var $nextLink       = '&gt;';
     var $prevLink       = '&lt;';
     var $lastLink       = 'Last &rsaquo;';
-    var $fullTagOpen    = '<div class="pagination">';
+    var $fullTagOpen    = '<div class="pagination" style="float: right; margin-top: 18px;">';
     var $fullTagClose   = '</div>';
     var $firstTagOpen   = '';
     var $firstTagClose  = '&nbsp;';
     var $lastTagOpen    = '&nbsp;';
     var $lastTagClose   = '';
-    var $curTagOpen     = '&nbsp;<b>';
-    var $curTagClose    = '</b>';
+    var $curTagOpen     = '&nbsp;<li class="btn btn-primary">';
+    var $curTagClose    = '</li>';
     var $nextTagOpen    = '&nbsp;';
     var $nextTagClose   = '&nbsp;';
     var $prevTagOpen    = '&nbsp;';
@@ -70,7 +70,7 @@ class Pagination
         // Is there only one page? will not need to continue 
         if ($numPages == 1) {
             if ($this->showCount) {
-                $info = '<p>Showing : ' . $this->totalRows . '</p>';
+                $info = '<div>Showing : ' . $this->totalRows . '</div>';
                 return $info;
             } else {
                 return '';
@@ -172,7 +172,7 @@ class Pagination
     function getAJAXlink($count, $text)
     {
         if ($this->link_func == '' && $this->contentDiv == '')
-            return '<a href="' . $this->baseURL . '?' . $count . '"' . $this->anchorClass . '>' . $text . '</a>';
+            return '<a class="btn btn-outline-primary" href="' . $this->baseURL . '?' . $count . '"' . $this->anchorClass . '>' . $text . '</a>';
 
         $pageCount = $count ? $count : 0;
         if (!empty($this->link_func)) {
@@ -183,7 +183,7 @@ class Pagination
                        $('#" . $this->contentDiv . "').html(data); }); return false;\"";
         }
 
-        return "<a href=\"javascript:void(0);\" " . $this->anchorClass . " 
+        return "<a class = \"btn btn-outline-primary\" href=\"javascript:void(0);\" " . $this->anchorClass . " 
                 " . $linkClick . ">" . $text . '</a>';
     }
 }

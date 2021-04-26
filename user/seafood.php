@@ -1,7 +1,7 @@
 <div class="post-wrapper">
     <!-- Loading overlay -->
     <div class="loading-overlay">
-        <div class="overlay-content">Loading...</div>
+        <div class="overlay-content"></div>
     </div>
 
     <!-- Post list container -->
@@ -15,7 +15,7 @@
 
         // Set some useful configuration 
         $baseURL = 'getData.php';
-        $limit = 10;
+        $limit = 15;
 
         // Count of all records 
         $query   = $link->query("SELECT COUNT(*) as rowNum FROM products");

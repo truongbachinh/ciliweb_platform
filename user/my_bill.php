@@ -22,7 +22,7 @@ $isFeedback = mysqli_fetch_assoc($isFB);
 
 <link rel="stylesheet" href="./css/rate.css">
 <link rel="stylesheet" href="./css/bill.css">
-<section class="manage-topic">
+<section class="manage-page">
     <div class="container m-t-30">
         <div class="row ">
             <div class="col-12">
