@@ -81,7 +81,7 @@
 
                 } else {
                     window.location.replace("../cart/cart.php");
-                    $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
+                    $.get('../partials/cart_count.php', function(
                         cartCountHTML) {
                         console.log("cart-count", cartCountHTML);
                         $('#cartCountHeader').html(cartCountHTML);
@@ -105,7 +105,7 @@
                     swal("Notice", response.message, "warning");
                 } else {
                     swal("Notice", response.message, "success");
-                    $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
+                    $.get('../partials/cart_count.php', function(
                         cartCountHTML) {
                         console.log("cart-count", cartCountHTML);
                         $('#cartCountHeader').html(cartCountHTML);
@@ -133,7 +133,7 @@
                                 console.log("cart-count", cartContentHTML);
                                 $('#cart-form').html(cartContentHTML);
                             })
-                            $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
+                            $.get('../partials/cart_count.php', function(
                                 cartCountHTML) {
                                 console.log("cart-count", cartCountHTML);
                                 $('#cartCountHeader').html(cartCountHTML);
@@ -161,7 +161,7 @@
                         console.log("cart-count", cartContentHTML);
                         $('#cart-form').html(cartContentHTML);
                     })
-                    $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
+                    $.get('../partials/cart_count.php', function(
                         cartCountHTML) {
                         console.log("cart-count", cartCountHTML);
                         $('#cartCountHeader').html(cartCountHTML);
@@ -192,7 +192,7 @@
                         console.log("cart-count", cartContentHTML);
                         $('#cart-form').html(cartContentHTML);
                     })
-                    $.get('https://ciliweb.vn/ciliweb_platform/partials/cart_count.php', function(
+                    $.get('../partials/cart_count.php', function(
                         cartCountHTML) {
                         console.log("cart-count", cartCountHTML);
                         $('#cartCountHeader').html(cartCountHTML);
@@ -279,14 +279,13 @@
     function chatToShop(shopId) {
 
         var pathFile = "../shop/image_shop/";
-        Utils.api("chat_to_shop", {
+        Utils.api("talk_to_shop", {
             id: shopId
         }).then(response => {
 
             $('#chatToShopAvatar').attr('src', pathFile.concat(response.data.shop_avatar));
             $("#chatToShopName").text(response.data.shop_name);
             $("#chatToShopStatus").text(response.data.session_status);
-            // $("#chatToShopId").val(response.data.user_id);
             $('#chatToShop').modal();
 
         }).catch(err => {
@@ -295,9 +294,8 @@
     }
 
     function listChatToShop(shopId) {
-
         var pathFile = "../shop/image_shop/";
-        Utils.api("chat_to_shop", {
+        Utils.api("talk_to_shop", {
             id: shopId
         }).then(response => {
 
@@ -318,8 +316,8 @@
 
     function turnOfInterval() {
         console.log("Setinter oke");
-        window.location.replace = "./chat_to_user.php";
+        window.location.replace = "./talk_to_user.php";
     }
 </script>
 
-<script src="../user/javascript/chat.js"></script>
+<script src="../user/javascript/conversation.js"></script>

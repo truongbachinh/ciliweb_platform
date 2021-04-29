@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../user/css/shop.css">
 <div class="container-fluid " style="overflow: hidden; ">
     <div class="sp">
-        <span id="shop-list"> <i class="fa fa-list-alt" aria-hidden="true"> Shop provider</span></i>
+        <span id="shop-list"> <i class="fa fa-shopping-bag" aria-hidden="true"> Shop provider</span></i>
     </div>
     <form id="form1" runat="server">
         <div class="shop m-t-10">

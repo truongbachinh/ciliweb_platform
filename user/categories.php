@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../user/css/categories.css">
 <div class="container-fluid " style="overflow: hidden; ">
     <div class="ctg">
-        <span id="ctg-list"> <i class="fa fa-list-alt" aria-hidden="true"> Categories</span></i>
+        <span id="ctg-list"> <i class="fa fa-fish" aria-hidden="true"> Categories</span></i>
     </div>
     <form id="form1" runat="server">
         <div class="categories m-t-10">

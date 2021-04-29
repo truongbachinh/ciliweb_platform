@@ -79,7 +79,7 @@
                             <?php
                             if ($productInfor["p_quantity"] > "0") {
                             ?>
-                                <form action="../cart/cart.php?view=add_to_cart" class="buy-now-form" method="post" enctype="multipart/form-data">
+                                <form action="" class="buy-now-form" method="post" enctype="multipart/form-data">
                                     <input type="text" value="1" name="quantity[<?= $productInfor['p_id'] ?>]" hidden="true">
                                     <input type="submit" class="btn" id="btn-buy" value="Buy Now">
                                 </form>

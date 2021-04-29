@@ -1,11 +1,23 @@
 #breadcrumb
 {
-    margin-top: 10px;
+    margin-top: 2px;
    
     padding: 10px;
-    border-bottom: 2px solid #ff284b;
+    border-bottom: 2px solid  #7abaa1 !important;
     font-weight: bold;
     font-size: 16px;
-    border-bottom-left-radius:10px;
     margin-bottom: 20px;
 }
+.order-card{
+    background: #7abaa1 !important;
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.order-header{
+
+   color: #7abaa1;
+}
+
+
+    

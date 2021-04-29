@@ -7,6 +7,9 @@ while ($row = mysqli_fetch_assoc($query)) {
     $row2 = mysqli_fetch_assoc($query2);
     (mysqli_num_rows($query2) > 0) ? $result = $row2['msg_message'] : $result = "No message available";
     (strlen($result) > 28) ? $msg =  substr($result, 0, 28) . '...' : $msg = $result;
+
+    // var_dump(strlen($result) > 28);
+    // exit;
     if (isset($row2['msg_outcoming_id'])) {
         ($outgoing_id == $row2['msg_outcoming_id']) ? $you = "You: " : $you = "";
     } else {

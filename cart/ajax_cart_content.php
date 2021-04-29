@@ -33,14 +33,13 @@
                         }  ?>
                         <table class="table table-hover table-bordered table-light" style="text-align: center; ">
 
-                            <div class="card" style="width: 20rem; margin-top: 60px; ">
+                            <div class="card order-card" style="width: 20rem; margin-top: 60px; ">
 
                                 <div class="card-body">
                                     <div>Order of shop <i class="mdi mdi-chevron-right mdi-14px "></i><?php echo "<span>" . $rowShop['shop_name'] . "</span>" ?></a></i></div>
                                 </div>
                             </div>
-                            <div id="breadcrumb" style="width:25%">
-                            </div>
+
 
                             <thead class="thead-success">
                                 <tr>

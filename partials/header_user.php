@@ -13,10 +13,10 @@ ob_start();
                     <a href="#!" class="nar-link"><i class="mdi mdi-24px mdi-chat"></i>
                         <!-- <span class="notification-counter"></span></a> -->
             </li>
-            <?php if (!empty($_SESSION["current_user"])) : ?>
+            <?php if (!empty($_SESSION["current_user"]) && $_SESSION["current_user"]['user_role_id'] == '2' &&  $_SESSION["current_user"]['user_status'] == '1') : ?>
                 <div class="header-content">
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
-                        <a class="navbar-brand" href="/ciliweb_platform/user/index.php" id="logo-brand">
+                        <a class="navbar-brand" href="../user/index.php" id="logo-brand">
                             <i class="fas fa-home"></i> Seller channel
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ciliweb-navBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,7 @@ ob_start();
                                         <a href="../user/index.php?view=conversation" class="dropdown-item"> My conversation</a>
                                         <a href="../user/index.php?view=myorder" class="dropdown-item"> My Order</a>
                                         <a href="../user/index.php?view=changepass" class="dropdown-item"> Reset Password</a>
-                                        <a class="dropdown-item" href=""> Help </a>
+
                                         <div class="dropdown-divider"></div>
                                         <a href="../account/logout.php" class="dropdown-item"> Logout</a>
                                     </div>
@@ -192,12 +192,47 @@ ob_start();
                                     <form action="">
                                         <div class="input">
                                             <div class="input-group">
-                                                <input type="search" class="form-control empty d-flex justify-content-center" id="searchNameFood" value="<?php if (isset($_POST['searchText'])) echo $_POST['searchText'] ?>" placeholder="Search seafood..." />
+                                                <input type="text" class="form-control empty d-flex justify-content-center search-box" id="keywords" placeholder="Type keywords..." onkeyup="searchFilterDelay();" />
+                                                <div style="position: relative; cursor: pointer">
+                                                    <i style="position: absolute; z-index:1; " class=" fa fa-microphone fa-lg iconVoice" onclick='startRecording(); '></i>
+                                                    <input type='button' class="inputVoice cursor-pointer form-control empty d-flex justify-content-center search-box col-1" id='start'>
+                                                </div>
+                                                <select class="form-control empty d-flex justify-content-center search-box col-2" id="sortBy" onchange="searchFilter();">
+                                                    <option value="">Sort by Price</option>
+                                                    <option value="asc"> Low to high</option>
+                                                    <option value="desc">High to low</option>
+                                                </select>
+                                                <?php
+                                                ?>
+                                                <script>
+                                                    var recognition = new webkitSpeechRecognition();
 
+                                                    recognition.onresult = function(event) {
+                                                        var saidText = "";
+                                                        for (var i = event.resultIndex; i < event.results.length; i++) {
+                                                            if (event.results[i].isFinal) {
+                                                                saidText = event.results[i][0].transcript;
+                                                            } else {
+                                                                saidText += event.results[i][0].transcript;
+                                                            }
+                                                        }
+                                                        // Update Textbox value
+                                                        document.getElementById('keywords').value = saidText;
+                                                        // Search Posts
+                                                        searchFilterDelay(saidText);
+                                                    }
 
-                                                <!-- <span class="input-group-text border-0" id="search-addon">
-                                        <i class="fas fa-search"></i>
-                                    </span> -->
+                                                    function startRecording() {
+                                                        recognition.start();
+                                                    }
+
+                                                    function endRecording() {
+                                                        recognition.end();
+                                                    }
+                                                </script>
+                                                <?php
+
+                                                ?>
                                             </div>
                                         </div>
                                     </form>

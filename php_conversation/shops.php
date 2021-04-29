@@ -10,7 +10,7 @@ $GLOBALS['userInfor'] = mysqli_fetch_assoc($userInfor);
 
 // $shopIF = $GLOBALS['shopInfor'];
 // $shopId = $shopIF['shop_id'];
-$query = $link->query("SELECT user.fullname,user.session_status, user.user_id, shop.shop_avatar, chat_messages.* FROM chat_messages
+$query = $link->query("SELECT user.session_status, user.user_id, shop.shop_avatar,shop.shop_name, chat_messages.* FROM chat_messages
  LEFT JOIN user ON user.user_id = chat_messages.msg_outcoming_id
   LEFT JOIN shop ON shop.shop_user_id = user.user_id
   WHERE chat_messages.msg_incoming_id = $userId GROUP BY user.user_id ORDER BY `user_id` DESC");

@@ -72,8 +72,9 @@ $shopUserId = $shopChat['user_id']
 <div class="seafood-infor" style="margin-top: 100px; ">
 
     <div class="infor">
-        <div id="breadcrumb" style="width: 100%;">Product of <i class="mdi mdi-chevron-right mdi-14px "></i><?php echo "<span>" . $line_food["shop_name"] . "</span>" ?></a></i>
+        <div id="breadcrumb-product-details">Product of <i class="mdi mdi-chevron-right mdi-14px "></i><?php echo "<span>" . $line_food["shop_name"] . "</span>" ?></a></i>
         </div>
+
         <form action="../cart/cart.php?view=add_to_cart" class="buy-form" method="post" enctype="multipart/form-data">
             <div class="row m-t-20">
                 <div class="col-md-6 col-lg-6 " style="text-align: center;">
@@ -174,10 +175,7 @@ $shopUserId = $shopChat['user_id']
                                 <td class="td-name">Product Fresh :</td>
                                 <td class="td-name-infor"><?= (!empty($line_food['p_fresh']) ? $line_food['p_fresh'] : "Null") ?>/10</td>
                             </tr>
-                            <tr>
-                                <td class="td-name">Product Date :</td>
-                                <td width="70%"><?= (!empty($line_food['p_date_create']) ? date("Y-M-d H:i:s", strtotime($line_food['p_date_create'])) : "Null") ?></td>
-                            </tr>
+
                             <tr>
                                 <td class="td-name">Product Count :</td>
                                 <td>
@@ -205,7 +203,7 @@ $shopUserId = $shopChat['user_id']
                     ?>
                         <div class="Buying">
 
-                            <input onclick="chatToShop(<?= $shopUserId ?>)" name="chat" value="Chat" class="btn btn-outline-info" role="button">
+                            <input onclick="chatToShop(<?= $shopUserId ?>)" name="chat" value="Chat" class="btn btn-outline-info" style="margin-right: 25px;" role="button">
 
                             </input>
                             <!-- <a href="" class="btn btn-info  btn-show-shop-chat" role="button" data-id="<?= $shopUserId ?>"><i class="mdi mdi-chat"></i> </a> -->
@@ -269,7 +267,7 @@ $shopUserId = $shopChat['user_id']
 
     <div class="infor">
 
-        <div id="breadcrumb-product-details">Detail of seafood: <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
+        <div id="breadcrumb-product-details">Detail of seafood <i class="mdi mdi-chevron-right mdi-14px "></i> <?php echo "<span>" . $line_food["p_name"] . "</span>" ?></a></i>
         </div>
         <div class="col-lg-12 col-md-12">
             <div class="card m-b-30 m-t-30">
@@ -284,7 +282,7 @@ $shopUserId = $shopChat['user_id']
         </div>
     </div>
     <div class="infor">
-        <div id="breadcrumb-product-details"> Feedback of product: <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
+        <div id="breadcrumb-product-details"> Feedback of product <i class="mdi mdi-chevron-right mdi-14px "></i> <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
         </div>
         <div class="feadback-description">
             <div class="col-lg-12 col-md-12">
@@ -386,7 +384,7 @@ $shopUserId = $shopChat['user_id']
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script src="../user/javascript/seafood_infor_chat.js"></script>
+<script src="../user/javascript/seafood_infor_conversation.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {

@@ -1,5 +1,6 @@
 <?php
 include "../config_shop.php";
+
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
 if (!isset($_SESSION['current_user'])) {
@@ -124,6 +125,7 @@ if ($chartSearch != null) {
         <!-- PLACE CODE INSIDE THIS AREA -->
 
         <section class="manage-page">
+            <iframe src="<?php echo get_trusted_url($user, $server, $view_url, $site); ?>"></iframe>
             <div class="container m-t-30">
                 <div class="row d-fex justify-content-lg-between">
                     <div class="col-lg-2 col-md-6">

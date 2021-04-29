@@ -99,7 +99,7 @@
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="../shop/chat_to_user.php" class=" menu-link">
+                                <a href="../shop/talk_to_user.php" class=" menu-link">
                                     <span class="menu-label">
                                         <span class="menu-name">Chat to user </span>
                                     </span>

@@ -238,7 +238,7 @@ if ($isLoggedIn) {
                 $data = $query->fetch_assoc();
             }
             break;
-        case "get_user_chat_detail":
+        case "get_user_coversation_detail":
 
             $talker = $_POST['id'];
             $userId = $_SESSION["current_user"]["user_id"];
@@ -248,9 +248,6 @@ if ($isLoggedIn) {
                 // $row = mysqli_fetch_assoc($sql);
                 $data = $sql->fetch_assoc();
             }
-            break;
-
-            $id = $_POST['id'];
             break;
         case "feedback_product":
             $id = $_POST['id'];
@@ -488,7 +485,7 @@ if ($isLoggedIn) {
                 $msg = "Error delete record: " . $link->error;
             }
             break;
-        case "chat_to_shop":
+        case "talk_to_shop":
             $talker = $_POST['id'];
             $userId = $_SESSION["current_user"]["user_id"];
             $user_id = mysqli_real_escape_string($link, $talker);
