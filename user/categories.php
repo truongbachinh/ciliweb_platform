@@ -4,7 +4,7 @@
         <span id="ctg-list"> <i class="fa fa-list-alt" aria-hidden="true"> Categories</span></i>
     </div>
     <form id="form1" runat="server">
-        <div class="categories ">
+        <div class="categories m-t-10">
             <div id="arrowL">
                 <i class="mdi mdi-chevron-left mdi:24px" aria-hidden="true" id="arrow-button"></i>
             </div>
@@ -12,12 +12,14 @@
                 <i class="mdi mdi-chevron-right mdi:24px" aria-hidden="true" id="arrow-button"></i>
             </div>
             <div class="list">
-                <div class="list-group list-group-horizontal col-lg-9 d-md-flex" id="view-list-categories">
+                <div class="list-group list-group-horizontal col-lg-9 d-md-flex" id="view-list-categories" style=" background-color: #e0f1eb;">
                     <?php
                     $resultCategories =  $link->query("SELECT categories.* from categories");
                     while ($row = mysqli_fetch_array($resultCategories)) {
                     ?>
-                        <div class="item-categories " style="width: 120px; "><a href="index.php?view=categories&idl=<?php echo $row["ctg_id"]; ?>" style="text-decoration: none;">
+                        <a href="" style="text-decoration: none;">
+                            <!-- <a href="" class="btn-get-id_ctg" role="button" data-id="<?= $row['ctg_id'] ?>"> -->
+                            <div id="categorySearch" class="item-categories btn-get-ctg-id" data-id="<?= $row['ctg_id'] ?>" style="width: 120px; " onclick='searchFilter()'>
                                 <div class="card card-block card-4" style="margin-top: 6px;">
                                     <div class="card-body">
 
@@ -39,8 +41,9 @@
 
                                 </div>
 
-                            </a>
-                        </div>
+
+                            </div>
+                        </a>
                     <?php
                     }
                     ?>

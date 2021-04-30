@@ -34,17 +34,17 @@
                             </div>
                             <!-- Modal edit profile -->
                             <div class="row justify-content-end p-r-40">
-                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                                    Edit profile
+                                <button type="button" class="btn btn-sm btn-primary btn-update-shop" role="button" data-id="<?= $rowShop['shop_id'] ?>" data-toggle="modal" data-target="#updateShopProfile">
+                                    Update shop profile
                                 </button>
 
 
                                 <!-- Model edit -->
-                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal fade" id="updateShopProfile" tabindex="-1" role="dialog" aria-labelledby="updateShopProfile" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalCenterTitle">Edit profile
+                                                <h5 class="modal-title" id="updateShopProfile">Update profile
                                                 </h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
@@ -53,38 +53,47 @@
                                             <div class="modal-body">
                                                 <form action="" name="forml" method="post" class="form-horizontal" enctype="multipart/form-data">
                                                     <div class="form-group">
-                                                        <label for="studentId">Student ID</label>
-                                                        <input type="text" class="form-control" id="inputStudentId" name="idStudent">
+                                                        <label for="updateName">Shop name</label>
+                                                        <input type="hidden" class="form-control" id="shopId" name="shopId">
+                                                        <input type="text" class="form-control" id="updateName" name="updateName">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="studentName">Name Student</label>
-                                                        <input type="text" class="form-control" id="inputStudentName" name="nameStudent">
+                                                        <label for="updateDescription">Shop Description</label>
+                                                        <input type="text" class="form-control" id="updateDescription" name="updateDescription">
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label for="updatePhone">Shop Description</label>
+                                                        <input type="text" class="form-control" id="updatePhone" name="updatePhone">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="updateAddress">Shop address</label>
+                                                        <input type="text" class="form-control" id="updateAddress" placeholder="1234 Main St" name="updateAddress">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="inputFile">Shop avatar</label>
+                                                        <img src="<?php echo $imageURL; ?>" alt="" width="50" height="50" style="display: flex; flex-direction:row; margin:10px 20px" />
+                                                        <!-- <input type="file" class="form-control" id="updateAvatar" name="updateAvatar"> -->
 
-                                                    <div class="form-group">
-                                                        <label for="inputAddress">Address</label>
-                                                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address">
+                                                        <div class="input-group mb-3">
+                                                            <div onload="GetFileInfo ()">
+                                                                <input type="file" class="custom-file-input" id="inputFile" name="updateAvatar" onchange="GetFileInfo ()">
+                                                                <label class="custom-file-label" for="inputFile">Choose file</label>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="inputPhone">Phone</label>
-                                                        <input type="text" class="form-control" id="inputPhone" name="phone">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="inputPhone">Email</label>
-                                                        <input type="text" class="form-control" id="inputEmail" name="email">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="inputPhone">DOB</label>
-                                                        <input type="date" class="form-control" id="inputDoB" name="DoB">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="inputPhone">Major</label>
-                                                        <input type="text" class="form-control" id="inputMajor" name="major">
-                                                    </div>
+                                                    <!-- <div class="form-group editRankShop">
+                                                        <label for="updateRankShop">Shop rank</label>
+                                                        <select id="updateRankShop" class="form-control">
+                                                            <option value="1">Silver</option>
+                                                            <option value="2">Gold</option>
+                                                            <option value="3">Platinum</option>
+                                                            <option value="4">Diamond</option>
+                                                        </select>
+                                                    </div> -->
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                                         Close
                                                     </button>
-                                                    <input type="submit" class="btn btn-primary" name="updateProfile" value="Save changes">
+                                                    <input type="submit" class="btn btn-primary btn-save-update-shop" name="btnUpdateShopProfile" value="Save changes">
                                                 </form>
                                             </div>
 
@@ -152,7 +161,10 @@
                                                         <?php
                                                         if (!empty($rowShop["shop_create_time"])) {
                                                         ?>
-                                                            <p><?= date("Y/m/d H:i:s", $rowShop["shop_create_time"]); ?></p>
+                                                            <p><?=
+                                                                date('d-M-Y  H:i:s', strtotime($rowShop["shop_create_time"]));
+
+                                                                ?></p>
                                                         <?php
                                                         } else {
                                                         ?>
@@ -175,7 +187,12 @@
 
                                                         <?php
                                                         } else {  ?>
-                                                            <td style="padding: 2.5%;"><?php echo date("Y/m/d  H:i:s", $row["shop_update_time"]); ?></td>
+                                                            <td style="padding: 2.5%;">
+                                                                <?php echo
+                                                                date('d-M-Y  H:i:s', strtotime($rowShop["shop_update_time"]));
+
+                                                                ?>
+                                                            </td>
                                                         <?php
                                                         }
                                                         ?>
@@ -191,11 +208,13 @@
                                                         if (!empty($rowShop['shop_status'] == 1)) {
                                                         ?>
 
-                                                            <p><button type="button" class="btn btn-primary">Active</button></p>
+                                                            <p><button type="button" class="btn btn-primary">Active</button>
+                                                            </p>
 
                                                         <?php
                                                         } elseif (!empty($rowShop['shop_status'] == 2)) {  ?>
-                                                            <p><button type="button" class="btn btn-danger">Block</button></p>
+                                                            <p><button type="button" class="btn btn-danger">Block</button>
+                                                            </p>
                                                         <?php
                                                         }
 
@@ -206,6 +225,35 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Shop rank</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <?php
+                                                    if (!empty($rowShop['shop_rank'] == 1)) {
+                                                    ?>
+
+                                                        <td><button type="button" class="btn btn-info">Silver</button></td>
+
+                                                    <?php
+                                                    } elseif (!empty($rowShop['shop_rank'] == 2)) {  ?>
+                                                        <td><button type="button" class="btn btn-warning">Gold</button></td>
+                                                    <?php
+                                                    } elseif (!empty($rowShop['shop_rank'] == 3)) {  ?>
+                                                        <td><button type="button" class="btn btn-success">Platinum</button></td>
+                                                    <?php
+                                                    } elseif (!empty($rowShop['shop_rank'] == 4)) {  ?>
+                                                        <td><button type="button" class="btn btn-danger">Diamond</button></td>
+                                                    <?php
+                                                    }
+
+
+
+                                                    ?>
+
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -214,49 +262,87 @@
                     </div>
                 </div>
             </div>
+        </div>
     </section>
     <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
+
+            $(document).on('click', '.btn-update-shop', function(e) {
+                e.preventDefault();
+                const shopId = parseInt($(this).data("id"));
+                activeId = shopId;
+                console.log(shopId);
+                Utils.api("get_shop_info", {
+                    id: shopId
+                }).then(shop => {
+                    $("input#shopId").val(shop.data.shop_id)
+                    $("input#updateName").val(shop.data.shop_name)
+                    $("#updateDescription").val(shop.data.shop_description)
+                    $("#updateAddress").val(shop.data.shop_address)
+                    $("#updatePhone").val(shop.data.shop_phone)
+                    $("#displayAvatarEdit").val(shop.data.shop_avatar)
+                    // $("#updateRankShop").val(shop.data.shop_rank)
+                    $('#updateShopProfile').modal();
+                }).catch(err => {
+
+                });
+            });
         })
     </script>
 </body>
 
 </html>
 <?php
-if (isset($_POST["updateProfile"])) {
 
-    if ($rowInfor == NULL) {
+if (isset($_POST["btnUpdateShopProfile"])) {
 
-        $addInfor = mysqli_query($conn, "INSERT INTO `user_infor` (`user_id`, `id_card`, `name`, `address`, `phone`,`email`, `DOB`, `major`) VALUES ('$userId', '$_POST[idStudent]', '$_POST[nameStudent]', '$_POST[address]', '$_POST[phone]','$_POST[email]', '$_POST[DoB]', '$_POST[major]');");
-    } else {
-        $updateInfor = mysqli_query($conn, "update `user_infor` set `user_id` = '$userId' , `id_card`  = '$_POST[idStudent]', `name`  = '$_POST[nameStudent]', `address`  = '$_POST[address]', `phone`  = '$_POST[phone]',`email`  = '$_POST[email]', `DOB`  = '$_POST[DoB]', `major` = '$_POST[major]';");
+    $shopTimeUpdate = time();
+    $updateImg = "";
+    $id = $_POST['shopId'];
+
+    // File upload configuration 
+    $tm = md5(time());
+    $statusMsg = '';
+    $uploadPath = "./image_shop/";
+    if (!is_dir($uploadPath)) {
+        mkdir($uploadPath, 0777, true);
     }
-
-
-
-    if ($updateInfor == true) {
+    $fileName =  basename($_FILES['updateAvatar']['name']);
+    $fileUp =  $tm . $fileName;
+    if (!empty($fileName)) {
+        $updateImg  = $fileUp;
+        $targetFilePath = $uploadPath . $updateImg;
+        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+        // Check whether file type is valid 
+        // var_dump("--------------------------------------", $updateImg);
+        // exit;
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+        if (!empty($updateImg)) {
+            $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
+            if (in_array($fileType, $allowTypes)) {
+                if (move_uploaded_file($_FILES["updateAvatar"]["tmp_name"], $targetFilePath)) {
+                    $updateShopProfile = $link->query("UPDATE `shop` SET `shop_name`= '$_POST[updateName]' , `shop_description`= '$_POST[updateDescription]', `shop_address`= '$_POST[updateAddress]',`shop_phone`='$_POST[updatePhone]', `shop_avatar`= '$updateImg' , `shop_update_time`= $shopTimeUpdate WHERE `shop_id`= '$id' ");
+                }
+            } else {
+                // $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
+            }
+        } else {
+            // $statusMsg = 'Please select a file to upload.';
+        }
+    } else {
+        $updateImg = $rowShop["shop_avatar"];
+        $updateShopProfile = $link->query("UPDATE `shop` SET `shop_name`= '$_POST[updateName]' , `shop_description`= '$_POST[updateDescription]', `shop_address`= '$_POST[updateAddress]',`shop_phone`='$_POST[updatePhone]', `shop_avatar`= '$updateImg' , `shop_update_time`= $shopTimeUpdate WHERE `shop_id`= '$id' ");
+    }
+    if ($updateShopProfile == true) {
 ?>
         <script type="text/javascript">
-            alert("update Infor successful");
-            window.location.replace("./profile.php");
-        </script>
-    <?php
-    } elseif ($addInfor == true) {
-    ?>
-        <script type="text/javascript">
-            alert("add Infor successful");
-            window.location.replace("./profile.php");
-        </script>
-    <?php
-    } else {
-    ?>
-        <script type="text/javascript">
-            window.location = "./homepage.php"
+            swal("Notice", "update oke", "success")
         </script>
 <?php
     }
 }
+
 ?>

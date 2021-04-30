@@ -13,7 +13,7 @@ ob_start();
                     <a href="#!" class="nar-link"><i class="mdi mdi-24px mdi-chat"></i>
                         <!-- <span class="notification-counter"></span></a> -->
             </li>
-            <?php if (!empty($_SESSION["current_user"]["username"])) : ?>
+            <?php if (!empty($_SESSION["current_user"])) : ?>
                 <div class="header-content">
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
                         <a class="navbar-brand" href="/ciliweb_platform/user/index.php" id="logo-brand">
@@ -42,25 +42,33 @@ ob_start();
                             <ul class="navbar-nav ">
                                 <li class="nav-item dropdown ">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <div class="avatar avatar-sm avatar-online">
-                                            <?php
-                                            if ($resultUserInfor->num_rows > 0) {
-                                                $imageURL = '../user/avatar/' . $rowUser["ui_avatar"];
-                                            ?>
+
+                                        <?php
+                                        if ($resultUserInfor->num_rows > 0) {
+                                            $imageURL = '../user/avatar/' . $rowUser["ui_avatar"];
+                                        ?>
+                                            <div class="avatar avatar-sm avatar-online">
                                                 <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
-                                            <?php
-                                            } else { ?>
-                                                <span class="avatar-title rounded-circle bg-warning"><?php echo $_SESSION["current_user"]["username"]; ?></span>
+                                            </div>
+                                        <?php
+                                        } else { ?>
+                                            <div class="btn btn-outline-warning">
+                                                <span style="color:aliceblue"><?php if (!empty($_SESSION["current_user"]["username"])) {
+                                                                                    echo $_SESSION["current_user"]["username"];
+                                                                                } else {
+                                                                                    echo $_SESSION["current_user"]["fullname"];
+                                                                                } ?></span>
+                                            </div>
+                                        <?php } ?>
 
-                                            <?php } ?>
 
 
-                                        </div>
                                     </a>
                                     <div class="dropdown-menu  dropdown-menu-right">
                                         <a href="../user/index.php?view=profile" class="dropdown-item"> Profile</a>
+                                        <a href="../user/index.php?view=conversation" class="dropdown-item"> My conversation</a>
                                         <a href="../user/index.php?view=myorder" class="dropdown-item"> My Order</a>
-                                        <a href="../account/change_password.php" class="dropdown-item"> Reset Password</a>
+                                        <a href="../user/index.php?view=changepass" class="dropdown-item"> Reset Password</a>
                                         <a class="dropdown-item" href=""> Help </a>
                                         <div class="dropdown-divider"></div>
                                         <a href="../account/logout.php" class="dropdown-item"> Logout</a>
@@ -71,7 +79,7 @@ ob_start();
                     </nav>
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
                         <a class="navbar-brand" href="../account/login.php">
-                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="75" height="75">
+                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="55" height="55">
                         </a>
                         <div class="collapse navbar-collapse">
                         </div>
@@ -83,11 +91,12 @@ ob_start();
                                     <form action="">
                                         <div class="input">
                                             <div class="input-group">
-                                                <input type="search" class="form-control empty d-flex justify-content-center" id="searchNameFood" value="<?php if (isset($_POST['searchText'])) echo $_POST['searchText'] ?>" placeholder="Search seafood..." />
-
-                                                <!-- <span class="input-group-text border-0" id="search-addon">
-                                        <i class="fas fa-search"></i>
-                                    </span> -->
+                                                <input type="text" class="form-control empty d-flex justify-content-center search-box" id="keywords" placeholder="Type keywords..." onkeyup="searchFilterDelay();" />
+                                                <select class="form-control empty d-flex justify-content-center search-box col-2" id="sortBy" onchange="searchFilter();">
+                                                    <option value="">Sort by Price</option>
+                                                    <option value="asc"> Low to high</option>
+                                                    <option value="desc">High to low</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </form>
@@ -104,62 +113,39 @@ ob_start();
                         <b><?= $_SESSION['current_user']['username'] ?></b>
                     </a>
                 </div>
-            <?php elseif (!empty($_SESSION["current_user"]["fullname"])) : ?>
+
+            <?php else : ?>
                 <div class="header-content">
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
-                        <a class="navbar-brand" href="/ciliweb_platform/user/index.php" id="logo-brand">
+                        <a class="navbar-brand" href="../user/index.php" id="logo-brand">
                             <i class="fas fa-home"></i> Seller channel
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ciliweb-navBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="ciliweb-navBar">
-                            <ul class="navbar-nav ml-auto ">
+                            <ul class="navbar-nav mr-auto ">
                                 <li class="nav-item active">
-                                    <form action="" method="post">
-                                        <div style="margin-right: 15px; ">
-                                            <button type="submit" class="btn btn-outline-danger " id="cartBT"> <span id="cartCountHeader"> <?php include_once "../user/cartCount.php"; ?> </span></button>
-                                        </div>
-                                    </form>
+
                                 </li>
                             </ul>
-                            <!-- <?php
-                                    if (isset($_POST["cartBT"])) {
-                                        header("location: ../cart/cart.php");
-                                    }
-                                    ?> -->
-                            <ul class="navbar-nav ">
-                                <li class="nav-item dropdown ">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <div class="avatar avatar-sm avatar-online">
-                                            <?php
-                                            if ($resultUserInfor->num_rows > 0) {
-                                                $imageURL = '../user/avatar_user' . $rowUser["ui_avatar"];
-                                            ?>
-                                                <img class="avatar-img rounded-circle" src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
-                                            <?php
-                                            } else { ?>
-                                                <span class="avatar-title rounded-circle bg-warning"><?php echo $_SESSION["current_user"]["fullname"]; ?></span>
+                            <ul class="navbar-nav ml-auto ">
+                                &nbsp;
+                                <li class="nav-item">
+                                    <a class="nav-link " id="login" href="../account/login.php"><i class="fas fa-sign-in-alt"></i>Log in</a>
+                                </li>
+                                <div class="verticalLine">
 
-                                            <?php } ?>
-
-
-                                        </div>
-                                    </a>
-                                    <div class="dropdown-menu  dropdown-menu-right">
-                                        <a href="/user/profile.php" class="dropdown-item"> Profile</a>
-                                        <a href="/user/change-password.php" class="dropdown-item"> Reset Password</a>
-                                        <a class="dropdown-item" href=""> Help </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a href="../account/logout.php" class="dropdown-item"> Logout</a>
-                                    </div>
+                                </div>
+                                <li class="nav-item">
+                                    <a class="nav-link " id="sign-up" href="../account/register.php"><i class="fas fa-user-plus"></i>Sign up</a>
                                 </li>
                             </ul>
                         </div>
                     </nav>
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
                         <a class="navbar-brand" href="https://ciliweb.vn/ciliweb_project/shop/register_shop.php">
-                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="75" height="75">
+                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="55" height="55">
                         </a>
                         <div class="collapse navbar-collapse">
                         </div>
@@ -187,15 +173,8 @@ ob_start();
 
 
 
-                <div class="nav-item m-r-3">
-                    <a href="#">
-                        <b><?= $_SESSION['current_user']['username'] ?></b>
-                    </a>
-                </div>
-            <?php else : ?>
-                <li class="nav-item m-r-3">
-                    <a href="../account/login.php" class="btn btn-dark">Login</a>
-                </li>
+
+
             <?php endif; ?>
         </ul>
 

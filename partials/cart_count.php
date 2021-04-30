@@ -4,7 +4,6 @@ if (!isset($_SESSION)) {
     include "../config_user.php";
 }
 
-
 if (!empty($_SESSION["current_user"]['username'])) {
 
     $cartUserId = $_SESSION["current_user"]['user_id'];

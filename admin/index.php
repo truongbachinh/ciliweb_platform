@@ -1,5 +1,15 @@
 <?php
-include "../config.php";
+include "../config_admin.php";
+if (!isset($_SESSION['current_user'])) {
+    header("location: ./account/login.php");
+}
+
+if (isset($_GET['view'])) {
+    $t = $_GET['view'];
+} else {
+    $t = '';
+}
+$adminId = $_SESSION['current_user']['admin_id'];
 
 ?>
 
@@ -16,7 +26,13 @@ include "../config.php";
         <?php include "../partials/header.php"; ?>
 
         <!-- PLACE CODE INSIDE THIS AREA -->
-
+        <?php
+        if ($t == 'changepassword') {
+            include('../account/change_password.php');
+        } elseif ($t == 'forgotpassword') {
+            include('../admin/forgot_password.php');
+        }
+        ?>
 
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
@@ -30,13 +46,3 @@ include "../config.php";
 </body>
 
 </html>
-
-
-
-
-
-
-<?php
-// session_start();
-include "../connect_db.php";
-?>

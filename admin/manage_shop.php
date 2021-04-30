@@ -1,68 +1,10 @@
 <?php
-include "../config.php";
-
-?>
-
-<?php
-
-if (isset($_POST["addCategories"])) {
-    $count = 0;
-    $sql_user = "SELECT * from categories where ctg_name ='$_POST[nameCategories]'";
-    $res = mysqli_query($link, $sql_user) or die(mysqli_error($link));
-    $count = mysqli_num_rows($res);
-
-    if ($count > 0) {
-?>
-        <script type="text/javascript">
-            alert("Categories exits !");
-            window.location.replace("./manage_categories.php");
-        </script>
-        <?php
-    } else {
-
-        // File upload configuration 
-        $tm = md5(time());
-        $statusMsg = '';
-        $uploadPath = "./image_categories/";
-        if (!is_dir($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
-
-        $fileName =  $tm . basename($_FILES['imageCategories']['name']);
-        $targetFilePath = $uploadPath . $fileName;
-        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-        // Check whether file type is valid 
-        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-        if (!empty($fileName)) {
-
-            $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
-            if (in_array($fileType, $allowTypes)) {
-                if (move_uploaded_file($_FILES["imageCategories"]["tmp_name"], $targetFilePath)) {
-                    $addCategories = $link->query("INSERT INTO `categories` (`ctg_id`,`ctg_name`,`ctg_description`, `ctg_image`,  `ctg_status`,  `ctg_create_time`) VALUES(NULL,'$_POST[nameCategories]','$_POST[descriptionCategories]','$fileName','1','" . time() . "')");
-                }
-                if ($addCategories) {
-        ?>
-                    <script type="text/javascript">
-                        alert("add categories success !");
-                        window.location.replace("./manage_categories.php");
-                    </script>
-                <?php
-                } else {
-                ?>
-                    <script type="text/javascript">
-                        alert("error !");
-                        window.location.replace("./manage_categories.php");
-                    </script>
-<?php
-                }
-            } else {
-                $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
-            }
-        } else {
-            $statusMsg = 'Please select a file to upload.';
-        }
-    }
+include "../config_admin.php";
+if (!isset($_SESSION['current_user'])) {
+    header("location: ./account/login.php");
 }
+
+$result = mysqli_query($link, "SELECT * from `shop`  order by `shop_id`");
 
 ?>
 
@@ -87,49 +29,48 @@ if (isset($_POST["addCategories"])) {
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h4> Manage User </h4>
+                                    <h4> Manage Shop </h4>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <!-- <div class="col-sm-6">
                                         <div class="form-group has-search">
                                             <span class="fa fa-search form-control-feedback"></span>
                                             <input type="text" class="form-control" placeholder="Search">
                                         </div>
-                                    </div>
-                                    <div class="col-sm-6 ">
-                                        <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addRole"><i class="mdi mdi-clipboard-plus"></i> Add neu categories
-                                        </a>
-                                    </div>
+                                    </div> -->
+
                                 </div>
+                                <!-- <?php
+                                        include('../pagination/pagination.php');
+                                        ?> -->
                                 <div class="table-responsive p-t-10">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="table_manage_shop" class="table table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>Id</th>
-                                                <th>Categories name</th>
-                                                <th>Categories description</th>
-                                                <th>Categories image</th>
-                                                <th>Categories status</th>
+                                                <th>Shop name</th>
+                                                <th>Shop avatar</th>
+                                                <th>Shop status</th>
+                                                <th>Shop Rank</th>
                                                 <th>Create time</th>
                                                 <th>Update time</th>
-                                                <th>View Detail</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             $i = 1;
-                                            $result = $link->query("select * from shop");
+
                                             while ($row = mysqli_fetch_array($result)) {
                                             ?>
                                                 <tr>
                                                     <td><?= $i++; ?></td>
                                                     <td><?= $row["shop_name"]; ?></td>
-                                                    <td><?= $row["shop_description"]; ?></td>
                                                     <td><?php
                                                         if ($result->num_rows > 0) {
-                                                            $imageURL = '../admin/image_categories/' . $row["ctg_image"];
+                                                            $imageURL = '../shop/image_shop/' . $row["shop_avatar"];
                                                         ?>
                                                             <img src="<?php echo $imageURL; ?>" alt="" height="50" width="50" style="border-radius:10px" />
                                                         <?php
@@ -139,7 +80,7 @@ if (isset($_POST["addCategories"])) {
                                                         <?php } ?>
                                                     </td>
                                                     <?php
-                                                    if (!empty($row['ctg_status'] == 1)) {
+                                                    if (!empty($row['shop_status'] == 1)) {
                                                     ?>
 
                                                         <td><button style="border-radius: 10px" type="button" class="btn btn-primary">Active</button></td>
@@ -153,26 +94,54 @@ if (isset($_POST["addCategories"])) {
 
 
                                                     ?>
-                                                    <td><?= date("Y/d/m H:i:s", $row["ctg_create_time"]); ?></td>
+
                                                     <?php
-                                                    if (!empty($row['ctg_update_time'] == 0)) {
+                                                    if (!empty($row['shop_rank'] == 1)) {
+                                                    ?>
+
+                                                        <td><button style="border-radius: 10px" type="button" class="btn btn-info">Silver</button></td>
+
+                                                    <?php
+                                                    } elseif (!empty($row['shop_rank'] == 2)) {  ?>
+                                                        <td><button style="border-radius: 10px" type="button" class="btn btn-warning">Gold</button></td>
+                                                    <?php
+                                                    } elseif (!empty($row['shop_rank'] == 3)) {  ?>
+                                                        <td><button style="border-radius: 10px" type="button" class="btn btn-success">Platinum</button></td>
+                                                    <?php
+                                                    } elseif (!empty($row['shop_rank'] == 4)) {  ?>
+                                                        <td><button style="border-radius: 10px" type="button" class="btn btn-danger">Diamond</button></td>
+                                                    <?php
+                                                    }
+
+
+
+                                                    ?>
+                                                    <td><?=
+                                                        date('d-M-Y  H:i:s', strtotime($row["shop_create_time"]));
+
+                                                        ?></td>
+                                                    <?php
+                                                    if (!empty($row['shop_update_time'] == 0)) {
 
                                                     ?>
                                                         <td style="padding: 2.5%;">Not Update</td>
 
                                                     <?php
                                                     } else {  ?>
-                                                        <td style="padding: 2.5%;"><?= date("Y/d/m H:i:s", $row["ctg_update_time"]); ?></td>
+                                                        <td style="padding: 2.5%;"><?=
+                                                                                    date('d-M-Y  H:i:s', strtotime($row["shop_update_time"]));
+
+                                                                                    ?></td>
                                                     <?php
                                                     }
                                                     ?>
 
                                                     <td>
                                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                                            <a href="" class="btn btn-info  btn-edit-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
-                                                            <a href="" class="btn btn-danger btn-delete-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-delete"></i>
+                                                            <a href="" class="btn btn-info  btn-edit-shop" role="button" data-id="<?= $row['shop_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
+                                                            <a href="" class="btn btn-danger btn-delete-shop" role="button" data-id="<?= $row['shop_id'] ?>"><i class="mdi mdi-delete"></i>
                                                             </a>
-                                                            <a href="" class="btn btn-primary  btn-get-role-info" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
+                                                            <a href="" class="btn btn-primary  btn-detail-shop" role="button" data-id="<?= $row['shop_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -183,48 +152,20 @@ if (isset($_POST["addCategories"])) {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal add role -->
-                <div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="addRole" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addRole">Add categories</h5>
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" name="manageCategories" method="POST" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <label class="control-label">Categories Name :</label>
-                                        <input type="text" class="form-control" id="nameCategories" name="nameCategories" placeholder="Enter name of categories" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Categories Description :</label>
-                                        <input type="text" class="form-control" id="descriptionCategories" name="descriptionCategories" placeholder="Enter name of topic" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Categories Image :</label>
-                                        <input type="file" class="p11" class="form-control" id="imageCategories" name="imageCategories" placeholder="Enter name of topic" required>
-                                    </div>
-                                    <input type="submit" class="btn btn-primary btn-md float-right" name="addCategories" value="Create categories">
-                                </form>
+                                <!-- <?php
+                                        include('../pagination/pagination.php');
+                                        ?> -->
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Modal Detail -->
-                <div class="modal fade" id="roleDetailModal" tabindex="-1" role="dialog" aria-labelledby="detailRole" aria-hidden="true">
+                <div class="modal fade" id="detailShop" tabindex="-1" role="dialog" aria-labelledby="detailShop" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="detailRole">Detail
-                                    Information role
+                                <h5 class="modal-title" id="detailShop">Detail
+                                    Information shop
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -235,24 +176,24 @@ if (isset($_POST["addCategories"])) {
                                     <table class="table table-striped">
                                         <tbody>
                                             <tr>
-                                                <td>Role Name</td>
-                                                <td id="roleNameDetail"></td>
+                                                <td>Accout create shop</td>
+                                                <td id="detailShopAccount"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role description</td>
-                                                <td id="roleDescriptionDetail"></td>
+                                                <td>Shop name</td>
+                                                <td id="detailShopName"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role status</td>
-                                                <td id="roleStatusDetail"></td>
+                                                <td>Shop mail</td>
+                                                <td id="detailShopMail"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role create time</td>
-                                                <td id="roleCreateTime"></td>
+                                                <td>Shop address</td>
+                                                <td id="detailShopAddress"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role update time</td>
-                                                <td id="roleUpdateTime"></td>
+                                                <td>Shop description</td>
+                                                <td id="detailShopDescription"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -268,12 +209,12 @@ if (isset($_POST["addCategories"])) {
                         </div>
                     </div>
                 </div>
-
-                <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editTopic" aria-hidden="true">
+                <!-- Modal Edit -->
+                <div class="modal fade" id="editShop" tabindex="-1" role="dialog" aria-labelledby="editShop" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editTopic">Edit User Information</h5>
+                                <h5 class="modal-title" id="editShop">Edit Shop Information</h5>
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -282,41 +223,27 @@ if (isset($_POST["addCategories"])) {
                             <div class="modal-body">
                                 <form action="" id="create-account-form">
                                     <div class="form-group">
-                                        <label for="inp-username">Username</label>
-                                        <input type="text" class="form-control" id="inp-username" required>
+                                        <label for="editShopName">Shop name</label>
+                                        <input type="text" class="form-control" id="editShopName" readonly required>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inp-fullname">Full Name</label>
-                                        <input type="text" class="form-control" id="inp-fullname" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-email">Email</label>
-                                        <input type="text" class="form-control" id="inp-email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-status">Status</label>
-                                        <select id="inp-status" class="form-control">
+                                    <div class="form-group editStatusShop">
+                                        <label for="editStatusShop">Shop Status</label>
+                                        <select id="editStatusShop" class="form-control">
                                             <option value="1">Active</option>
                                             <option value="2">Blocked</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inp-role">Role</label>
-                                        <select id="inp-role" class="form-control">
-                                            <option value="student">Student</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="manager-coordinator">Coordinator Manager</option>
-                                            <option value="manager-marketing">Marketing Manager</option>
+                                    <div class="form-group editRankShop">
+                                        <label for="editRankShop">Shop rank</label>
+                                        <select id="editRankShop" class="form-control">
+                                            <option value="1">Silver</option>
+                                            <option value="2">Gold</option>
+                                            <option value="3">Platinum</option>
+                                            <option value="4">Diamond</option>
                                         </select>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="inp-password">New Password (Leave blank for unchanged)</label>
-                                        <input type="password" placeholder="Leave blank for unchanged..." class="form-control" id="inp-password" required>
-                                    </div>
-
                                     <div class="model-footer">
-                                        <button type="button" class="btn btn-warning btn-save">
+                                        <button type="button" class="btn btn-warning btn-update-shop">
                                             Save Changes
                                         </button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -334,36 +261,77 @@ if (isset($_POST["addCategories"])) {
     <?php include "../partials/js_libs.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            $('#table_manage_shop').DataTable();
+        })
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
-            $(document).on('click', ".btn-add-role", function(e) {
-                Utils.api("add_role_info", {
-                    roleName: $('#addNameRole').val(),
-                    roleDescription: $('#addDescriptionRole').val(),
+            $(document).on('click', ".btn-delete-shop", function(e) {
+                e.preventDefault();
+                swal({
+                    title: "Please confirm",
+                    text: 'Are sure you want to delete this shop?',
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        Utils.api('delete_shop_info', {
+                            id: $(this).data('id'),
+                        }).then(response => {
+                            swal("Notice", response.msg, "success").then(function(e) {
+                                location.reload();
+                            });
+                        }).catch(err => {})
+                    }
+                });
+            });
+            $(document).on('click', '.btn-edit-shop', function(e) {
+                e.preventDefault();
+                const shopId = parseInt($(this).data("id"));
+                activeId = shopId;
+                console.log(shopId);
+                Utils.api("get_shop_info", {
+                    id: shopId
+                }).then(shop => {
+                    $("input#editShopName").val(shop.data.shop_name)
+                    $("#editStatusShop").val(shop.data.shop_status)
+                    $("#editRankShop").val(shop.data.shop_rank)
+                    $('#editShop').modal();
+                }).catch(err => {
+
+                });
+            });
+            $(document).on('click', '.btn-update-shop', function(e) {
+                Utils.api("update_shop_info", {
+                    id: activeId,
+                    editStatusShop: $("#editStatusShop").val(),
+                    editRankShop: $("#editRankShop").val(),
                 }).then(response => {
-
-
-
+                    $("#editUser").modal("hide");
+                    swal("Notice", "Record is updated successfully!", "success").then(function(e) {
+                        location.replace("./manage_shop.php");
+                    });
                 }).catch(err => {
 
                 })
             });
-            $(document).on('click', ".btn-get-role-info", function(e) {
+            $(document).on('click', '.btn-detail-shop', function(e) {
                 e.preventDefault();
-                $('#roleDetailModal').modal();
-                const roleId = parseInt($(this).data("id"));
-                activeId = roleId;
-                console.log(roleId);
-                Utils.api("get_role_info", {
-                    id: roleId
+                const shopId = parseInt($(this).data("id"));
+                console.log(shopId)
+                Utils.api('get_shop_info_detail', {
+                    id: shopId
                 }).then(response => {
-                    console.log("name", response.data.role_name);
-                    $('#roleNameDetail').text(response.data.role_name);
-                    $('#roleDescription').text(response.data.role_description);
-                    $('#roelStatus').texy(response.data.role_status);
-                    $('#roelCreateTime').text(response.data.role_create_time);
-                    $('#roelUpdateTime').text(response.data.topic_update_time);
-                    $('#roleDetailModal').modal();
+                    $('#detailShopAccount').text(response.data.username);
+                    $('#detailShopName').text(response.data.shop_name);
+                    $('#detailShopMail').text(response.data.email);
+                    $('#detailShopAddress').text(response.data.shop_address);
+                    $('#detailShopDescription').text(response.data.shop_description);
+                    // var createDate = date("Y-m-d H:i:s", response.data.shop_create_time);
+                    // $('#detailShopCreateTime').text(createDate);
+                    // $('#detailShopUpdateTime').text(date("Y-m-d H:i:s", response.data.shop_update_time));
+                    $('#detailShop').modal();
                 }).catch(err => {
 
                 })

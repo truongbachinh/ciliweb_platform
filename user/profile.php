@@ -1,61 +1,6 @@
 <?php
 include "../config_user.php";
-// $resultUserInfor = $link->query("SELECT * from shop where shop_user_id = '$userId'");
-// $shopInfor = mysqli_fetch_assoc($resultShopInfor);
-
 ?>
-<?php
-if (isset($_POST["addProfileUser"])) {
-
-
-
-    // File upload configuration 
-    $tm = md5(time());
-    $statusMsg = '';
-    $uploadPath = "./avatar/";
-    if (!is_dir($uploadPath)) {
-        mkdir($uploadPath, 0777, true);
-    }
-
-    $fileName =  $tm . basename($_FILES['avatarUser']['name']);
-    $targetFilePath = $uploadPath . $fileName;
-    $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-    // Check whether file type is valid 
-    $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-    if (!empty($fileName)) {
-
-        $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
-        if (in_array($fileType, $allowTypes)) {
-            if (move_uploaded_file($_FILES["avatarUser"]["tmp_name"], $targetFilePath)) {
-                $addShop = $link->query("INSERT INTO `user_infor` (`ui_id_infor`, `ui_avatar`, `ui_firstname`, `ui_lastname`, `ui_address`, `ui_DOB`, `ui_phone`, `ui_create_time`, `ui_user_id`) VALUES (NULL,'$fileName','$_POST[firstName]','$_POST[lastName]','$_POST[address]','$_POST[DoB]','$_POST[phone]','" . time() . "','$userId')");
-            }
-
-            if ($addShop) {
-?>
-                <script type="text/javascript">
-                    alert("add user success !");
-                    window.location.replace("./index.php?view=profile&id=<?= $userId ?>");
-                </script>
-            <?php
-            } else {
-            ?>
-                <script type="text/javascript">
-                    alert("error !");
-                    window.location.replace("./index.php?view=profile&id=<?= $userId ?>");
-                </script>
-<?php
-            }
-        } else {
-            $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
-        }
-    } else {
-        $statusMsg = 'Please select a file to upload.';
-    }
-}
-
-?>
-
-
 <section class="admin-content" style="margin-top:80px">
     <div class="container m-t-30" id="myInformation">
         <div class="row justify-content-md-center">
@@ -99,7 +44,7 @@ if (isset($_POST["addProfileUser"])) {
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="" name="formAddInfor" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                            <form action="" name="formAddInfor" id="addUserInfor" method="post" class="form-horizontal" enctype="multipart/form-data">
                                                 <div class="form-group">
                                                     <label for="inputFirstName">First name</label>
                                                     <input type="text" class="form-control" id="inputFirstName" name="firstName">
@@ -121,8 +66,16 @@ if (isset($_POST["addProfileUser"])) {
                                                     <input type="date" class="form-control" id="inputDoB" name="DoB">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="inputAvatar">Avatar</label>
-                                                    <input type="file" class="form-control" id="inputAvatar" name="avatarUser">
+                                                    <div>
+                                                        <p class=" font-secondary">Avatar Uploads</p>
+                                                        <div class="input-group mb-3">
+                                                            <div onload="GetFileInfo ()">
+                                                                <input type="file" class="custom-file-input" id="inputFile" name="avatarUser" onchange="GetFileInfo ()">
+                                                                <label class="custom-file-label" for="inputFile">Choose file</label>
+                                                            </div>
+                                                        </div>
+                                                        <div id="info" style="margin-top:10px"></div>
+                                                    </div>
                                                 </div>
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                                     Close
@@ -194,7 +147,7 @@ if (isset($_POST["addProfileUser"])) {
                                                     <?php
                                                     if (!empty($rowUser["ui_DOB"])) {
                                                     ?>
-                                                        <p><?= $rowUser["ui_DOB"] ?></p>
+                                                        <p><?= date("Y-M-d",  strtotime($rowUser["ui_DOB"])) ?></p>
                                                     <?php
                                                     } else {
                                                     ?>
@@ -208,13 +161,13 @@ if (isset($_POST["addProfileUser"])) {
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <label>User create time</label>
+                                                    <label>User information create time</label>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <?php
                                                     if (!empty($rowUser["ui_create_time"])) {
                                                     ?>
-                                                        <p><?= date("Y/m/d H:i:s", $rowUser["ui_create_time"]); ?></p>
+                                                        <p><?= date("Y-M-d H:i:s", strtotime($rowUser["ui_create_time"])); ?></p>
                                                     <?php
                                                     } else {
                                                     ?>
@@ -222,26 +175,6 @@ if (isset($_POST["addProfileUser"])) {
                                                     <?php
                                                     }
                                                     ?>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <label>User update time</label>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <?php
-                                                    if (empty($rowUser['user_update_time'])) {
-
-                                                    ?>
-                                                        <td style="padding: 2.5%;">Not Update</td>
-
-                                                    <?php
-                                                    } else {  ?>
-                                                        <td style="padding: 2.5%;"><?php echo date("Y/m/d  H:i:s", $rowUser["ui_update_time"]); ?></td>
-                                                    <?php
-                                                    }
-                                                    ?>
-
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -276,8 +209,148 @@ if (isset($_POST["addProfileUser"])) {
                 </div>
             </div>
         </div>
-        <div id="myOrderDetail" style="margin-top: 500px; ">
-            <h1>Hello world</h1>
-        </div>
+
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.validator.addMethod("validDate", function(value, element) {
+            return this.optional(element) || moment(value, "DD/MM/YYYY").isValid();
+        }, "Please enter a valid date in the format DD/MM/YYYY");
+
+        $.validator.addMethod("valueNotEquals", function(value, element, arg) {
+            return arg !== value;
+        }, "Value must not equal arg.");
+
+        $.validator.addMethod("lettersOnly", function(value, element) {
+            return this.optional(element) || /^[a-z," "]+$/i.test(value);
+        }, "Letters and spaces only please");
+        $('#addUserInfor').validate({
+            rules: {
+                firstName: {
+                    required: true,
+                    lettersOnly: true,
+                },
+                lastName: {
+                    required: true,
+                    lettersOnly: true,
+                },
+                phone: {
+                    required: true,
+                    number: true,
+                },
+                address: {
+                    required: true,
+                },
+                DoB: {
+                    required: true,
+                }
+            },
+            messages: {
+                firstName: {
+                    required: "Please provide last name!",
+                    lettersOnly: "Please provide only character in alphabet!",
+                },
+                lastName: {
+                    required: "Please provide first name!",
+                    lettersOnly: "Please provide only character in alphabet!",
+                },
+                phone: {
+                    required: "Please provide your number phone!",
+                    number: "Please provide number phone!",
+                },
+                address: {
+                    required: "Please provide your address!",
+                },
+                DoB: {
+                    required: "Please provide your DOB!",
+                },
+
+            },
+        })
+    })
+</script>
+
+
+<?php
+if (isset($_POST["addProfileUser"])) {
+    $check = false;
+    $upload_query = false;
+    $targetFilePath = "";
+    $fileType = "";
+    $tm = md5(time());
+    $uploadPath = "./avatar/";
+    $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+
+    if (!is_dir($uploadPath)) {
+        mkdir($uploadPath, 0777, true);
+    }
+
+    $fileName =  $tm . basename($_FILES['avatarUser']['name']);
+    $targetFilePath = $uploadPath . $fileName;
+
+    // Check whether file type is valid 
+
+    if (!empty($fileName)) {
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+        if (in_array($fileType, $allowTypes)) {
+            $check = true;
+            $up = move_uploaded_file($_FILES["avatarUser"]["tmp_name"], $targetFilePath);
+        } else {
+
+?>
+            <script>
+                swal("Notice", 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.', "warning");
+            </script>
+        <?php
+        }
+    }
+    $result = $link->query("SELECT * from `user_infor` where `ui_user_id` = '$userId'");
+    $count = mysqli_num_rows($result);
+
+
+    if ($check == true && $up == true) {
+        if ($count > 0) {
+            $deleteUserInfor =  $link->query("DELETE  from user_infor  where `ui_user_id` = '$userId'");
+        }
+        $addUserInfor = $link->query("INSERT INTO `user_infor` (`ui_id_infor`, `ui_avatar`, `ui_firstname`, `ui_lastname`, `ui_address`, `ui_DOB`, `ui_phone`, `ui_create_time`, `ui_user_id`) VALUES (NULL,'$fileName','$_POST[firstName]','$_POST[lastName]','$_POST[address]','$_POST[DoB]','$_POST[phone]','" . $timeInVietNam . "','$userId')");
+        if ($addUserInfor) {
+        ?>
+            <script type="text/javascript">
+                swal("Notice", 'Adding user information success !', "success");
+                setTimeout(window.location.replace("./index.php?view=profile&id=<?= $userId ?>"), 500);
+            </script>
+        <?php
+        } else {
+
+        ?>
+            <script type="text/javascript">
+                swal("Notice", 'Adding user information False !', "warning");
+                window.location.replace("./index.php?view=profile&id=<?= $userId ?>");
+            </script>
+        <?php
+        }
+    } else {
+        if ($count > 0) {
+            $deleteUserInfor =  $link->query("DELETE  from user_infor  where `ui_user_id` = '$userId'");
+        }
+        $addUserInfor = $link->query("INSERT INTO `user_infor` (`ui_id_infor`,`ui_avatar`,  `ui_firstname`, `ui_lastname`, `ui_address`, `ui_DOB`, `ui_phone`, `ui_create_time`, `ui_user_id`) VALUES (NULL,'$rowUser[ui_avatar]','$_POST[firstName]','$_POST[lastName]','$_POST[address]','$_POST[DoB]','$_POST[phone]','" . $timeInVietNam . "','$userId')");
+        if ($addUserInfor) {
+        ?>
+            <script type="text/javascript">
+                swal("Notice", 'Adding user information successfully !', "success");
+                setTimeout(window.location.replace("./index.php?view=profile&id=<?= $userId ?>"), 500);
+            </script>
+        <?php
+        } else {
+        ?>
+            <script type="text/javascript">
+                swal("Notice", 'Adding user information False !', "warning");
+                window.location.replace("./index.php?view=profile&id=<?= $userId ?>");
+            </script>
+<?php
+        }
+    }
+}
+
+?>

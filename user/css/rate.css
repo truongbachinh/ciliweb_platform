@@ -1,0 +1,19 @@
+
+
+.rate2-base-layer {
+    color: #aaa;
+}
+
+
+
+.rate2 {
+    font-size: 50px;
+}
+
+.rate2 .rate-hover-layer {
+    color: #fa4956 ;
+}
+
+.rate2 .rate-select-layer {
+    color: #f9b34c;
+}

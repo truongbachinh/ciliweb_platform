@@ -1,39 +1,22 @@
 <?php
-include "../config.php";
-
-?>
-
-<?php
-
-if (isset($_POST["addUser"])) {
-
-    $count = 0;
-
-    $result = $link->query("SELECT * from `role` where `role_name` ='$_POST[nameRole]'");
-    $count = mysqli_num_rows($result);
-    if ($count > 0) {
-?>
-        <script type="text/javascript">
-            alert("error")
-        </script>
-    <?php
-    } else {
-        $sqlAddRole = $link->query("INSERT INTO `role` (`role_id`, `role_name`, `role_description`, `role_status`, `role_create_time`) VALUES (NULL,'$_POST[nameRole]', '$_POST[descriptionRole]','1','" . time() . "')");
-    ?>
-        <script type="text/javascript">
-            alert("addOKe")
-        </script>
-<?php
-    }
+include "../config_admin.php";
+if (!isset($_SESSION['current_user'])) {
+    header("location: ./account/login.php");
 }
-
+$pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 2;
+$currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
+$offest = ($currentPage - 1) * $pPerPage;
+$countUser = mysqli_query($link, "SELECT * from user");
+$res = mysqli_query($link, "SELECT * from user  order by `user_id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . "");
+$totalUser = $countUser->num_rows;
+$totalPage = ceil($totalUser / $pPerPage);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <?php include "../partials/html_header.php"; ?>
+    <link rel="stylesheet" href="./css/manage_user.css">
 </head>
 
 <body class="sidebar-pinned ">
@@ -57,17 +40,13 @@ if (isset($_POST["addUser"])) {
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group has-search">
-                                            <span class="fa fa-search form-control-feedback"></span>
                                             <input type="text" class="form-control" placeholder="Search">
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 ">
-                                        <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addRole"><i class="mdi mdi-clipboard-plus"></i> Add neu user
-                                        </a>
-                                    </div>
                                 </div>
+
                                 <div class="table-responsive p-t-10">
-                                    <table class="table table-responsive  table-bordered table-striped">
+                                    <table id="table_manage_user" class="table table-responsive center table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th scope="col">Id</th>
@@ -78,31 +57,30 @@ if (isset($_POST["addUser"])) {
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Role</th>
                                                 <th scope="col">Createa time</th>
-                                                <th scope="col">Update time</th>
+                                                <!--  <th scope="col">Update time</th> -->
                                                 <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             $i = 1;
-                                            $res = mysqli_query($link, "select * from user");
                                             while ($row = mysqli_fetch_array($res)) {
                                             ?>
                                                 <tr>
-                                                    <td><?= $i++; ?></td>
-                                                    <td><?= $row["fullname"]; ?></td>
-                                                    <td><?= $row["username"]; ?></td>
-                                                    <td><?= $row["password"]; ?></td>
-                                                    <td><?= $row["email"]; ?></td>
+                                                    <td class="max-lines"><?= $i++; ?></td>
+                                                    <td class="max-lines"><?= $row["fullname"]; ?></td>
+                                                    <td class="max-lines"><?= $row["username"]; ?></td>
+                                                    <td class="max-lines"><?= $row["password"]; ?></td>
+                                                    <td class="max-lines"><?= $row["email"]; ?></td>
                                                     <?php
                                                     if (!empty($row['user_status'] == 1)) {
                                                     ?>
 
-                                                        <td><button style="border-radius: 10px" type="button" class="btn btn-primary">Active</button></td>
+                                                        <td class="max-lines"><button style="border-radius: 10px" type="button" class="btn btn-primary">Active</button></td>
 
                                                     <?php
                                                     } elseif (!empty($row['user_status'] == 2)) {  ?>
-                                                        <td><button style="border-radius: 10px" type="button" class="btn btn-danger">Block</button></td>
+                                                        <td class="max-lines"><button style="border-radius: 10px" type="button" class="btn btn-danger">Block</button></td>
                                                     <?php
                                                     }
 
@@ -113,36 +91,40 @@ if (isset($_POST["addUser"])) {
                                                     if (!empty($row['user_role_id'] == 1)) {
                                                     ?>
 
-                                                        <td><button style="border-radius: 10px" type="button" class="btn btn-info">Shop</button></td>
+                                                        <td class="max-lines"><button style="border-radius: 10px" type="button" class="btn btn-info">Shop</button></td>
 
                                                     <?php
                                                     } elseif (!empty($row['user_role_id'] == 2)) {  ?>
-                                                        <td><button style="border-radius: 10px" type="button" class="btn btn-warning">User</button></td>
+                                                        <td class="max-lines"><button style="border-radius: 10px" type="button" class="btn btn-warning">User</button></td>
                                                     <?php
                                                     }
-
-
-
                                                     ?>
-                                                    <td><?= date("Y-m-d H:i:s", $row["user_create_time"]); ?></td>
-                                                    <?php
-                                                    if (!empty($row['user_update_time'] == 0)) {
 
-                                                    ?>
+
+                                                    <td><?=
+                                                        date('d-M-Y  H:i:s', strtotime($row["user_create_time"]));
+                                                        ?></td>
+                                                    <!--     <?php
+                                                                if (!empty($row['user_update_time'] == 0)) {
+
+                                                                ?>
                                                         <td>Not Update</td>
 
                                                     <?php
-                                                    } else {  ?>
-                                                        <td><?php echo date("Y-m-d  H:i:s", $row["user_update_time"]); ?></td>
+                                                                } else {  ?>
+                                                        <td><?php echo
+                                                                    date('d-M-Y  H:i:s', strtotime($row["user_update_time"]));
+
+                                                            ?></td>
                                                     <?php
-                                                    }
-                                                    ?>
+                                                                }
+                                                    ?> -->
+
                                                     <td>
                                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                                            <a href="" class="btn btn-info  btn-edit-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
-                                                            <a href="" class="btn btn-danger btn-delete-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-delete"></i>
-                                                            </a>
-                                                            <a href="" class="btn btn-primary  btn-get-role-info" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
+                                                            <a href="" class="btn btn-info  btn-edit-user" role="button" data-id="<?php echo $row['user_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
+                                                            <a href="" class="btn btn-danger btn-delete-user" role="button" data-id="<?php echo $row['user_id'] ?>"><i class="mdi mdi-delete"></i></a>
+                                                            <a href="" class="btn btn-primary  btn-detail-user" role="button" data-id="<?php echo $row['user_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -152,163 +134,43 @@ if (isset($_POST["addUser"])) {
                                         </tbody>
                                     </table>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Modal add role -->
-                <div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="addRole" aria-hidden="true">
+                <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editUser" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="addRole">Add user</h5>
+                                <h5 class="modal-title" id="editUser">Edit User Information</h5>
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form" action="" method="post">
-                                    <h6 style="padding-top: 2% !important;">Fullname</h6>
-                                    <div class="form-group ">
-                                        <input type="text" class="form-control" id="fullname" name="fullname">
-                                    </div>
-                                    <h6 style="padding-top: 2% !important;">Username</h6>
-                                    <div class="form-group ">
-
-                                        <input type="text" class="form-control" id="username" name="username">
-                                    </div>
-                                    <h6>Email</h6>
-                                    <div class="form-group ">
-
-                                        <input type="text" class="form-control" id="email" name="email">
-                                    </div>
-                                    <h6 style="padding-top: 2% !important;">Password</h6>
-                                    <div class="form-group last mb-3">
-                                        <input type="password" class="form-control" id="password" name="password">
-                                    </div>
-                                    <br>
-                                    <div class="control-group">
-                                        <label>Roles</label>
-                                        <select class="form-group" name="role" require>
-                                            <option selected value="student">--select role--</option>
-                                            <option value="1">Shop-account</option>
-                                            <option value="2">User-account</option>
-                                        </select>
-                                    </div>
-                                    <hr>
-                                    <div class="alert alert-success" id="success" style="margin-top: 10px; display: none">
-                                        <strong>Success!</strong> Account Registration Successfully.
-                                    </div>
-                                    <div class="alert alert-danger" id="failure" style="margin-top: 10px; display: none">
-                                        <strong>Already exist!</strong> The Username Alreadly Exits!
-                                    </div>
-                                    <input type="submit" value="Register" name="register" class="btn btn-block btn-success">
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal Detail -->
-                <div class="modal fade" id="roleDetailModal" tabindex="-1" role="dialog" aria-labelledby="detailRole" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="detailRole">Detail
-                                    Information role
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="detail">
-                                    <table class="table table-striped">
-                                        <tbody>
-                                            <tr>
-                                                <td>Role Name</td>
-                                                <td id="roleNameDetail"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Role description</td>
-                                                <td id="roleDescriptionDetail"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Role status</td>
-                                                <td id="roleStatusDetail"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Role create time</td>
-                                                <td id="roleCreateTime"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Role update time</td>
-                                                <td id="roleUpdateTime"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="button-close float-right">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                        Close
-                                    </button>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editTopic" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editTopic">Edit User Information</h5>
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" id="create-account-form">
+                                <form action="" id="edit-account-form">
                                     <div class="form-group">
-                                        <label for="inp-username">Username</label>
-                                        <input type="text" class="form-control" id="inp-username" required>
+                                        <label for="editUsername">User Account</label>
+                                        <input type="text" class="form-control" id="editUsername" readonly>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inp-fullname">Full Name</label>
-                                        <input type="text" class="form-control" id="inp-fullname" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-email">Email</label>
-                                        <input type="text" class="form-control" id="inp-email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-status">Status</label>
-                                        <select id="inp-status" class="form-control">
+                                    <div class="form-group statusUser">
+                                        <label for="editStatus">User Status</label>
+                                        <select id="editStatus" class="form-control">
                                             <option value="1">Active</option>
                                             <option value="2">Blocked</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inp-role">Role</label>
-                                        <select id="inp-role" class="form-control">
-                                            <option value="student">Student</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="manager-coordinator">Coordinator Manager</option>
-                                            <option value="manager-marketing">Marketing Manager</option>
+                                    <div class="form-group roleUser">
+                                        <label for="editRole">Role</label>
+                                        <select id="editRole" class="form-control">
+                                            <option value="1">Shop</option>
+                                            <option value="2">User</option>
                                         </select>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="inp-password">New Password (Leave blank for unchanged)</label>
-                                        <input type="password" placeholder="Leave blank for unchanged..." class="form-control" id="inp-password" required>
-                                    </div>
-
                                     <div class="model-footer">
-                                        <button type="button" class="btn btn-warning btn-save">
+                                        <button type="button" class="btn btn-warning btn-update-user">
                                             Save Changes
                                         </button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -320,42 +182,168 @@ if (isset($_POST["addUser"])) {
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="detailUser" tabindex="-1" role="dialog" aria-labelledby="detailUser" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailUser">Detail Information Faculty
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body p-t-0 p-l-0 p-r-0">
+                                <div class="detail">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <td>Avatar</td>
+                                                <td>
+
+                                                    <div class="avatar avatar-sm avatar-online">
+
+                                                        <img src="" class="avatar-img rounded-circle" alt="No avatar" id="detailAvatar">
+
+
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Fullname</td>
+                                                <td id="detailFullname"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Username</td>
+                                                <td id="detailUsername"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Password</td>
+                                                <td id="detailPassword"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Email</td>
+                                                <td id="detailEmail">
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+
+                                                <td>Phone</td>
+                                                <td id="detailPhone"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Address</td>
+                                                <td id="detailAddress"></td>
+
+
+                                            </tr>
+                                            <tr>
+                                                <td>Create time</td>
+                                                <td id="detailCreateTime">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Update time </td>
+                                                <td id="detailUpdateTime">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="button-close float-right">
+                                    <button type="button" class="btn btn-secondary m-r-10" data-dismiss="modal">
+                                        Close
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
         </section>
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
     <?php include "../partials/js_libs.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            $('#table_manage_user').DataTable();
+        })
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
-            $(document).on('click', ".btn-add-role", function(e) {
-                Utils.api("add_role_info", {
-                    roleName: $('#addNameRole').val(),
-                    roleDescription: $('#addDescriptionRole').val(),
+            $(document).on('click', ".btn-delete-user", function(e) {
+                e.preventDefault();
+                swal({
+                    title: "Please confirm",
+                    text: 'Are sure you want to delete this user?',
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        Utils.api('delete_user_info', {
+                            id: $(this).data('id'),
+                        }).then(response => {
+                            swal("Notice", response.msg, "success").then(function(e) {
+                                location.replace("./manage_user.php");
+                            });
+                        }).catch(err => {})
+                    }
+                });
+            });
+            $(document).on('click', '.btn-edit-user', function(e) {
+                e.preventDefault();
+
+                const userId = parseInt($(this).data("id"));
+                activeId = userId;
+                console.log(userId);
+                Utils.api("get_user_info", {
+                    id: userId
+                }).then(user => {
+                    $("input#editUsername ").val(user.data.username)
+                    $("#editStatus ").val(user.data.user_status)
+                    $("#editRole ").val(user.data.user_role_id)
+                    $('#editUser').modal();
+                }).catch(err => {
+
+                });
+            });
+            $(document).on('click', '.btn-update-user', function(e) {
+                Utils.api("update_user_info", {
+                    id: activeId,
+                    editStatus: $("#editStatus").val(),
+                    editRole: $("#editRole").val(),
                 }).then(response => {
-
-
-
+                    $("#editUser").modal("hide");
+                    swal("Notice", "Record is updated successfully!", "success").then(function(e) {
+                        location.replace("./manage_user.php");
+                    });
                 }).catch(err => {
 
                 })
             });
-            $(document).on('click', ".btn-get-role-info", function(e) {
+            $(document).on('click', '.btn-detail-user', function(e) {
                 e.preventDefault();
-                $('#roleDetailModal').modal();
-                const roleId = parseInt($(this).data("id"));
-                activeId = roleId;
-                console.log(roleId);
-                Utils.api("get_role_info", {
-                    id: roleId
+                var pathFile = "../user/avatar/";
+                const userId = parseInt($(this).data("id"));
+                console.log(userId)
+                Utils.api('get_user_info_detail', {
+                    id: userId
                 }).then(response => {
-                    console.log("name", response.data.role_name);
-                    $('#roleNameDetail').text(response.data.role_name);
-                    $('#roleDescription').text(response.data.role_description);
-                    $('#roelStatus').texy(response.data.role_status);
-                    $('#roelCreateTime').text(response.data.role_create_time);
-                    $('#roelUpdateTime').text(response.data.topic_update_time);
-                    $('#roleDetailModal').modal();
+                    $('#detailAvatar').attr('src', pathFile.concat(response.data.ui_avatar));
+                    $('#detailFullname').text(response.data.fullname);
+                    $('#detailUsername').text(response.data.username);
+                    $('#detailPassword').text(response.data.password);
+                    $('#detailEmail').text(response.data.email);
+                    $('#detailAddress').text(response.data.ui_address);
+                    $('#detailPhone').text(response.data.ui_phone);
+                    $('#detailCreateTime').text(response.data.user_create_time);
+                    $('#detailUpdateTime').text(response.data.user_update_time);
+                    $('#detailUser').modal();
                 }).catch(err => {
 
                 })

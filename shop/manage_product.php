@@ -2,6 +2,9 @@
 include "../config_shop.php";
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
+if (!isset($_SESSION['current_user'])) {
+    header("location: ../account/login.php");
+}
 ?>
 
 
@@ -30,7 +33,7 @@ $shopId = $shopIF['shop_id'];
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group has-search">
                                             <span class="fa fa-search form-control-feedback"></span>
@@ -38,9 +41,9 @@ $shopId = $shopIF['shop_id'];
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> -->
                                 <div class="table-responsive p-t-10">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="table_categories" class="table table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>Id</th>
@@ -255,6 +258,9 @@ $shopId = $shopIF['shop_id'];
     <?php include "../partials/js_libs.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            $('#table_categories').DataTable();
+        })
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
             $(document).on('click', ".btn-add-role", function(e) {

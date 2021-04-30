@@ -2,70 +2,88 @@
 include "../config_shop.php";
 $shopIF = $GLOBALS['shopInfor'];
 $shopId = $shopIF['shop_id'];
-?>
+if (!isset($_SESSION['current_user'])) {
+    header("location: ../account/login.php");
+}
+// if (isset($submitSearch)) {
+//     $_SESSION['product_filter'] = $_POST;
+//     var_dump("---------------------------------------------------------", $_POST);
+// } else {
+//     unset($_SESSION['product_filter']);
+// }
+// if (!empty($_SESSION['product_filter'])) {
+//     $where = "";
+//     foreach ($_SESSION['product_filter'] as $field => $value) {
+//         if (!empty($value)) {
+//             switch ($field) {
+//                 case 'id':
+//                     $where .= (!empty($where)) ? "AND" .  "`" . $field . "` LIKE '%" . $value . "%' " : "`" . $field . "` LIKE '%" . $value . "%' ";
+//                     break;
+//                 default:
+//                     $where .= (!empty($where)) ? "AND" .   "`" . $field . "` = '%" . $value . "%' " : "`" . $field . "` = '%" . $value . "%' ";
+//                     break;
+//             }
+//         }
+//     }
+// }
+// var_dump("result-------------------------------------------", $where);
 
-<?php
 
-if (isset($_POST["addCategories"])) {
-    $count = 0;
-    $sql_user = "SELECT * from categories where ctg_name ='$_POST[nameCategories]'";
-    $res = mysqli_query($link, $sql_user) or die(mysqli_error($link));
-    $count = mysqli_num_rows($res);
+// $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 3;
+// $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
+// $offest = ($currentPage - 1) * $pPerPage;
+// $countOrder = $link->query("SELECT * from orders where order_shop_id = $shopId");
+// $totalOrder = $countOrder->num_rows;
+// $totalPage = ceil($totalOrder / $pPerPage);
 
-    if ($count > 0) {
-?>
-        <script type="text/javascript">
-            alert("Categories exits !");
-            window.location.replace("./manage_categories.php");
-        </script>
-        <?php
+// if (!empty($where)) {
+//     $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId  AND (" . $where . ") order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
+// } else {
+//     $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
+// }
+// var_dump("result-------------------------------------------", $res);
+
+
+$res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId  ");
+
+
+$resTime = $link->query("SELECT orders.* from orders where order_shop_id  = $shopId  ");
+$checkTime = array();
+while ($rowTime =  mysqli_fetch_array($resTime)) {
+    $checkTime[] = $rowTime;
+}
+foreach ($checkTime as $rowTimeOrder) {
+
+    $checkTimeOrder = $rowTimeOrder['shipping_create_time'];
+    $orderCheckTimeId = $rowTimeOrder['id'];
+    $duration = 2;
+    $duration_type = 'day';
+    $deadline = date('Y-M-d H:i:s', strtotime($checkTimeOrder . ' +' . $duration . ' ' . $duration_type));
+
+    $diff = abs(strtotime($timeInVietNam) - strtotime($timeInVietNam));
+    $years = floor($diff / (365 * 60 * 60 * 24));
+    $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
+    $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+    $hours = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24) / (60 * 60));
+    $minutes = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24 - $hours * 60 * 60) / 60);
+    $seconds = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24 - $hours * 60 * 60 - $minutes * 60));
+
+    if ($years != 0) {
+        $checkTimeCancle = $years . " years, " . $months . " months, " . $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
+    } else if ($months != 0) {
+        $checkTimeCancle = $months . " months, " . $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
     } else {
-
-        // File upload configuration 
-        $tm = md5(time());
-        $statusMsg = '';
-        $uploadPath = "./image_categories/";
-        if (!is_dir($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
-
-        $fileName =  $tm . basename($_FILES['imageCategories']['name']);
-        $targetFilePath = $uploadPath . $fileName;
-        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-        // Check whether file type is valid 
-        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-        if (!empty($fileName)) {
-
-            $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
-            if (in_array($fileType, $allowTypes)) {
-                if (move_uploaded_file($_FILES["imageCategories"]["tmp_name"], $targetFilePath)) {
-                    $addCategories = $link->query("INSERT INTO `categories` (`ctg_id`,`ctg_name`,`ctg_description`, `ctg_image`,  `ctg_status`,  `ctg_create_time`) VALUES(NULL,'$_POST[nameCategories]','$_POST[descriptionCategories]','$fileName','1','" . time() . "')");
-                }
-                if ($addCategories) {
-        ?>
-                    <script type="text/javascript">
-                        alert("add categories success !");
-                        window.location.replace("./manage_categories.php");
-                    </script>
-                <?php
-                } else {
-                ?>
-                    <script type="text/javascript">
-                        alert("error !");
-                        window.location.replace("./manage_categories.php");
-                    </script>
-<?php
-                }
-            } else {
-                $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
-            }
-        } else {
-            $statusMsg = 'Please select a file to upload.';
-        }
+        $checkTimeCancle =  $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
+    }
+    if ($diff == 0) {
+        $updateOrderShipping = $link->query("UPDATE `orders` SET `shipping_order_status`= '4', `shipping_cancle_time` = '$timeInVietNam' WHERE `id` = $orderCheckTimeId ");
     }
 }
 
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -88,105 +106,142 @@ if (isset($_POST["addCategories"])) {
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
-                                    <h4> Manage order </h4>
+                                    <h2 style="text-align:center"> Manage order </h2>
                                 </div>
                             </div>
+
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group has-search">
-                                            <span class="fa fa-search form-control-feedback"></span>
-                                            <input type="text" class="form-control" placeholder="Search">
+                                            <form action="" method="POST">
+                                                <fieldset>
+                                                    <legend>Search Order:</legend>
+                                                    <div class="row">
+                                                        <div class="col-md-6 mb-3">
+                                                            <span class="fa fa-search form-control-feedback"></span>
+                                                            <input type="text" name="id" id="inputSearchOrderId" class="form-control" placeholder="Search">
+                                                        </div>
+                                                        <!-- <div class="col-md-4 mb-3">
+                                                            <select id="shipping_order_status" name="shipping_order_status" class="form-control">
+                                                                <option value="" selected>Shipping Status</option>
+                                                                <option value="1">Not yet</option>
+                                                                <option value="2">Shipped</option>
+                                                                <option value="3">Order Received</option>
+                                                                <option value="4">Order canceled</option>
+                                                            </select>
+                                                        </div> -->
+                                                        <div class="search">
+
+                                                            <input type="submit" name="submitSearch" id="submitSearch" value="Search" class="btn btn-info">
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 ">
-                                        <a href="" class="btn btn-info float-right" role="button" data-toggle="modal" data-target="#addRole"><i class="mdi mdi-clipboard-plus"></i> Add new order
-                                        </a>
-                                    </div>
                                 </div>
+                                <!-- <?php
+                                        include("../pagination/pagination.php");
+                                        ?> -->
                                 <div class="table-responsive p-t-10">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="table_order" class="table table-bordered table-striped">
                                         <thead>
                                             <tr style="text-align: center;">
                                                 <th>Order Id</th>
-                                                <th>User name</th>
+                                                <th>User account</th>
                                                 <th>Fullname</th>
-                                                <th> phone</th>
-                                                <th>Address</th>
-                                                <th>Total</th>
-                                                <th>Quantity</th>
+                                                <th>Phone</th>
+                                                <!-- <th>Address</th> -->
+                                                <th>Total Cost</th>
+                                                <!--  <th>Quantity</th> -->
                                                 <th>Payment status</th>
+                                                <th>Shipping status</th>
+                                                <th>Shipping start time</th>
                                                 <th>Action</th>
 
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="result">
                                             <?php
-                                            $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId ");
                                             $i = 1;
                                             while ($row = mysqli_fetch_array($res)) {
-
+                                                // var_dump($row);
+                                                // exit;
                                             ?>
                                                 <tr>
                                                     <td><?= $i++ ?></td>
                                                     <td><?= $row['username'] ?></td>
                                                     <td><?= $row['oda_firstname'], " ", $row['oda_lastname'] ?></td>
-                                                    <td><?= $row['oda_address'] ?></td>
-                                                    <td><?= $row['oda_address_2'] ?></td>
-                                                    <td><?= $row['order_total_cost'] ?></td>
-                                                    <td><?= $row['order_total_amount'] ?></td>
-                                                    <td>NOT YET</td>
+                                                    <td><?= $row['oda_phone'] ?></td>
+                                                    <!-- <td><?= $row['oda_address'] ?></td> -->
+                                                    <td><?= number_format($row['order_total_cost'], 0, ",", ".") ?> VNĐ</td>
+                                                    <!--  <td><?= $row['order_total_amount'] ?></td> -->
+
+                                                    <?php
+                                                    if (!empty($row['payment_order_status'] == 1)) {
+                                                    ?>
+                                                        <td>Payment on delivery </td>
+
+                                                    <?php
+                                                    } elseif (!empty($row['payment_order_status'] == 2)) {  ?>
+                                                        <td>Payment online</td>
+                                                    <?php
+                                                    }
+                                                    ?>
+
+                                                    <?php
+                                                    if (!empty($row['shipping_order_status'] == 1)) {
+                                                    ?>
+                                                        <td>Not yet</td>
+                                                    <?php
+                                                    } elseif (!empty($row['shipping_order_status'] == 2)) {  ?>
+                                                        <td style="color:green">Shipped</td>
+                                                    <?php
+                                                    } elseif (!empty($row['shipping_order_status'] == 3)) {  ?>
+                                                        <td style="color:red">Order Received</td>
+                                                    <?php
+                                                    } elseif (!empty($row['shipping_order_status'] == 4)) {  ?>
+                                                        <td>Order canceled</td>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                    <?php
+                                                    if (!empty($row['shipping_order_status'] == 1)) {
+                                                    ?>
+                                                        <td>Not Start</td>
+                                                    <?php
+                                                    } elseif (!empty($row['shipping_order_status'] == 2)) {  ?>
+                                                        <td style="color:green"><?= date('d-M-Y  H:i:s', strtotime($row['shipping_create_time'])); ?></td>
+                                                    <?php
+                                                    } elseif (!empty($row['shipping_order_status'] == 3)) {  ?>
+                                                        <td style="color:red"><?= date('d-M-Y  H:i:s', strtotime($row['shipping_receive_time'])); ?></td>
+                                                    <?php
+                                                    } elseif (!empty($row['shipping_order_status'] == 4)) {  ?>
+                                                        <td style="color:red"><?= date('d-M-Y  H:i:s', strtotime($row['shipping_cancle_time'])) ?></td>
+                                                    <?php
+                                                    }
+                                                    ?>
                                                     <td>
                                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                                            <a href="bill.php?id=<?= $row["id"] ?>&idu=<?= $row["order_user_id"] ?>" class="btn btn-info  btn-edit-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
-                                                            <a href="bill.php?id=<?= $row["id"]; ?>" class="btn btn-danger btn-delete-role" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-delete"></i>
+                                                            <a href="" class="btn btn-info  btn-edit-order" role="button" data-id="<?= $row["id"] ?>"><i class="mdi mdi-pencil-outline"></i> </a>
+                                                            <a href="" class="btn btn-danger btn-delete-order" role="button" data-id="<?= $row["id"] ?>"><i class="mdi mdi-delete"></i>
                                                             </a>
-                                                            <a href="" class="btn btn-primary  btn-get-role-info" role="button" data-id="<?= $row['role_id'] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
+                                                            <a href="./bill.php?id=<?= $row['id'] ?>&idu=<?= $row['user_id'] ?>" class="btn btn-primary" role="button" data-id="<?= $row["id"] ?>"><i class="mdi mdi-dots-horizontal"></i> </a>
+                                                            <!-- <a data-fancybox data-type="ajax" data-src="./bill.php?id=<?= $row['id'] ?>&idu=<?= $row['user_id'] ?>" href="javascript:;">Ajax content</a> -->
                                                         </div>
                                                     </td>
-
-
                                                 </tr>
                                             <?php
 
                                             }
                                             ?>
-
-
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal add role -->
-                <div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="addRole" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addRole">Add categories</h5>
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" name="manageCategories" method="POST" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <label class="control-label">Categories Name :</label>
-                                        <input type="text" class="form-control" id="nameCategories" name="nameCategories" placeholder="Enter name of categories" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Categories Description :</label>
-                                        <input type="text" class="form-control" id="descriptionCategories" name="descriptionCategories" placeholder="Enter name of topic" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Categories Image :</label>
-                                        <input type="file" class="p11" class="form-control" id="imageCategories" name="imageCategories" placeholder="Enter name of topic" required>
-                                    </div>
-                                    <input type="submit" class="btn btn-primary btn-md float-right" name="addCategories" value="Create categories">
-                                </form>
+                                <!-- <?php
+                                        include("../pagination/pagination.php");
+                                        ?> -->
                             </div>
                         </div>
                     </div>
@@ -196,8 +251,8 @@ if (isset($_POST["addCategories"])) {
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="detailRole">Detail
-                                    Information role
+                                <h5 class="modal-title" id="detailRole">Detail order
+                                    Information
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -208,23 +263,23 @@ if (isset($_POST["addCategories"])) {
                                     <table class="table table-striped">
                                         <tbody>
                                             <tr>
-                                                <td>Role Name</td>
+                                                <td>Order Id</td>
                                                 <td id="roleNameDetail"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role description</td>
+                                                <td>Người nhận</td>
                                                 <td id="roleDescriptionDetail"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role status</td>
+                                                <td>Address</td>
                                                 <td id="roleStatusDetail"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role create time</td>
+                                                <td>Phone</td>
                                                 <td id="roleCreateTime"></td>
                                             </tr>
                                             <tr>
-                                                <td>Role update time</td>
+                                                <td>Sản phẩm</td>
                                                 <td id="roleUpdateTime"></td>
                                             </tr>
                                         </tbody>
@@ -235,61 +290,42 @@ if (isset($_POST["addCategories"])) {
                                         Close
                                     </button>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
 
-                <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editTopic" aria-hidden="true">
+                <div class="modal fade" id="editOrder" tabindex="-1" role="dialog" aria-labelledby="editOrder" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editTopic">Edit User Information</h5>
+                                <h5 class="modal-title" id="editOrder">Update Oder Information</h5>
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="" id="create-account-form">
+                                <form action="" id="edit-order-form">
                                     <div class="form-group">
-                                        <label for="inp-username">Username</label>
-                                        <input type="text" class="form-control" id="inp-username" required>
+                                        <label for=""> Order id:</label>
+                                        <label for="updateOrderId" id="updateOrderId"></label>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inp-fullname">Full Name</label>
-                                        <input type="text" class="form-control" id="inp-fullname" required>
+                                        <label for="">Account ordered:</label>
+                                        <label for="updateOrderAccount" id="updateOrderAccount"></label>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inp-email">Email</label>
-                                        <input type="text" class="form-control" id="inp-email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inp-status">Status</label>
-                                        <select id="inp-status" class="form-control">
-                                            <option value="1">Active</option>
-                                            <option value="2">Blocked</option>
+                                        <label for="updateShippingStatus">Shipping Status</label>
+                                        <select id="updateShippingStatus" class="form-control">
+                                            <option value="1">Not yet</option>
+                                            <option value="2">Shipped</option>
+                                            <option value="3">Order Received</option>
+                                            <option value="4">Order canceled</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inp-role">Role</label>
-                                        <select id="inp-role" class="form-control">
-                                            <option value="student">Student</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="manager-coordinator">Coordinator Manager</option>
-                                            <option value="manager-marketing">Marketing Manager</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="inp-password">New Password (Leave blank for unchanged)</label>
-                                        <input type="password" placeholder="Leave blank for unchanged..." class="form-control" id="inp-password" required>
-                                    </div>
-
                                     <div class="model-footer">
-                                        <button type="button" class="btn btn-warning btn-save">
+                                        <button type="button" class="btn btn-warning btn-update-order">
                                             Save Changes
                                         </button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -300,6 +336,7 @@ if (isset($_POST["addCategories"])) {
                             </div>
                         </div>
                     </div>
+
                 </div>
         </section>
         <!--/ PLACE CODE INSIDE THIS AREA -->
@@ -307,41 +344,148 @@ if (isset($_POST["addCategories"])) {
     <?php include "../partials/js_libs.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            $('#table_order').DataTable();
+        });
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
-            $(document).on('click', ".btn-add-role", function(e) {
-                Utils.api("add_role_info", {
-                    roleName: $('#addNameRole').val(),
-                    roleDescription: $('#addDescriptionRole').val(),
-                }).then(response => {
-
-
-
-                }).catch(err => {
-
-                })
-            });
-            $(document).on('click', ".btn-get-role-info", function(e) {
+            $(document).on('click', '.btn-edit-order', function(e) {
                 e.preventDefault();
-                $('#roleDetailModal').modal();
-                const roleId = parseInt($(this).data("id"));
-                activeId = roleId;
-                console.log(roleId);
-                Utils.api("get_role_info", {
-                    id: roleId
+                const orderId = parseInt($(this).data("id"));
+                activeId = orderId;
+                console.log(orderId);
+                Utils.api("get_order_shipping_info", {
+                    id: orderId
                 }).then(response => {
-                    console.log("name", response.data.role_name);
-                    $('#roleNameDetail').text(response.data.role_name);
-                    $('#roleDescription').text(response.data.role_description);
-                    $('#roelStatus').texy(response.data.role_status);
-                    $('#roelCreateTime').text(response.data.role_create_time);
-                    $('#roelUpdateTime').text(response.data.topic_update_time);
-                    $('#roleDetailModal').modal();
+                    $("#updateOrderId").html(response.data.id)
+                    $("#updateOrderAccount").html(response.data.username)
+                    $("#updateShippingStatus").val(response.data.shipping_order_status)
+                    $('#editOrder').modal();
+                }).catch(err => {
+
+                });
+            });
+            $(document).on('click', '.btn-update-order', function(e) {
+                Utils.api("update_order_shipping_infor", {
+                    id: activeId,
+                    updateOrderShipping: $("#updateShippingStatus").val(),
+                }).then(response => {
+                    $("#editOrder").modal("hide"),
+                        swal("Notice", response.msg, "success").then(function(e) {
+                            location.reload()
+                        });
                 }).catch(err => {
 
                 })
             });
-        })
+        });
+
+
+
+        // $(document).on('click', 'btn-update-order', function(e) {
+        //     Utils.api("update_order_shipping_infor", {
+        //         id: activeId,
+        //         updateOrderShipping: $("#updateShippingStatus").val(),
+        //     }).then(response => {
+        //         $("#editOrder").hide(),
+        //             swal("Notice", response.msg, "success").then(function(e) {
+        //                 location.replace("./manage_order.php");
+        //             });
+        //     }).catch(err => {
+
+        //     })
+        // });
+
+
+        // $(document).on('click', '.btn-edit-order', function(e) {
+        //     e.preventDefault();
+
+        //     const orderId = parseInt($(this).data("id"));
+        //     activeId = orderId;
+        //     console.log(orderId);
+        //     Utils.api("get_order_info_detail", {
+        //         id: orderId
+        //     }).then(response => {
+        //         $.get("../api.php", function(orderDetailContentHtml) {
+        //             console.log("order-count", orderDetailContentHtml);
+        //             // $('#editOrder').modal();
+
+        //         }).catch(err => {
+
+        //         });
+        //     });
+        // });
+        // $(document).on('click', '.btn-detail-order', function(e) {
+        //     e.preventDefault();
+        //     const orderId = parseInt($(this).data("id"));
+        //     activeId = orderId;
+        //     console.log(orderId);
+        //     $.fancybox({
+        //         'width': '60%',
+        //         'height': '80%',
+        //         'autoScale': true,
+        //         'transitionIn': 'fade',
+        //         'transitionOut': 'fade',
+        //         'href': './bill.php',
+        //         'type': 'iframe',
+        //         'onClosed': function() {
+        //             window.location.href = "./manage_order.php";
+        //         }
+
+
+        //     });
+        //     return false;
+        // });
+        // $(document).on('click', '.btn-edit-order', function(e) {
+        //     e.preventDefault();
+        //     const orderId = parseInt($(this).data("id"));
+        //     activeId = orderId;
+        //     console.log(orderId);
+        //     $.ajax({
+        //         type: "POST",
+        //         url: Utils.api("get_order_info_detail"),
+        //         data: {
+        //             "id": orderId
+        //         },
+        //         success: function(res) {
+        //             if (res) {
+        //                 var response = JSON.parse(res);
+        //                 if (response.status == 0) {
+
+        //                 } else {
+        //                     $.get('../shop/bill.php', function(cartContentHTML) {
+        //                         console.log("cart-count", cartContentHTML);
+        //                         $('#viewDetailOrder').html(cartContentHTML);
+        //                         $('#editOrder').modal();
+        //                     })
+        //                 }
+        //             }
+        //         }
+        //     });
+        // });
+
+
+        // $(document).ready(function() {
+        //     $('#inputSearchOrder').keyup(function() {
+        //         var txt = $(this).val();
+        //         if (txt != '') {
+
+        //         } else {
+        //             $('#result').html('');
+        //             $.ajax({
+        //                 url: "search_order.php",
+        //                 method: "post",
+        //                 data: {
+        //                     search: txt
+        //                 },
+        //                 dataType: "text",
+        //                 success: function(data) {
+        //                     $('#result').html(data)
+        //                 }
+        //             })
+        //         }
+        //     })
+        // })
     </script>
 </body>
 

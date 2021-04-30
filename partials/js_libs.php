@@ -1,4 +1,3 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
 <script src="../assets/vendor/jquery-ui/jquery-ui.min.js"></script>
 <script src="../assets/vendor/popper/popper.js"></script>
@@ -17,3 +16,25 @@
 <script src="../assets/vendor/apexchart/apexcharts.min.js"></script>
 <!--chart data for current dashboard-->
 <script src="../assets/js/utils.js"></script>
+<!--Location-->
+<script src="../assets/js/districts.min.js"></script>
+<!--Validation-->
+<script src="../assets/vendor/jquery.validate/jquery.validate.min.js"></script>
+<!--Fancybox-->
+<!-- <script src="../assets/fancybox/jquery.fancybox.min.js"></script> -->
+<!-- Chart -->
+<script src="../assets/js/canvasjs.min.js"></script>
+<!-- Sweetalert -->
+<script src="../assets/js/sweetalert.min.js"></script>
+
+<!-- rater -->
+<script src="../assets/js/rater.js"></script>
+<script src="../assets/js/rater.min.js"></script>
+<!-- pagination -->
+<script src="../assets/vendor/jquery/jquery.dataTables.js"></script>
+
+<!-- Fancybox -->
+<script src="../assets/vendor/jquery/jquery.fancybox.js"></script>
+
+<!-- Check File -->
+<script src="../assets/js/checkFile.js"></script>
