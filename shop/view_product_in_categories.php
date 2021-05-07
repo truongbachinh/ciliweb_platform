@@ -28,7 +28,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
 
         <!-- PLACE CODE INSIDE THIS AREA -->
 
-        <section class="manage-topic">
+        <section class="manage-page">
             <div class="container m-t-30">
                 <div class="row ">
                     <div class="col-12">
@@ -176,18 +176,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                         <label class="control-label">Product Image Library :</label>
                                         <input type="file" class="form-control" id="imageProductLibrary" name="imageProductLibrary[]" multiple required>
                                     </div>
-                                    <!-- <div class="form-group">
-                                        <div>
-                                            <p class=" font-secondary">Product Image Library</p>
-                                            <div class="input-group mb-3">
-                                                <div onload="GetFileInfo ()">
-                                                    <input type="file" class="custom-file-input" id="inputFiles" name="imageProductLibrary[]" multiple onchange="GetFileInfo ()">
-                                                    <label class="custom-file-label" for="inputFiles">Choose file</label>
-                                                </div>
-                                            </div>
-                                            <div id="info" style="margin-top:10px"></div>
-                                        </div>
-                                    </div> -->
+
                                     <input type="submit" class="btn btn-primary btn-md float-right" name="addProduct" value="Create product">
                                 </form>
                             </div>
@@ -251,7 +240,10 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="" id="editProductVali">
+                                <form action="" method="post" id="editProductVali" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="editProductId" name="editProductId" hidden>
+                                    </div>
                                     <div class="form-group">
                                         <label for="editProductName">Product name</label>
                                         <input type="text" class="form-control" id="editProductName" name="editProductName">
@@ -268,8 +260,12 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                                         <label for="editProductPrice">Product price</label>
                                         <input type="number" class="form-control" id="editProductPrice" name="editProductPrice">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="editProductImage">Product price</label>
+                                        <input type="file" class="form-control" id="editProductImage" name="editProductImage">
+                                    </div>
                                     <div class="model-footer">
-                                        <button type="button" class="btn btn-warning btn-update-product">
+                                        <button type="submit" class="btn btn-warning btn-update-product" name="updateProduct">
                                             Save Changes
                                         </button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -317,6 +313,11 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                         required: true,
                         number: true
                     },
+                    editProductImage: {
+                        required: true,
+
+                    },
+
 
                 },
                 messages: {
@@ -339,6 +340,10 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                     editProductPrice: {
                         required: "Please provide information!",
                         number: "Please provide only number!",
+                    },
+                    editProductImage: {
+                        required: "Please provide image!",
+
                     },
 
                 },
@@ -402,54 +407,6 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
 
 
 
-                    usernameUserLogin: {
-                        required: "Please provide information!",
-                        minlength: "Please provide at least 6 characters.",
-                        maxlength: "Please provide at must 32 characters.",
-
-
-                    },
-                    passwordUserLogin: {
-                        required: "Please provide information!",
-                        minlength: "Please provide at least 6 characters.",
-                        maxlength: "Please provide at must 32 characters.",
-                    },
-                    usernameUserLogin: {
-                        required: "Please provide information!",
-                        minlength: "Please provide at least 6 characters.",
-                        maxlength: "Please provide at must 32 characters.",
-
-
-                    },
-                    passwordUserLogin: {
-                        required: "Please provide information!",
-                        minlength: "Please provide at least 6 characters.",
-                        maxlength: "Please provide at must 32 characters.",
-                    },
-                    usernameUserLogin: {
-                        required: "Please provide information!",
-                        minlength: "Please provide at least 6 characters.",
-                        maxlength: "Please provide at must 32 characters.",
-
-
-                    },
-                    passwordUserLogin: {
-                        required: "Please provide information!",
-                        minlength: "Please provide at least 6 characters.",
-                        maxlength: "Please provide at must 32 characters.",
-                    },
-                    usernameUserLogin: {
-                        required: "Please provide information!",
-                        minlength: "Please provide at least 6 characters.",
-                        maxlength: "Please provide at must 32 characters.",
-
-
-                    },
-                    passwordUserLogin: {
-                        required: "Please provide information!",
-                        minlength: "Please provide at least 6 characters.",
-                        maxlength: "Please provide at must 32 characters.",
-                    },
                 },
             })
 
@@ -492,6 +449,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                     id: productId
                 }).then(response => {
                     // $('#detailProductCategory').text(response.data.ctg_name);
+
                     $('#detailProductName').text(response.data.p_name);
                     $('#detailProductDescription').text(response.data.p_description);
                     $("#detailListProductImage").attr("src", pathFile.concat(response.data.p_image));
@@ -509,6 +467,7 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                 Utils.api("get_product_edit", {
                     id: productId
                 }).then(response => {
+                    $('#editProductId').val(response.data.p_id)
                     $('#editProductName').val(response.data.p_name);
                     $('#editProductQuantity').val(response.data.p_quantity);
                     $("#editProductFresh").val(response.data.p_fresh);
@@ -517,22 +476,6 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
                 }).catch(err => {
 
                 });
-            });
-            $(document).on('click', '.btn-update-product', function(e) {
-                Utils.api("update_product_info", {
-                    id: activeId,
-                    editProductName: $("#editProductName").val(),
-                    editProductQuantity: $("#editProductQuantity").val(),
-                    editProductFresh: $("#editProductFresh").val(),
-                    editProductPrice: $("#editProductPrice").val(),
-                }).then(response => {
-                    $("#editProduct").modal("hide");
-                    swal("Notice", "Record is updated successfully!", "success").then(function(e) {
-                        location.reload()
-                    });
-                }).catch(err => {
-
-                })
             });
 
 
@@ -543,6 +486,96 @@ $resultProduct = $link->query("SELECT products.*, categories.*,shop.* from produ
 </body>
 
 </html>
+
+<?php
+if (isset($_POST["updateProduct"])) {
+    $fileCheck = '';
+    $id = $_POST['editProductId'];
+    $fileCheck = $_FILES["editProductImage"]["name"];
+
+    $editProductName = $_POST['editProductName'];
+    $editProductQuantity = $_POST['editProductQuantity'];
+    $editProductFresh = $_POST['editProductFresh'];
+    $editProductPrice = $_POST['editProductPrice'];
+    if (!empty($fileCheck)) {
+        $tm = md5(time());
+        $statusMsg = '';
+        $uploadPath = "./image_products/";
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        $fileName =  $tm . basename($_FILES["editProductImage"]["name"]);
+
+        $targetFilePath = $uploadPath . $fileName;
+        // Check whether file type is valid 
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+        if (!empty($fileName)) {
+            $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
+            if (in_array(strtolower($fileType), $allowTypes)) {
+                if (move_uploaded_file($_FILES["editProductImage"]["tmp_name"], $targetFilePath)) {
+
+                    $productUpdateTime = $timeInVietNam;
+                    $stmt = $link->prepare("UPDATE `products` SET `p_name`=?,`p_quantity`=?,`p_fresh`=?,`p_price`=?,`p_image`=?,`p_date_update`=? WHERE `p_id`=?");
+                    $stmt->bind_param("ssssssi", $editProductName, $editProductQuantity, $editProductFresh, $editProductPrice, $fileName,  $productUpdateTime, $id);
+                    if ($stmt->execute()) {
+?>
+                        <script>
+                            swal("Notice", "Record updated successfully", "success").then(function(e) {
+                                window.location.replace("./view_product_in_categories.php?idsh=<?= $shopId ?>&idctg=<?= $idCtg ?>");
+                            });
+                        </script>
+                    <?php
+
+                    } else {
+                    ?>
+                        <script>
+                            alert("Error try again.!")
+                        </script>
+                <?php
+                    }
+                }
+            } else {
+                ?>
+                <script>
+                    alert("Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.!")
+                </script>
+            <?php
+
+            }
+        } else {
+
+            ?>
+            <script>
+                alert("Please select a file to upload.!")
+            </script>
+        <?php
+        }
+    } else {
+        $productUpdateTime = $timeInVietNam;
+        $stmt = $link->prepare("UPDATE `products` SET `p_name`=?,`p_quantity`=?,`p_fresh`=?,`p_price`=?,`p_date_update`=? WHERE `p_id`=?");
+        $stmt->bind_param("sssssi", $editProductName, $editProductQuantity, $editProductFresh, $editProductPrice,  $productUpdateTime, $id);
+        if ($stmt->execute()) {
+        ?>
+            <script>
+                swal("Notice", "Record updated successfully", "success").then(function(e) {
+                    window.location.replace("./view_product_in_categories.php?idsh=<?= $shopId ?>&idctg=<?= $idCtg ?>");
+                });
+            </script>
+        <?php
+
+        } else {
+        ?>
+            <script>
+                alert("Error try again.!")
+            </script>
+<?php
+        }
+    }
+}
+
+?>
+
 
 <?php
 

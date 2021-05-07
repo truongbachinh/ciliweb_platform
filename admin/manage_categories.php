@@ -26,7 +26,7 @@ $result = mysqli_query($link, "SELECT * from `categories`  order by `ctg_id` ");
 
         <!-- PLACE CODE INSIDE THIS AREA -->
 
-        <section class="manage-topic">
+        <section class="manage-page">
             <div class="container m-t-30">
                 <div class="row ">
                     <div class="col-12">

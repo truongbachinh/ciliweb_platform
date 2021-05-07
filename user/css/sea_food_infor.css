@@ -26,12 +26,12 @@
 #breadcrumb
 {
     margin-top: 10px;
-    /* display: inline-flex; */
+  
     padding: 10px;
-    border-bottom: 2px solid #ff284b;
+    border-bottom: 1px solid #ff284b;
     font-weight: bold;
-    font-size: 18px;
-    border-bottom-left-radius:10px;
+    font-size: 15px;
+    border-bottom-left-radius:5px;
 }
 #quantity-product{
     width: 40%  !important;
@@ -168,7 +168,24 @@
     height: 32px;
     display: inline-block;
 }
-    
+    .galleryProduct{
+        height: 75px;
+    }
+
+    #content {
+        display: flex;
+        }
+
+        #content img{
+         
+                width: 100%;
+                vertical-align: top;
+           
+        }
+        .imageLibrary {
+            flex: 2;
+            margin: 10px;
+          }
 
 
 

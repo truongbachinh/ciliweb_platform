@@ -37,6 +37,7 @@
                 </li>
             <?php else : ?>
                 <?php if ($currentUser['user_role_id'] == "1" && $currentUser['user_status'] == "1") : ?>
+
                     <li class="menu-item ">
                         <a href="../shop/index.php" class=" menu-link">
                             <span class="menu-label">
@@ -56,59 +57,66 @@
                                 <i class="mdi mdi-buffer mdi-24px "></i>
                             </span>
                         </a>
-                        <!--submenu-->
-                        <ul class="sub-menu" style="display: block;">
-                            <li class="menu-item ">
-                                <a href="../shop/manage_product.php" class=" menu-link">
-                                    <span class="menu-label">
-                                        <span class="menu-name">Manage Product</span>
-                                    </span>
-                                    <span class="menu-icon">
-                                        <i class="mdi mdi-folder-star mdi-24px "></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="../shop/manage_order.php" class=" menu-link">
-                                    <span class="menu-label">
-                                        <span class="menu-name">Manage Order</span>
-                                    </span>
-                                    <span class="menu-icon">
-                                        <i class="mdi mdi-basket mdi-24px "></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="../shop/manage_revenue.php" class=" menu-link">
-                                    <span class="menu-label">
-                                        <span class="menu-name">Manage Revenue</span>
-                                    </span>
-                                    <span class="menu-icon">
-                                        <i class="mdi mdi-currency-usd mdi-24px "></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="../shop/chart.php" class=" menu-link">
-                                    <span class="menu-label">
-                                        <span class="menu-name">Chart Analysis</span>
-                                    </span>
-                                    <span class="menu-icon">
-                                        <i class="mdi mdi-chart-bar mdi-24px "></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="../shop/chat_to_user.php" class=" menu-link">
-                                    <span class="menu-label">
-                                        <span class="menu-name">Chat to user </span>
-                                    </span>
-                                    <span class="menu-icon">
-                                        <i class="mdi mdi-chat-processing mdi-24px "></i>
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
+                        <?php
+                        if ($resultShopInfor->num_rows > 0) {
+
+                        ?>
+                            <!--submenu-->
+                            <ul class="sub-menu" style="display: block;">
+                                <li class="menu-item ">
+                                    <a href="../shop/manage_product.php" class=" menu-link">
+                                        <span class="menu-label">
+                                            <span class="menu-name">Manage Product</span>
+                                        </span>
+                                        <span class="menu-icon">
+                                            <i class="mdi mdi-folder-star mdi-24px "></i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="../shop/manage_order.php" class=" menu-link">
+                                        <span class="menu-label">
+                                            <span class="menu-name">Manage Order</span>
+                                        </span>
+                                        <span class="menu-icon">
+                                            <i class="mdi mdi-basket mdi-24px "></i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="../shop/manage_revenue.php" class=" menu-link">
+                                        <span class="menu-label">
+                                            <span class="menu-name">Manage Revenue</span>
+                                        </span>
+                                        <span class="menu-icon">
+                                            <i class="mdi mdi-currency-usd mdi-24px "></i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="../shop/chart.php" class=" menu-link">
+                                        <span class="menu-label">
+                                            <span class="menu-name">Chart Analysis</span>
+                                        </span>
+                                        <span class="menu-icon">
+                                            <i class="mdi mdi-chart-bar mdi-24px "></i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="../shop/talk_to_user.php" class=" menu-link">
+                                        <span class="menu-label">
+                                            <span class="menu-name">Chat to user </span>
+                                        </span>
+                                        <span class="menu-icon">
+                                            <i class="mdi mdi-chat-processing mdi-24px "></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        <?php
+                        }
+                        ?>
                     </li>
                 <?php endif ?>
             <?php endif; ?>

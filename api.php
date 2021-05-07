@@ -27,59 +27,57 @@ if ($isLoggedIn) {
             }
             break;
 
-        case "update_order_shipping_infor":
-            $id = $_POST['id'];
-            $queryOrder = $link->query("SELECT orders.*, user.* FROM `orders` 
-            INNER JOIN user ON user.user_id = orders.order_user_id where `id` = '$id'");
-            $orderInfor = mysqli_fetch_assoc($queryOrder);
-            $user_order = $orderInfor["username"];
-            $total_money_order = $orderInfor["order_total_cost"];
-            $order_id_paymeny = time();
-            $shippingCreateTime = $timeInVietNam;
-            $current = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh'));
-            $timePayment = $current->format('Y-m-d H:i:s');
-            $orderShipping = $_POST['updateOrderShipping'];
-            if ($orderShipping == 2) {
-                $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping',
-                 `shipping_create_time` = '$shippingCreateTime' WHERE `id` = $id");
-            } elseif ($orderShipping == 3) {
-                $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping',
-                 `shipping_receive_time` = '$shippingCreateTime' WHERE `id` = $id");
-            } elseif ($orderShipping == 4) {
-                $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping',
-                 `shipping_cancle_time` = '$shippingCreateTime' WHERE `id` = $id");
-            }
+            // case "update_order_shipping_infor":
+            //     $id = $_POST['id'];
+            //     $queryOrder = $link->query("SELECT orders.*, user.* FROM `orders` 
+            //     INNER JOIN user ON user.user_id = orders.order_user_id where `id` = '$id'");
+            //     $orderInfor = mysqli_fetch_assoc($queryOrder);
+            //     $user_order = $orderInfor["username"];
+            //     $total_money_order = $orderInfor["order_total_cost"];
+            //     $order_id_paymeny = time();
+            //     $shippingCreateTime = $timeInVietNam;
+            //     $current = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh'));
+            //     $timePayment = $current->format('Y-m-d H:i:s');
+            //     $orderShipping = $_POST['updateOrderShipping'];
+            //     if ($orderShipping == 2) {
+            //         $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping',
+            //          `shipping_create_time` = '$shippingCreateTime' WHERE `id` = $id");
+            //     } elseif ($orderShipping == 3) {
+            //         $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping',
+            //          `shipping_receive_time` = '$shippingCreateTime' WHERE `id` = $id");
+            //     } elseif ($orderShipping == 4) {
+            //         $update = $link->query("UPDATE `orders` SET `shipping_order_status`= '$orderShipping',
+            //          `shipping_cancle_time` = '$shippingCreateTime' WHERE `id` = $id");
+            //     }
 
-            if ($update) {
-                $msg = "Record updated successfully";
-                $queryEmail = $link->query("SELECT orders.*, user.email FROM orders 
-                INNER JOIN `user` ON user.user_id = orders.order_user_id where orders.id = '$id'");
-                $userMail = $queryEmail->fetch_assoc();
-                $email = $userMail["email"];
-                $message = "Shop has sent seafood for you";
-                $subject = "Notification from Cili website";
-                $text_message    =   "hello";
-                send_mail($email, $subject, $message, $text_message);
-                if ($orderInfor["payment_order_status"] == 2 && $orderShipping == 4) {
-                    $sql = "SELECT * FROM payments WHERE payment_order_id = '$id'";
-                    if (isset($sql)) {
-                        $query = mysqli_query($link, $sql);
-                        $row = mysqli_num_rows($query);
-                    }
-                    if ($row > 0) {
-                        $updatePayment  = $link->query("DELETE from payments WHERE  `payment_order_id` = '$id'");
-                    }
-                }
-                if ($update) {
-                    $msg = "Record updated successfully";
-                }
-            } else {
-                $error = 400;
-                $msg = "Error updating record: " . $link->error;
-            }
-            break;
-
-
+            //     if ($update) {
+            //         $msg = "Record updated successfully";
+            //         $queryEmail = $link->query("SELECT orders.*, user.email FROM orders 
+            //         INNER JOIN `user` ON user.user_id = orders.order_user_id where orders.id = '$id'");
+            //         $userMail = $queryEmail->fetch_assoc();
+            //         $email = $userMail["email"];
+            //         $message = "Shop has sent seafood for you";
+            //         $subject = "Notification from Cili website";
+            //         $text_message    =   "hello";
+            //         send_mail($email, $subject, $message, $text_message);
+            //         if ($orderInfor["payment_order_status"] == 2 && $orderShipping == 4) {
+            //             $sql = "SELECT * FROM payments WHERE payment_order_id = '$id'";
+            //             if (isset($sql)) {
+            //                 $query = mysqli_query($link, $sql);
+            //                 $row = mysqli_num_rows($query);
+            //             }
+            //             if ($row > 0) {
+            //                 $updatePayment  = $link->query("DELETE from payments WHERE  `payment_order_id` = '$id'");
+            //             }
+            //         }
+            //         if ($update) {
+            //             $msg = "Record updated successfully";
+            //         }
+            //     } else {
+            //         $error = 400;
+            //         $msg = "Error updating record: " . $link->error;
+            //     }
+            //     break;
 
         case "delete_user_info":
             $id = $_POST['id'];
@@ -238,7 +236,7 @@ if ($isLoggedIn) {
                 $data = $query->fetch_assoc();
             }
             break;
-        case "get_user_chat_detail":
+        case "get_user_coversation_detail":
 
             $talker = $_POST['id'];
             $userId = $_SESSION["current_user"]["user_id"];
@@ -248,9 +246,6 @@ if ($isLoggedIn) {
                 // $row = mysqli_fetch_assoc($sql);
                 $data = $sql->fetch_assoc();
             }
-            break;
-
-            $id = $_POST['id'];
             break;
         case "feedback_product":
             $id = $_POST['id'];
@@ -471,24 +466,57 @@ if ($isLoggedIn) {
             }
 
             break;
-        case "update_product_info":
+            // case "update_product_info":
 
-            $id = $_POST['id'];
-            $editProductName = $_POST['editProductName'];
-            $editProductQuantity = $_POST['editProductQuantity'];
-            $editProductFresh = $_POST['editProductFresh'];
-            $editProductPrice = $_POST['editProductPrice'];
-            $productUpdateTime = $timeInVietNam;
-            $stmt = $link->prepare("UPDATE `products` SET `p_name`=?,`p_quantity`=?,`p_fresh`=?,`p_price`=?,`p_date_update`=? WHERE `p_id`=?");
-            $stmt->bind_param("sssssi", $editProductName, $editProductQuantity, $editProductFresh, $editProductPrice,  $productUpdateTime, $id);
-            if ($stmt->execute()) {
-                $msg = "Record updated successfully";
-            } else {
-                $error = 400;
-                $msg = "Error delete record: " . $link->error;
-            }
-            break;
-        case "chat_to_shop":
+            //     $id = $_POST['id'];
+            //     $editProductName = $_POST['editProductName'];
+            //     $editProductQuantity = $_POST['editProductQuantity'];
+            //     $editProductFresh = $_POST['editProductFresh'];
+            //     $editProductPrice = $_POST['editProductPrice'];
+            //     $editProductImageHidden = $_POST['editProductImageHidden'];
+            //     $editProductImage = basename($_POST['editProductImage']);
+            //     // var_dump($editProductImageHidden);
+            //     var_dump($editProductImage["tmp_name"]);
+            //     var_dump(!empty($editProductImage));
+            //     exit;
+            //     if (!empty($editProductImage)) {
+            //         $tm = md5(time());
+            //         $statusMsg = '';
+            //         $uploadPath = "./image_products/";
+            //         if (!is_dir($uploadPath)) {
+            //             mkdir($uploadPath, 0777, true);
+            //         }
+            //         $fileName =  $tm .   $editProductImage  . PHP_EOL;
+            //         $targetFilePath = $uploadPath . $fileName;
+            //         $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+            //         // Check whether file type is valid 
+            //         $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+            //         if (!empty($fileName)) {
+
+            //             $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
+            //             if (in_array($fileType, $allowTypes)) {
+            //                 if (move_uploaded_file($_FILES["imageProduct"]["tmp_name"], $targetFilePath)) {
+            //                     $addProduct = $link->query("INSERT INTO `products` (`p_id`, `p_category_id`, `p_shop_id`, `p_name`, `p_description`, `p_fresh`, `p_quantity`, `p_price`, `p_image`,  `p_date_create`) VALUES (NULL,'$idCtg','$shopId','$_POST[nameProduct]','$_POST[descriptionProduct]','$_POST[freshProduct]','$_POST[quantityProduct]','$_POST[priceProduct]','$fileName','" . $timeInVietNam . "')");
+            //                 }
+            //             } else {
+            //                 $statusMsg = 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.';
+            //             }
+            //         } else {
+            //             $statusMsg = 'Please select a file to upload.';
+            //         }
+            //     } else {
+            //         $productUpdateTime = $timeInVietNam;
+            //         $stmt = $link->prepare("UPDATE `products` SET `p_name`=?,`p_quantity`=?,`p_fresh`=?,`p_price`=?,`p_date_update`=? WHERE `p_id`=?");
+            //         $stmt->bind_param("sssssi", $editProductName, $editProductQuantity, $editProductFresh, $editProductPrice,  $productUpdateTime, $id);
+            //         if ($stmt->execute()) {
+            //             $msg = "Record updated successfully";
+            //         } else {
+            //             $error = 400;
+            //             $msg = "Error delete record: " . $link->error;
+            //         }
+            //     }
+            //     break;
+        case "talk_to_shop":
             $talker = $_POST['id'];
             $userId = $_SESSION["current_user"]["user_id"];
             $user_id = mysqli_real_escape_string($link, $talker);
@@ -497,6 +525,29 @@ if ($isLoggedIn) {
                 // $row = mysqli_fetch_assoc($sql);
                 $data = $sql->fetch_assoc();
             }
+            break;
+        case "btn-edit-user-infor-detail":
+
+
+            $id = $_POST['id'];
+            $fullname = $_POST['updateFullName'];
+            $email = $_POST['updateEmail'];
+            $phone = $_POST['updatePhone'];
+            $address = $_POST['updateAddress'];
+            $DOB = $_POST['updateDoB'];
+            $update = $link->query("UPDATE `user` SET `fullname`= '$fullname ',`email`= '$email',`user_update_time`= '" . $timeInVietNam . "' WHERE `user_id`=$id");
+            $updateDetail = $link->query("UPDATE `user_infor` SET `ui_phone`= '$phone ',`ui_address`= '$address ',`ui_DOB = '$DOB'`,`user_update_time`= '" . $timeInVietNam . "' WHERE `user_id`=$id");
+
+            if ($update) {
+                $msg = "Record updated successfully";
+            } else {
+                $error = 400;
+                $msg = "Error updating record: " . $link->error;
+            }
+
+
+            break;
+
             break;
     }
 }

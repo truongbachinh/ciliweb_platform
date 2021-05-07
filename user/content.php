@@ -13,16 +13,16 @@ if ($t == 'foodInfo') {
 } elseif ($t == 'changepass') {
     include('../account/change_password.php');
 } elseif ($t == 'myorder') {
-    include('my_order.php');
+    include('../user/my_order.php');
 } elseif ($t == 'conversation') {
-    include('chat_to_shop.php');
+    include('../user/talk_to_shop.php');
 } elseif ($t == 'my_order-detail') {
-    include('my_bill.php');
+    include('../user/my_bill.php');
 } else {
 
-    include('advertisement.php');
-    include('categories.php');
-    include('shop_providers.php');
+    include('../user/advertisement.php');
+    include('../user/categories.php');
+    include('../user/shop_providers.php');
 ?>
     <div class="container-fluid result-search">
         <div id="title-categories">
@@ -37,5 +37,5 @@ if ($t == 'foodInfo') {
             </p>
         </div>
     <?php
-    include('seafood.php');
+    include('../user/seafood.php');
 }

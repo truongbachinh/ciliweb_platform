@@ -1,7 +1,7 @@
 <div class="post-wrapper">
     <!-- Loading overlay -->
     <div class="loading-overlay">
-        <div class="overlay-content">Loading...</div>
+        <div class="overlay-content"></div>
     </div>
 
     <!-- Post list container -->
@@ -15,7 +15,7 @@
 
         // Set some useful configuration 
         $baseURL = 'getData.php';
-        $limit = 10;
+        $limit = 15;
 
         // Count of all records 
         $query   = $link->query("SELECT COUNT(*) as rowNum FROM products");
@@ -70,7 +70,7 @@
                                 </p>
                                 <div class="progress">
                                     <div class="progress-bar" role="progressbar" aria-valuenow=" <?= $totalSoldOfShop ?>" aria-valuemin="0" aria-valuemax="<?= $totalProduct ?>" style='width:<?= $widthBar ?>'>
-                                        Sold <?= $totalSoldOfShop  ?>
+                                        <span style="color: #2c7873;"> Sold <?= $totalSoldOfShop  ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
                             <?php
                             if ($productInfor["p_quantity"] > "0") {
                             ?>
-                                <form action="../cart/cart.php?view=add_to_cart" class="buy-now-form" method="post" enctype="multipart/form-data">
+                                <form action="" class="buy-now-form" method="post" enctype="multipart/form-data">
                                     <input type="text" value="1" name="quantity[<?= $productInfor['p_id'] ?>]" hidden="true">
                                     <input type="submit" class="btn" id="btn-buy" value="Buy Now">
                                 </form>

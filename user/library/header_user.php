@@ -11,8 +11,8 @@
             <?php if (!empty($_SESSION["current_user"]["username"])) : ?>
                 <div class="header-content">
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
-                        <a class="navbar-brand" href="/ciliweb_platform/user/index.php" id="logo-brand">
-                            <i class="fas fa-home"></i> Seller channel
+                        <a class="navbar-brand" href="../user/index.php" id="logo-brand">
+                            <i class="fas fa-home"></i> Index page
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ciliweb-navBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -99,8 +99,8 @@
             <?php elseif (!empty($_SESSION["current_user"]["fullname"])) : ?>
                 <div class="header-content">
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
-                        <a class="navbar-brand" href="/ciliweb_platform/user/index.php" id="logo-brand">
-                            <i class="fas fa-home"></i> Seller channel
+                        <a class="navbar-brand" href="../user/index.php" id="logo-brand">
+                            <i class="fas fa-home"></i> Index page
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ciliweb-navBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>

@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../user/css/categories.css">
 <div class="container-fluid " style="overflow: hidden; ">
     <div class="ctg">
-        <span id="ctg-list"> <i class="fa fa-list-alt" aria-hidden="true"> Categories</span></i>
+        <span id="ctg-list"> <i class="fa fa-fish" aria-hidden="true"> Categories</span></i>
     </div>
     <form id="form1" runat="server">
         <div class="categories m-t-10">
@@ -19,8 +19,8 @@
                     ?>
                         <a href="" style="text-decoration: none;">
                             <!-- <a href="" class="btn-get-id_ctg" role="button" data-id="<?= $row['ctg_id'] ?>"> -->
-                            <div id="categorySearch" class="item-categories btn-get-ctg-id" data-id="<?= $row['ctg_id'] ?>" style="width: 120px; " onclick='searchFilter()'>
-                                <div class="card card-block card-4" style="margin-top: 6px;">
+                            <div id="categorySearch" class="item-categories btn-get-ctg-id" data-id="<?= $row['ctg_id'] ?>" style="width: 120px; ">
+                                <div class="change-color-card-ctg card card-block card-4 " style="margin-top: 6px;">
                                     <div class="card-body">
 
                                         <?php
@@ -58,6 +58,10 @@
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script type="text/javascript">
+            var $lis = $('.change-color-card-ctg').on("click", function() {
+                $lis.removeClass('card-change');
+                $(this).addClass('card-change');
+            });
             $(document).ready(function() {
                 var $item = $('div.item-categories'), //Cache your DOM selector
                     visible = 4, //Set the number of items that will be visible

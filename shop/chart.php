@@ -6,10 +6,12 @@ if (!isset($_SESSION['current_user'])) {
     header("location: ../account/login.php");
 }
 
+
+
 $queryTotalOrder = ("SELECT COUNT(orders.id) as order_amount, orders.*, order_address.*,user.* from orders
 INNER JOIN user ON user.user_id = orders.order_user_id
 inner join order_address on order_address.oda_order_id = orders.id
-where orders.order_shop_id = 8 GROUP BY orders.order_user_id ORDER BY COUNT(orders.id)");
+where orders.order_shop_id = $shopId GROUP BY orders.order_user_id ORDER BY COUNT(orders.id)");
 $sumOrder = $link->query($queryTotalOrder);
 $sumOrderArray = array();
 while ($rowOrder = mysqli_fetch_array($sumOrder)) {
@@ -18,13 +20,17 @@ while ($rowOrder = mysqli_fetch_array($sumOrder)) {
 
 $totalOrder = 0;
 $otalUser = 0;
+$sumUser = array();
 foreach ($sumOrderArray as $sumOrderValue) {
     $sum = $sumOrderValue['order_amount'];
     $sumUser[] = ($sumOrderValue['order_amount']);
 
     $totalOrder += $sum;
 }
-$totalUser = (COUNT($sumUser));
+if (!empty($queryTotalOrder)) {
+    $totalUser = (COUNT($sumUser));
+}
+
 
 $queryOrderReice = $link->query("SELECT COUNT(orders.id) as order_receive_amount FROM orders where orders.order_shop_id = $shopId AND orders.shipping_order_status = 3");
 $totalOrderR = mysqli_fetch_assoc($queryOrderReice);
@@ -42,67 +48,86 @@ $queryOrderNotShip = $link->query("SELECT COUNT(orders.id) as order_not_ship_amo
 $totalOrderNS = mysqli_fetch_assoc($queryOrderNotShip);
 $totalOrdeNotShip   = $totalOrderNS['order_not_ship_amount'];
 
-$chartSearch = null;
-if (isset($_POST["submitFieldChart"])) {
-    $chartSearch = $_POST["chartField"];
+
+$sumOrderPieChart = 0;
+$sumOrderPieChart = $totalOrdeReceive + $totalOrdeCancle;
+if ($sumOrderPieChart != 0) {
+    $dataPiePoints = array(
+        array("label" => "Received", "y" => ($totalOrdeReceive / $sumOrderPieChart * 100)),
+        array("label" => "Cancle", "y" => ($totalOrdeCancle / $sumOrderPieChart * 100)),
+
+    );
 }
 
+
+
+$limit = '';
+$chartSearch = null;
 $queryChart = null;
+if (isset($_POST["submitFieldChart"])) {
 
-$top10Array = array();
-$dataPoints = array();
-if ($chartSearch != null) {
-    if ($chartSearch  == "orders.order_user_id") {
-        $queryChart = ("SELECT COUNT(orders.id) as order_amount, orders.*, order_address.*,user.* from orders INNER JOIN user ON user.user_id = orders.order_user_id inner join order_address on order_address.oda_order_id = orders.id where orders.order_shop_id = $shopId GROUP BY orders.order_user_id ORDER BY COUNT(orders.id) DESC LIMIT 10");
-        $top10User = $link->query($queryChart);
-        while ($rowTop = mysqli_fetch_array($top10User)) {
-            $top10Array[] =  $rowTop;
-        }
+    $chartSearch = $_POST["chartField"];
+    $limit = " LIMIT " .  $_POST["chartLimit"];
 
-        foreach ($top10Array as $value) {
-            list($dataPoints[])  = array(
-                array("y" =>  $value['order_amount'], "label" => $value['username']),
-            );
-        }
-    } elseif ($chartSearch  == "order_address.oda_city") {
-        $queryChart = ("SELECT COUNT(orders.id) as order_amount, orders.*, order_address.* from orders inner join order_address on order_address.oda_order_id = orders.id where orders.order_shop_id = $shopId GROUP BY order_address.oda_city ORDER BY COUNT(orders.id) DESC LIMIT 10");
-        $top10City = $link->query($queryChart);
-        while ($rowTop = mysqli_fetch_array($top10City)) {
-            $top10Array[] =  $rowTop;
-        }
 
-        foreach ($top10Array as $value) {
-            list($dataPoints[])  = array(
-                array("y" =>  $value['order_amount'], "label" => $value['oda_city']),
-            );
-        }
-    } elseif ($chartSearch == "order.product") {
-        $queryChart = ("SELECT order_items.*, COUNT(order_items.order_product_id) as order_product_count, orders.*, products.p_name FROM `order_items` INNER JOIN products ON products.p_id = order_items.order_product_id INNER JOIN orders ON orders.id = order_items.order_id WHERE orders.order_shop_id = $shopId GROUP BY order_items.order_product_id ORDER BY COUNT(order_items.order_product_id) DESC LIMIT 10");
-        $top10Product = $link->query($queryChart);
-        while ($rowTop = mysqli_fetch_array($top10Product)) {
-            $top10Array[] =  $rowTop;
-        }
 
-        foreach ($top10Array as $value) {
-            list($dataPoints[])  = array(
-                array("y" =>  $value['order_product_count'], "label" => $value['p_name']),
-            );
+    $top10Array = array();
+    $dataPoints = array();
+    if ($chartSearch != null) {
+        if ($chartSearch  == "chartUser") {
+            $queryChart = ("SELECT COUNT(orders.id) as order_amount, orders.*, order_address.*,user.* from orders INNER JOIN user ON user.user_id = orders.order_user_id inner join order_address on order_address.oda_order_id = orders.id where orders.order_shop_id = $shopId GROUP BY orders.order_user_id ORDER BY COUNT(orders.id) DESC" . $limit);
+            $top10User = $link->query($queryChart);
+            while ($rowTop = mysqli_fetch_array($top10User)) {
+                $top10Array[] =  $rowTop;
+            }
+
+            foreach ($top10Array as $value) {
+                list($dataPoints[])  = array(
+                    array("y" =>  $value['order_amount'], "label" => $value['fullname']),
+                );
+            }
+        } elseif ($chartSearch  == "chartCity") {
+            $queryChart = ("SELECT COUNT(orders.id) as order_amount, orders.*, order_address.* from orders inner join order_address on order_address.oda_order_id = orders.id where orders.order_shop_id = $shopId GROUP BY order_address.oda_city ORDER BY COUNT(orders.id) DESC LIMIT 10");
+            $top10City = $link->query($queryChart);
+            while ($rowTop = mysqli_fetch_array($top10City)) {
+                $top10Array[] =  $rowTop;
+            }
+
+            foreach ($top10Array as $value) {
+                list($dataPoints[])  = array(
+                    array("y" =>  $value['order_amount'], "label" => $value['oda_city']),
+                );
+            }
+        } elseif ($chartSearch == "chartProduct") {
+            $queryChart = ("SELECT order_items.*, COUNT(order_items.order_product_id) as order_product_count, orders.*, products.p_name FROM `order_items` INNER JOIN products ON products.p_id = order_items.order_product_id INNER JOIN orders ON orders.id = order_items.order_id WHERE orders.order_shop_id = $shopId GROUP BY order_items.order_product_id ORDER BY COUNT(order_items.order_product_id) DESC" . $limit);
+            $top10Product = $link->query($queryChart);
+            while ($rowTop = mysqli_fetch_array($top10Product)) {
+                $top10Array[] =  $rowTop;
+            }
+
+            foreach ($top10Array as $value) {
+                list($dataPoints[])  = array(
+                    array("y" =>  $value['order_product_count'], "label" => $value['p_name']),
+                );
+            }
         }
     }
 } else {
-    $queryChart = ("SELECT COUNT(orders.id) as order_amount, orders.*, order_address.* from orders inner join order_address on order_address.oda_order_id = orders.id where orders.order_shop_id = $shopId GROUP BY order_address.oda_city ORDER BY COUNT(orders.id) DESC LIMIT 10");
-    $top10City = $link->query($queryChart);
-    while ($rowTop = mysqli_fetch_array($top10City)) {
+    $queryChart = ("SELECT COUNT(orders.id) as order_amount, orders.*, order_address.*,user.* from orders INNER JOIN user ON user.user_id = orders.order_user_id inner join order_address on order_address.oda_order_id = orders.id where orders.order_shop_id = $shopId GROUP BY orders.order_user_id ORDER BY COUNT(orders.id) DESC LIMIT 3");
+    $top10User = $link->query($queryChart);
+    while ($rowTop = mysqli_fetch_array($top10User)) {
         $top10Array[] =  $rowTop;
     }
+    if (!empty($top10Array)) {
 
-    foreach ($top10Array as $value) {
-        list($dataPoints[])  = array(
-            array("y" =>  $value['order_amount'], "label" => $value['oda_city']),
-        );
+
+        foreach ($top10Array as $value) {
+            list($dataPoints[])  = array(
+                array("y" =>  $value['order_amount'], "label" => $value['fullname']),
+            );
+        }
     }
 }
-
 
 
 ?>
@@ -245,13 +270,18 @@ if ($chartSearch != null) {
                                         <form action="" method="POST">
                                             <fieldset>
                                                 <div class="row">
-                                                    <div class="col-md-6 mb-3">
+                                                    <div class="col-md-3 mb-3">
+                                                        <select id="chartLimit" name="chartLimit" class="form-control">
+                                                            <option value="3">Top 3</option>
+                                                            <option value="5">Top 5</option>
+                                                            <option value="10">Top 10</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-7 mb-3">
                                                         <select id="chartField" name="chartField" class="form-control">
-                                                            <option value="" selected>-----Top 10 of-----</option>
-                                                            <option value="order_address.oda_city">Top 10 of City</option>
-                                                            <option value="orders.order_user_id">Top 10 of User buy</option>
-                                                            <option value="order.product">Top 10 best selling products</option>
-                                                            <option value="4">Oder total money</option>
+                                                            <option value="chartUser">customers who buy the most products</option>
+                                                            <option value="chartCity">area bought the most of seafood</option>
+                                                            <option value="chartProduct">best-selling seafood products</option>
                                                         </select>
                                                     </div>
                                                     <div class="search">
@@ -264,23 +294,70 @@ if ($chartSearch != null) {
                                 </div>
                             </div>
                             <div class="card-body">
-                                <h5>Top 10 of <?php
-                                                if (!empty($top10City)) {
+
+                                <!-- <div class="col-lg-12 col-md-6" id="chartContainer" style="height: 370px; width: 100%;"></div>
+                                <hr>
+                                <div class="col-lg-12 col-md-6" id="chartPieContainer" style="height: 370px; width: 100%;"></div> -->
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="card m-b-30">
+                                            <div class="card-header">
+                                                <div class="col-12 m-b-20">
+                                                    <h3> Chart 1</h3>
+                                                </div>
+                                                <?php
+                                                if (isset($_POST["chartLimit"])) {
+
+
                                                 ?>
-                                        <span>cities with the most orders</span>
-                                    <?php
-                                                } elseif (!empty($top10User)) {
-                                    ?>
-                                        <span>users who order the most </span>
-                                    <?php
+                                                    <h5>Top <?= $_POST["chartLimit"] ?> <?php
+                                                                                        if (!empty($top10City)) {
+                                                                                        ?>
+                                                            <span>area bought the most of seafood</span>
+                                                        <?php
+                                                                                        } elseif (!empty($top10User)) {
+                                                        ?>
+                                                            <span>customers who buy the most products</span>
+                                                        <?php
+                                                                                        } elseif (!empty($top10Product)) {
+                                                        ?>
+                                                            <span>best-selling seafood products</span>
+                                                        <?php
+                                                                                        }
+                                                        ?>
+                                                    </h5>
+                                                <?php
+                                                } else {
+                                                ?>
+                                                    <h5>Top 3
+                                                        <span>area bought the most of seafood</span>
+                                                    </h5>
+                                                <?php
                                                 }
-                                    ?>
-                                </h5>
-                                <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                                                ?>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="card m-b-30">
+                                            <div class="card-header">
+                                                <h3>Chart 2</h3>
+                                                <h5>The rate of the shop order</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="chartPieContainer" style="height: 370px; width: 100%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
@@ -289,143 +366,9 @@ if ($chartSearch != null) {
     <script>
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
-            $(document).on('click', '.btn-edit-order', function(e) {
-                e.preventDefault();
-                const orderId = parseInt($(this).data("id"));
-                activeId = orderId;
-                console.log(orderId);
-                Utils.api("get_order_shipping_info", {
-                    id: orderId
-                }).then(response => {
-                    $("#updateOrderId").html(response.data.id)
-                    $("#updateOrderAccount").html(response.data.username)
-                    $("#updateShippingStatus").val(response.data.shipping_order_status)
-                    $('#editOrder').modal();
-                }).catch(err => {
-
-                });
-            });
-
-            $(document).on('click', '.btn-update-order', function(e) {
-                Utils.api("update_order_shipping_infor", {
-                    id: activeId,
-                    updateOrderShipping: $("#updateShippingStatus").val(),
-                }).then(response => {
-                    $("#editOrder").modal("hide"),
-                        swal("Notice", response.msg, "success").then(function(e) {
-                            location.replace("./manage_order.php");
-                        });
-                }).catch(err => {
-
-                })
-            });
-
-            // $(document).on('click', 'btn-update-order', function(e) {
-            //     Utils.api("update_order_shipping_infor", {
-            //         id: activeId,
-            //         updateOrderShipping: $("#updateShippingStatus").val(),
-            //     }).then(response => {
-            //         $("#editOrder").hide(),
-            //             swal("Notice", response.msg, "success").then(function(e) {
-            //                 location.replace("./manage_order.php");
-            //             });
-            //     }).catch(err => {
-
-            //     })
-            // });
-
-
-            // $(document).on('click', '.btn-edit-order', function(e) {
-            //     e.preventDefault();
-
-            //     const orderId = parseInt($(this).data("id"));
-            //     activeId = orderId;
-            //     console.log(orderId);
-            //     Utils.api("get_order_info_detail", {
-            //         id: orderId
-            //     }).then(response => {
-            //         $.get("../api.php", function(orderDetailContentHtml) {
-            //             console.log("order-count", orderDetailContentHtml);
-            //             // $('#editOrder').modal();
-
-            //         }).catch(err => {
-
-            //         });
-            //     });
-            // });
-            // $(document).on('click', '.btn-detail-order', function(e) {
-            //     e.preventDefault();
-            //     const orderId = parseInt($(this).data("id"));
-            //     activeId = orderId;
-            //     console.log(orderId);
-            //     $.fancybox({
-            //         'width': '60%',
-            //         'height': '80%',
-            //         'autoScale': true,
-            //         'transitionIn': 'fade',
-            //         'transitionOut': 'fade',
-            //         'href': './bill.php',
-            //         'type': 'iframe',
-            //         'onClosed': function() {
-            //             window.location.href = "./manage_order.php";
-            //         }
-
-
-            //     });
-            //     return false;
-            // });
-            // $(document).on('click', '.btn-edit-order', function(e) {
-            //     e.preventDefault();
-            //     const orderId = parseInt($(this).data("id"));
-            //     activeId = orderId;
-            //     console.log(orderId);
-            //     $.ajax({
-            //         type: "POST",
-            //         url: Utils.api("get_order_info_detail"),
-            //         data: {
-            //             "id": orderId
-            //         },
-            //         success: function(res) {
-            //             if (res) {
-            //                 var response = JSON.parse(res);
-            //                 if (response.status == 0) {
-
-            //                 } else {
-            //                     $.get('../shop/bill.php', function(cartContentHTML) {
-            //                         console.log("cart-count", cartContentHTML);
-            //                         $('#viewDetailOrder').html(cartContentHTML);
-            //                         $('#editOrder').modal();
-            //                     })
-            //                 }
-            //             }
-            //         }
-            //     });
-            // });
-
-
-        });
-
-        // $(document).ready(function() {
-        //     $('#inputSearchOrder').keyup(function() {
-        //         var txt = $(this).val();
-        //         if (txt != '') {
-
-        //         } else {
-        //             $('#result').html('');
-        //             $.ajax({
-        //                 url: "search_order.php",
-        //                 method: "post",
-        //                 data: {
-        //                     search: txt
-        //                 },
-        //                 dataType: "text",
-        //                 success: function(data) {
-        //                     $('#result').html(data)
-        //                 }
-        //             })
-        //         }
-        //     })
-        // })
+            document.getElementById('chartLimit').value = "<?php echo $_POST['chartLimit']; ?>";
+            document.getElementById('chartField').value = "<?php echo $_POST['chartField']; ?>";
+        })
     </script>
 
     <script>
@@ -445,6 +388,29 @@ if ($chartSearch != null) {
                     dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
                 }]
 
+            });
+            chart.render();
+
+
+            var chart = new CanvasJS.Chart("chartPieContainer", {
+                animationEnabled: true,
+                title: {
+                    text: "Order rate"
+                },
+                subtitles: [{
+                    text: "2021"
+                }],
+                data: [{
+                    type: "pie",
+                    yValueFormatString: "#,##0.00\"%\"",
+                    indexLabel: "{label} ({y})",
+                    indexLabelFontColor: "#36454F",
+                    indexLabelFontSize: 9,
+                    indexLabelFontWeight: "bolder",
+                    showInLegend: true,
+                    legendText: "{label}",
+                    dataPoints: <?php echo json_encode($dataPiePoints, JSON_NUMERIC_CHECK); ?>
+                }]
             });
             chart.render();
         }

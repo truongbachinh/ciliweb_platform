@@ -1,5 +1,7 @@
 <?php
+
 if (isset($_POST['page'])) {
+    session_start();
     // Include pagination library file 
     include_once 'Pagination.class.php';
 
@@ -9,25 +11,22 @@ if (isset($_POST['page'])) {
     // Set some useful configuration 
     $baseURL = 'getData.php';
     $offset = !empty($_POST['page']) ? $_POST['page'] : 0;
-    $limit = 10;
+    $limit = 15;
 
     // Set conditions for search 
-    $whereSQL = $orderSQL = $and = '';
-
+    $whereSQL = $orderSQL = $trimShop = $trimCtg = $and  =  '';
 
     if (!empty($_POST['shop'])) {
-        $and .=  " AND p_shop_id = " . $_POST['shop'];
+        $varShop = $_SESSION['shop'] = $_POST['shop'];
+        $and  .=  " AND p_shop_id = " . $varShop . "";
     }
 
     if (!empty($_POST['category'])) {
-        $and .= " AND p_category_id = " . $_POST['category'];
+        $varCtg = $_SESSION['ctg'] = $_POST['category'];
+        $and .= " AND p_category_id = " . $varCtg . "";
     }
+
     $whereSQL = "WHERE p_name LIKE '%" . $_POST['keywords'] . "%'" . $and;
-
-
-
-
-
 
     if (!empty($_POST['sortBy'])) {
         $orderSQL = " ORDER BY p_price " . $_POST['sortBy'];
@@ -35,16 +34,12 @@ if (isset($_POST['page'])) {
         $orderSQL = " ORDER BY p_price DESC ";
     }
 
-    // var_dump($whereSQL);
-    // var_dump($orderSQL);
-    // // var_dump($query);
-    // print_r($result);
+    var_dump($whereSQL);
     // exit;
     // Count of all records 
     $query   = $link->query("SELECT COUNT(*) as rowNum FROM products " . $whereSQL . $orderSQL);
 
     $result  = $query->fetch_assoc();
-
 
     $rowCount = $result['rowNum'];
 
@@ -60,7 +55,7 @@ if (isset($_POST['page'])) {
     $pagination =  new Pagination($pagConfig);
 
     // Fetch records based on the offset and limit 
-    $query = $link->query("SELECT categories.*, shop.*, products.* from products INNER JOIN shop ON shop.shop_id = products.p_shop_id INNER JOIN categories ON products.p_category_id = categories.ctg_id $whereSQL $orderSQL LIMIT $offset,$limit");
+    $query = $link->query("SELECT  products.* from products  $whereSQL $orderSQL LIMIT $offset,$limit");
 
     if ($query->num_rows > 0) {
 ?>
@@ -107,7 +102,7 @@ if (isset($_POST['page'])) {
                         <?php
                         if ($productInfor["p_quantity"] > "0") {
                         ?>
-                            <form action="../cart/cart.php?view=add_to_cart" class="buy-now-form" method="post" enctype="multipart/form-data">
+                            <form action="" class="buy-now-form" method="post" enctype="multipart/form-data">
                                 <input type="text" value="1" name="quantity[<?= $productInfor['p_id'] ?>]" hidden="true">
                                 <input type="submit" class="btn" id="btn-buy" value="Buy Now">
                             </form>
@@ -130,4 +125,8 @@ if (isset($_POST['page'])) {
         echo '<p>Post(s) not found...</p>';
     }
 }
+?>
+
+<?php include "../partials/footer_user.php"; ?>
+<?php
 ?>

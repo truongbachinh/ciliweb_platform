@@ -16,19 +16,11 @@ $orderProduct = $link->query(" ");
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">
+                        <div class="card-title  text-center m-t-30">
                             <h4> Manage order </h4>
                         </div>
                     </div>
                     <div class="card-body">
-                        <!-- <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group has-search">
-                                    <span class="fa fa-search form-control-feedback"></span>
-                                    <input type="text" class="form-control" placeholder="Search">
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="table-responsive p-t-10 m-t-50">
                             <?php
                             if (isset($rowShopInfor)) {
@@ -42,8 +34,13 @@ $orderProduct = $link->query(" ");
                                     while ($rowOrderProduct = mysqli_fetch_array($orderProduct)) {
                                         $myOrderProduct[] =  $rowOrderProduct;
                                     }
+
                             ?>
-                                    <div id="breadcrumb"><i class="fa fas-home" style="margin-left: 9px;"> Order of shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $rowS['shop_name'] . "</font>" ?></a></i>
+                                    <div class="card order-card" style="width: 20rem; margin-top: 60px;">
+
+                                        <div class="card-body">
+                                            <div>Order of shop <i class="mdi mdi-chevron-right mdi-14px "></i><?php echo "<span>" . $rowS['shop_name'] . "</span>" ?></a></i></div>
+                                        </div>
                                     </div>
                                     <table class=" table_my_order table table-bordered table-striped">
                                         <thead>
@@ -107,7 +104,7 @@ $orderProduct = $link->query(" ");
                                                     <?php
                                                     } elseif ($rowMyOrderProduct['shipping_order_status'] == 4) {
                                                     ?>
-                                                        <td>Cencle</td>
+                                                        <td> <?= date('d-M-Y  H:i:s', strtotime($rowMyOrderProduct['shipping_cancle_time'])) ?> </td>
                                                     <?php
                                                     }
                                                     ?>
@@ -169,8 +166,6 @@ $orderProduct = $link->query(" ");
                             <div class="form-group">
                                 <label for="updateShippingStatus">Shipping Status</label>
                                 <select id="updateShippingStatus" class="form-control">
-                                    <option value="1">Waiting </option>
-                                    <option value="2">Shipped</option>
                                     <option value="3">Order Received</option>
                                     <option value="4">Order canceled</option>
                                 </select>

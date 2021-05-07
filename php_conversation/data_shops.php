@@ -21,7 +21,7 @@ while ($row = mysqli_fetch_assoc($query)) {
         <div class=" content">
             <img src="<?= $avatar ?>" alt="">
             <div class="details">
-                <span><?= $row['fullname'] ?></span>
+                <span><?= $row['shop_name'] ?></span>
                 <p><?= $you . $msg ?></p>
                 <small><?=
                         date('H:i:s', strtotime($row2['msg_time']))

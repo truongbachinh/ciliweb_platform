@@ -5,43 +5,6 @@ $shopId = $shopIF['shop_id'];
 if (!isset($_SESSION['current_user'])) {
     header("location: ../account/login.php");
 }
-// if (isset($submitSearch)) {
-//     $_SESSION['product_filter'] = $_POST;
-//     var_dump("---------------------------------------------------------", $_POST);
-// } else {
-//     unset($_SESSION['product_filter']);
-// }
-// if (!empty($_SESSION['product_filter'])) {
-//     $where = "";
-//     foreach ($_SESSION['product_filter'] as $field => $value) {
-//         if (!empty($value)) {
-//             switch ($field) {
-//                 case 'id':
-//                     $where .= (!empty($where)) ? "AND" .  "`" . $field . "` LIKE '%" . $value . "%' " : "`" . $field . "` LIKE '%" . $value . "%' ";
-//                     break;
-//                 default:
-//                     $where .= (!empty($where)) ? "AND" .   "`" . $field . "` = '%" . $value . "%' " : "`" . $field . "` = '%" . $value . "%' ";
-//                     break;
-//             }
-//         }
-//     }
-// }
-// var_dump("result-------------------------------------------", $where);
-
-
-// $pPerPage = !empty($_GET['per_page']) ? $_GET['per_page'] : 3;
-// $currentPage = !empty($_GET['page']) ? $_GET['page'] : 1;
-// $offest = ($currentPage - 1) * $pPerPage;
-// $countOrder = $link->query("SELECT * from orders where order_shop_id = $shopId");
-// $totalOrder = $countOrder->num_rows;
-// $totalPage = ceil($totalOrder / $pPerPage);
-
-// if (!empty($where)) {
-//     $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId  AND (" . $where . ") order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
-// } else {
-//     $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId order by `id` ASC LIMIT " . $pPerPage . " OFFSET " . $offest . " ");
-// }
-// var_dump("result-------------------------------------------", $res);
 
 
 $res = $link->query("SELECT orders.*,user.*,order_address.* from orders INNER JOIN order_address ON orders.id = order_address.oda_order_id INNER JOIN user ON user.user_id = orders.order_user_id where order_shop_id  = $shopId  ");
@@ -52,31 +15,34 @@ $checkTime = array();
 while ($rowTime =  mysqli_fetch_array($resTime)) {
     $checkTime[] = $rowTime;
 }
+
 foreach ($checkTime as $rowTimeOrder) {
+    if (strtotime($rowTimeOrder['shipping_create_time']) != '-62169987208') {
+        $checkTimeOrder = $rowTimeOrder['shipping_create_time'];
 
-    $checkTimeOrder = $rowTimeOrder['shipping_create_time'];
-    $orderCheckTimeId = $rowTimeOrder['id'];
-    $duration = 2;
-    $duration_type = 'day';
-    $deadline = date('Y-M-d H:i:s', strtotime($checkTimeOrder . ' +' . $duration . ' ' . $duration_type));
+        $orderCheckTimeId = $rowTimeOrder['id'];
+        $duration = 2;
+        $duration_type = 'day';
+        $deadline = date('Y-M-d H:i:s', strtotime($checkTimeOrder . ' +' . $duration . ' ' . $duration_type));
 
-    $diff = abs(strtotime($timeInVietNam) - strtotime($timeInVietNam));
-    $years = floor($diff / (365 * 60 * 60 * 24));
-    $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
-    $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
-    $hours = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24) / (60 * 60));
-    $minutes = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24 - $hours * 60 * 60) / 60);
-    $seconds = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24 - $hours * 60 * 60 - $minutes * 60));
+        $diff = abs(strtotime($timeInVietNam) - strtotime($checkTimeOrder));
+        $years = floor($diff / (365 * 60 * 60 * 24));
+        $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
+        $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+        $hours = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24) / (60 * 60));
+        $minutes = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24 - $hours * 60 * 60) / 60);
+        $seconds = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24 - $days * 60 * 60 * 24 - $hours * 60 * 60 - $minutes * 60));
 
-    if ($years != 0) {
-        $checkTimeCancle = $years . " years, " . $months . " months, " . $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
-    } else if ($months != 0) {
-        $checkTimeCancle = $months . " months, " . $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
-    } else {
-        $checkTimeCancle =  $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
-    }
-    if ($diff == 0) {
-        $updateOrderShipping = $link->query("UPDATE `orders` SET `shipping_order_status`= '4', `shipping_cancle_time` = '$timeInVietNam' WHERE `id` = $orderCheckTimeId ");
+        if ($years != 0) {
+            $checkTimeCancle = $years . " years, " . $months . " months, " . $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
+        } else if ($months != 0) {
+            $checkTimeCancle = $months . " months, " . $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
+        } else {
+            $checkTimeCancle =  $days . " days, " . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds";
+        }
+        if ($diff == 0) {
+            $updateOrderShipping = $link->query("UPDATE `orders` SET `shipping_order_status`= '4', `shipping_cancle_time` = '$timeInVietNam' WHERE `id` = $orderCheckTimeId ");
+        }
     }
 }
 
@@ -99,7 +65,7 @@ foreach ($checkTime as $rowTimeOrder) {
 
         <!-- PLACE CODE INSIDE THIS AREA -->
 
-        <section class="manage-topic">
+        <section class="manage-page">
             <div class="container m-t-30">
                 <div class="row ">
                     <div class="col-12">
@@ -379,113 +345,6 @@ foreach ($checkTime as $rowTimeOrder) {
                 })
             });
         });
-
-
-
-        // $(document).on('click', 'btn-update-order', function(e) {
-        //     Utils.api("update_order_shipping_infor", {
-        //         id: activeId,
-        //         updateOrderShipping: $("#updateShippingStatus").val(),
-        //     }).then(response => {
-        //         $("#editOrder").hide(),
-        //             swal("Notice", response.msg, "success").then(function(e) {
-        //                 location.replace("./manage_order.php");
-        //             });
-        //     }).catch(err => {
-
-        //     })
-        // });
-
-
-        // $(document).on('click', '.btn-edit-order', function(e) {
-        //     e.preventDefault();
-
-        //     const orderId = parseInt($(this).data("id"));
-        //     activeId = orderId;
-        //     console.log(orderId);
-        //     Utils.api("get_order_info_detail", {
-        //         id: orderId
-        //     }).then(response => {
-        //         $.get("../api.php", function(orderDetailContentHtml) {
-        //             console.log("order-count", orderDetailContentHtml);
-        //             // $('#editOrder').modal();
-
-        //         }).catch(err => {
-
-        //         });
-        //     });
-        // });
-        // $(document).on('click', '.btn-detail-order', function(e) {
-        //     e.preventDefault();
-        //     const orderId = parseInt($(this).data("id"));
-        //     activeId = orderId;
-        //     console.log(orderId);
-        //     $.fancybox({
-        //         'width': '60%',
-        //         'height': '80%',
-        //         'autoScale': true,
-        //         'transitionIn': 'fade',
-        //         'transitionOut': 'fade',
-        //         'href': './bill.php',
-        //         'type': 'iframe',
-        //         'onClosed': function() {
-        //             window.location.href = "./manage_order.php";
-        //         }
-
-
-        //     });
-        //     return false;
-        // });
-        // $(document).on('click', '.btn-edit-order', function(e) {
-        //     e.preventDefault();
-        //     const orderId = parseInt($(this).data("id"));
-        //     activeId = orderId;
-        //     console.log(orderId);
-        //     $.ajax({
-        //         type: "POST",
-        //         url: Utils.api("get_order_info_detail"),
-        //         data: {
-        //             "id": orderId
-        //         },
-        //         success: function(res) {
-        //             if (res) {
-        //                 var response = JSON.parse(res);
-        //                 if (response.status == 0) {
-
-        //                 } else {
-        //                     $.get('../shop/bill.php', function(cartContentHTML) {
-        //                         console.log("cart-count", cartContentHTML);
-        //                         $('#viewDetailOrder').html(cartContentHTML);
-        //                         $('#editOrder').modal();
-        //                     })
-        //                 }
-        //             }
-        //         }
-        //     });
-        // });
-
-
-        // $(document).ready(function() {
-        //     $('#inputSearchOrder').keyup(function() {
-        //         var txt = $(this).val();
-        //         if (txt != '') {
-
-        //         } else {
-        //             $('#result').html('');
-        //             $.ajax({
-        //                 url: "search_order.php",
-        //                 method: "post",
-        //                 data: {
-        //                     search: txt
-        //                 },
-        //                 dataType: "text",
-        //                 success: function(data) {
-        //                     $('#result').html(data)
-        //                 }
-        //             })
-        //         }
-        //     })
-        // })
     </script>
 </body>
 

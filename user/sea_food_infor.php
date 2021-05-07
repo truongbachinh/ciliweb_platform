@@ -72,8 +72,9 @@ $shopUserId = $shopChat['user_id']
 <div class="seafood-infor" style="margin-top: 100px; ">
 
     <div class="infor">
-        <div id="breadcrumb" style="width: 30%;"><i class="fa fas-home" style="margin-left: 9px;"> Sản phẩm của shop <i class="mdi mdi-arrow-right mdi-14px "></i><?php echo "<font>" . $line_food["shop_name"] . "</font>" ?></a></i>
+        <div id="breadcrumb-product-details">Product of <i class="mdi mdi-chevron-right mdi-14px "></i><?php echo "<span>" . $line_food["shop_name"] . "</span>" ?></a></i>
         </div>
+
         <form action="../cart/cart.php?view=add_to_cart" class="buy-form" method="post" enctype="multipart/form-data">
             <div class="row m-t-20">
                 <div class="col-md-6 col-lg-6 " style="text-align: center;">
@@ -93,16 +94,17 @@ $shopUserId = $shopChat['user_id']
                                         <i class="mdi mdi-chevron-right mdi:24px" aria-hidden="true" id="arrow-button"></i>
                                     </div>
                                     <div class="list">
-                                        <div class="list-group list-group-horizontal col-lg-9 d-md-flex" id="view-list-libImg">
+                                        <div class="list-group list-group-horizontal col-lg-9" id="view-list-libImg">
                                             <div class="galleryProduct d-flex">
                                                 <?php
                                                 if ($sql_img->num_rows > 0) {
                                                     while ($row = $sql_img->fetch_assoc()) {
                                                         $imageURL = '../shop/image_library/' . $row["img_name"];
                                                 ?>
-                                                        <div>
+
+                                                        <div class="card" style="background: none;">
                                                             <a href="<?= $imageURL ?>" data-fancybox="galleryProduct">
-                                                                <img src="<?php echo $imageURL; ?>" alt="" class="img-fluid m-r-10" id="img-view-details" />
+                                                                <img src="<?php echo $imageURL; ?>" alt="" class="img-fluid " style="max-width: 100%;" height="100px" id="img-view-details" />
                                                             </a>
                                                         </div> <?php }
                                                         } else { ?>
@@ -173,10 +175,7 @@ $shopUserId = $shopChat['user_id']
                                 <td class="td-name">Product Fresh :</td>
                                 <td class="td-name-infor"><?= (!empty($line_food['p_fresh']) ? $line_food['p_fresh'] : "Null") ?>/10</td>
                             </tr>
-                            <tr>
-                                <td class="td-name">Product Date :</td>
-                                <td width="70%"><?= (!empty($line_food['p_date_create']) ? date("Y-M-d H:i:s", strtotime($line_food['p_date_create'])) : "Null") ?></td>
-                            </tr>
+
                             <tr>
                                 <td class="td-name">Product Count :</td>
                                 <td>
@@ -204,13 +203,13 @@ $shopUserId = $shopChat['user_id']
                     ?>
                         <div class="Buying">
 
-                            <input onclick="chatToShop(<?= $shopUserId ?>)" name="chat" value="Chat" class="btn btn-outline-info" role="button">
+                            <input onclick="chatToShop(<?= $shopUserId ?>)" name="chat" value="Chat" class="btn btn-outline-info" style="margin-right: 25px;" role="button">
 
                             </input>
                             <!-- <a href="" class="btn btn-info  btn-show-shop-chat" role="button" data-id="<?= $shopUserId ?>"><i class="mdi mdi-chat"></i> </a> -->
-                            <div class="verticalLine">
-                            </div>
-                            <input type="submit" name="buyProduct" class="btn btn-outline-danger " onclick="orderNow()" id="btn-danger-now" value="Order Now">
+                            <!-- <div class="verticalLine">
+                            </div> -->
+                            <!-- <input type="submit" name="buyProduct" class="btn btn-outline-danger " onclick="orderNow()" id="btn-danger-now" value="Order Now"> -->
                             <div class="verticalLine">
                             </div>
                             <input type="submit" name="buyProduct" class="btn btn-danger " id="btn-danger" value="Add To Cart">
@@ -268,7 +267,7 @@ $shopUserId = $shopChat['user_id']
 
     <div class="infor">
 
-        <div id="breadcrumb-product-details">Detail of seafood: <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
+        <div id="breadcrumb-product-details">Detail of seafood <i class="mdi mdi-chevron-right mdi-14px "></i> <?php echo "<span>" . $line_food["p_name"] . "</span>" ?></a></i>
         </div>
         <div class="col-lg-12 col-md-12">
             <div class="card m-b-30 m-t-30">
@@ -283,7 +282,7 @@ $shopUserId = $shopChat['user_id']
         </div>
     </div>
     <div class="infor">
-        <div id="breadcrumb-product-details"> Feedback of product: <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
+        <div id="breadcrumb-product-details"> Feedback of product <i class="mdi mdi-chevron-right mdi-14px "></i> <?php echo "<font>" . $line_food["p_name"] . "</font>" ?></a></i>
         </div>
         <div class="feadback-description">
             <div class="col-lg-12 col-md-12">
@@ -358,7 +357,7 @@ $shopUserId = $shopChat['user_id']
                                         if (in_array($fileType, $allowTypeVideos)) {
                                         ?>
                                             <video width="150" height="150" controls>
-                                                <source src="<?php$imageReviewURL ?>" type="video/mp4">
+                                                <source src="<?php $imageReviewURL ?>" type="video/mp4">
                                             </video>
                                         <?php
                                         }
@@ -385,7 +384,7 @@ $shopUserId = $shopChat['user_id']
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script src="../user/javascript/seafood_infor_chat.js"></script>
+<script src="../user/javascript/seafood_infor_conversation.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {

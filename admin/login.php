@@ -55,11 +55,11 @@ include "../mail_process.php";
                                                 <div class="panel-body">
                                                     <div class="form-group">
                                                         <label for="passwordUserLogin">Password</label>
-                                                        <div class="input-group" id="show_hide_password">
+                                                        <div class="input-group" style="flex-flow: row-reverse;" id="show_hide_password">
                                                             <input type="password" class="form-control" placeholder="Enter password" name="passwordUserLogin" id="passwordUserLogin" required>
-                                                            <label class="custom-input-label" for="inputFile">
+                                                            <label class="custom-input-label" style="position: absolute;" for="inputFile">
                                                                 <div class="input-group-addon">
-                                                                    <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                                                    <a href=""><i class="fa fa-eye-slash" style=" font-size: 18px; " aria-hidden="true"></i></a>
                                                                 </div>
                                                             </label>
                                                         </div>

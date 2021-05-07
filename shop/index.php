@@ -41,7 +41,6 @@ if (isset($_POST["addShopInfor"])) {
             if ($addShop) {
 ?>
                 <script type="text/javascript">
-                    swal("Notice", "Adding shop information successfully!", "success");
                     window.location.replace("./index.php");
                 </script>
             <?php
