@@ -17,7 +17,7 @@ ob_start();
                 <div class="header-content">
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
                         <a class="navbar-brand" href="../user/index.php" id="logo-brand">
-                            <i class="fas fa-home"></i> Seller channel
+                            <i class="fas fa-home"></i> Index page
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ciliweb-navBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -79,7 +79,7 @@ ob_start();
                     </nav>
                     <nav class="navbar navbar-expand-lg navbar-light bg-nav">
                         <a class="navbar-brand" href="../account/login.php">
-                            <img src="https://ciliweb.vn/ciliweb_project/user/images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="55" height="55">
+                            <img src="../images/ciliweb.png" class="rounded-circle" id="img-logo" alt="Logo Cili" width="55" height="55">
                         </a>
                         <div class="collapse navbar-collapse">
                         </div>
@@ -206,7 +206,8 @@ ob_start();
                                                 ?>
                                                 <script>
                                                     var recognition = new webkitSpeechRecognition();
-
+                                                    recognition.continuous = true;
+                                                    recognition.lang = 'vi-VN';
                                                     recognition.onresult = function(event) {
                                                         var saidText = "";
                                                         for (var i = event.resultIndex; i < event.results.length; i++) {
@@ -216,6 +217,7 @@ ob_start();
                                                                 saidText += event.results[i][0].transcript;
                                                             }
                                                         }
+                                                        console.log("result", event);
                                                         // Update Textbox value
                                                         document.getElementById('keywords').value = saidText;
                                                         // Search Posts

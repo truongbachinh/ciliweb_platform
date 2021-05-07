@@ -29,7 +29,17 @@
                 </li>
                 <div class="nav-item m-r-3">
                     <a href="#">
-                        <b><?= $_SESSION['current_user']['username'] ?></b>
+                        <b>
+                            <?php
+                            if (isset($rowShop['shop_name'])) {
+                            ?>
+                                <?= $rowShop['shop_name'] ?>
+                            <?php
+                            }
+                            ?>
+
+
+                        </b>
                     </a>
                 </div>
             <?php else : ?>

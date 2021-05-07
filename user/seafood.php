@@ -70,7 +70,7 @@
                                 </p>
                                 <div class="progress">
                                     <div class="progress-bar" role="progressbar" aria-valuenow=" <?= $totalSoldOfShop ?>" aria-valuemin="0" aria-valuemax="<?= $totalProduct ?>" style='width:<?= $widthBar ?>'>
-                                        Sold <?= $totalSoldOfShop  ?>
+                                        <span style="color: #2c7873;"> Sold <?= $totalSoldOfShop  ?></span>
                                     </div>
                                 </div>
                             </div>

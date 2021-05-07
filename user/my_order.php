@@ -104,7 +104,7 @@ $orderProduct = $link->query(" ");
                                                     <?php
                                                     } elseif ($rowMyOrderProduct['shipping_order_status'] == 4) {
                                                     ?>
-                                                        <td>Cencle</td>
+                                                        <td> <?= date('d-M-Y  H:i:s', strtotime($rowMyOrderProduct['shipping_cancle_time'])) ?> </td>
                                                     <?php
                                                     }
                                                     ?>
@@ -166,8 +166,6 @@ $orderProduct = $link->query(" ");
                             <div class="form-group">
                                 <label for="updateShippingStatus">Shipping Status</label>
                                 <select id="updateShippingStatus" class="form-control">
-                                    <option value="1">Waiting </option>
-                                    <option value="2">Shipped</option>
                                     <option value="3">Order Received</option>
                                     <option value="4">Order canceled</option>
                                 </select>

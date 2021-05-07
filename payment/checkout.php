@@ -46,6 +46,8 @@ while ($rowShop = mysqli_fetch_array($result)) {
     <link src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
     <link rel="stylesheet" href="./css/checkout.css">
     <link rel="stylesheet" href="../assets/css/error.css">
+
+    <?php include "../partials/html_header.php"; ?>
 </head>
 
 <body>

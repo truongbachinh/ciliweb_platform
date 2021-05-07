@@ -15,7 +15,7 @@ if ($isLoggedInUser) {
 }
 
 if (!empty($userId)) {
-    $resultUserInfor = mysqli_query($link, "SELECT  user.*, user_infor.*  from user_infor INNER JOIN user ON user.user_id = user_infor.ui_user_id WHERE `user_id` = '$userId'");
+    $resultUserInfor = mysqli_query($link, "SELECT  user.*, user_infor.*  from user LEFT JOIN user_infor ON user.user_id = user_infor.ui_user_id WHERE `user_id` = '$userId'");
 }
 
 if (isset($resultUserInfor)) {

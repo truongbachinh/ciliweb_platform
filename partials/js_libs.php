@@ -38,6 +38,3 @@
 
 <!-- Check File -->
 <script src="../assets/js/checkFile.js"></script>
-
-<!--Tableau javascript API-->
-<script src="https://clientreporting.theinformationlab.co.uk/javascripts/api/tableau-2.min.js"></script>

@@ -24,70 +24,135 @@ include "../config_user.php";
                                 <?php } ?>
                             </div>
                             <h4 class="text-center m-t-20">
-                                <div class="text text-center m-b-5"><?= (!empty($rowUser) ? ($rowUser["ui_lastname"]) : "Null") ?></div>
+                                <div class="text text-center m-b-5"><?= (!empty($rowUser) ? ($rowUser["fullname"]) : "Null") ?></div>
                             </h4>
                         </div>
                         <!-- Modal edit profile -->
-                        <div class="row justify-content-end p-r-40">
-                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                                Edit profile
-                            </button>
-                            <!-- Model edit -->
-                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalCenterTitle">Edit profile
-                                            </h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="" name="formAddInfor" id="addUserInfor" method="post" class="form-horizontal" enctype="multipart/form-data">
-                                                <div class="form-group">
-                                                    <label for="inputFirstName">First name</label>
-                                                    <input type="text" class="form-control" id="inputFirstName" name="firstName">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputLastName">Last name</label>
-                                                    <input type="text" class="form-control" id="inputLastName" name="lastName">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputPhone">Phone</label>
-                                                    <input type="text" class="form-control" id="inputPhone" name="phone">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputAddress">Address</label>
-                                                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputPhone">DOB</label>
-                                                    <input type="date" class="form-control" id="inputDoB" name="DoB">
-                                                </div>
-                                                <div class="form-group">
-                                                    <div>
-                                                        <p class=" font-secondary">Avatar Uploads</p>
-                                                        <div class="input-group mb-3">
-                                                            <div onload="GetFileInfo ()">
-                                                                <input type="file" class="custom-file-input" id="inputFile" name="avatarUser" onchange="GetFileInfo ()">
-                                                                <label class="custom-file-label" for="inputFile">Choose file</label>
-                                                            </div>
-                                                        </div>
-                                                        <div id="info" style="margin-top:10px"></div>
-                                                    </div>
-                                                </div>
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                    Close
+                        <?php
+                        if (empty($rowUser["ui_avatar"])) {
+                        ?>
+                            <div class="row justify-content-end p-r-40">
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addUserInfor">
+                                    Add detail profile
+                                </button>
+                                <!-- Model edit -->
+                                <div class="modal fade" id="addUserInfor" tabindex="-1" role="dialog" aria-labelledby="addUserInfor" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addUserInfor">Add profile
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
                                                 </button>
-                                                <input type="submit" class="btn btn-primary" name="addProfileUser" value="Save changes">
-                                            </form>
-                                        </div>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="" name="formAddInfor" id="addUserInfor" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                                    <div class="form-group">
+                                                        <label for="inputPhone">Phone</label>
+                                                        <input type="text" class="form-control" id="inputPhone" name="phone">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="inputAddress">Address</label>
+                                                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="inputPhone">DOB</label>
+                                                        <input type="date" class="form-control" id="inputDoB" name="DoB">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <p class=" font-secondary">Avatar Uploads</p>
+                                                            <div class="input-group mb-3">
+                                                                <div onload="GetFileInfo ()">
+                                                                    <input type="file" class="custom-file-input" id="inputFile" name="avatarUser" onchange="GetFileInfo ()">
+                                                                    <label class="custom-file-label" for="inputFile">Choose file</label>
+                                                                </div>
+                                                            </div>
+                                                            <div id="info" style="margin-top:10px"></div>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <input type="submit" class="btn btn-primary " name="addProfileUser" value="Save changes">
+                                                </form>
+                                            </div>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php
+                        } else {
+                        ?>
+                            <div class="row justify-content-end p-r-40">
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" onclick="editUserInfor(<?= $userId ?>)" data-target="#editUserInfor">
+                                    Edit profile
+                                </button>
+                                <!-- Model edit -->
+                                <div class="modal fade" id="editUserInfor" tabindex="-1" role="dialog" aria-labelledby="editUserInfor" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editUserInfor">Edit profile
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="" name="formEditInfor" id="editUserInfor" method="post" class="form-horizontal" enctype="multipart/form-data">
+                                                    <div class="form-group">
+                                                        <label for="updateFullName">Full name</label>
+                                                        <input type="text" class="form-control" id="updateFullName" name="updateFullName">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="updateLastName">Email</label>
+                                                        <input type="text" class="form-control" id="updateEmail" name="updateEmail">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="updatePhone">Phone</label>
+                                                        <input type="text" class="form-control" id="updatePhone" name="updatePhone">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="updateAddress">Address</label>
+                                                        <input type="text" class="form-control" id="updateAddress" name="updateAddress">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="updatePhone">DOB</label>
+                                                        <input type="date" class="form-control" id="updateDoB" name="updateDoB">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="inputFile">User avatar</label>
+                                                        <img src="<?php echo $imageURL; ?>" alt="" width="50" height="50" style="display: flex; flex-direction:row; margin:10px 20px" />
+                                                        <div>
+                                                            <p class=" font-secondary">Avatar Uploads</p>
+                                                            <div class="input-group mb-3">
+                                                                <div onload="GetFileInfo ()">
+                                                                    <input type="file" class="custom-file-input" id="inputFile" name="editAvatarUser" onchange="GetFileInfo ()">
+                                                                    <label class="custom-file-label" for="inputFile">Choose file</label>
+                                                                </div>
+                                                            </div>
+                                                            <div id="info" style="margin-top:10px"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <input type="submit" class="btn btn-primary btn-edit-user-infor-detail" name="updateProfileUser" value="Save changes">
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                        ?>
+
                         <div class="row justify-content-md-center">
                             <div class="col-md-9">
                                 <div class="tab-infor m-b-15">
@@ -101,6 +166,25 @@ include "../config_user.php";
                                 <div class="about-student">
                                     <div class="tab-content profile-tab" id="myTabContent">
                                         <div class="tab-pane fade active show" id="inforUser" role="tabpanel" aria-labelledby="home-tab">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label>Email</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <?php
+                                                    if (!empty($rowUser["email"])) {
+                                                    ?>
+                                                        <p><?= $rowUser["email"] ?></p>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <p>Null</p>
+                                                    <?php
+                                                    }
+                                                    ?>
+
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label>User phone</label>
@@ -227,14 +311,6 @@ include "../config_user.php";
         }, "Letters and spaces only please");
         $('#addUserInfor').validate({
             rules: {
-                firstName: {
-                    required: true,
-                    lettersOnly: true,
-                },
-                lastName: {
-                    required: true,
-                    lettersOnly: true,
-                },
                 phone: {
                     required: true,
                     number: true,
@@ -247,14 +323,6 @@ include "../config_user.php";
                 }
             },
             messages: {
-                firstName: {
-                    required: "Please provide last name!",
-                    lettersOnly: "Please provide only character in alphabet!",
-                },
-                lastName: {
-                    required: "Please provide first name!",
-                    lettersOnly: "Please provide only character in alphabet!",
-                },
                 phone: {
                     required: "Please provide your number phone!",
                     number: "Please provide number phone!",
@@ -280,7 +348,7 @@ if (isset($_POST["addProfileUser"])) {
     $fileType = "";
     $tm = md5(time());
     $uploadPath = "./avatar/";
-    $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+    $allowTypes = array('jpg', 'JPG', 'PNG', 'png', 'jpeg', 'gif');
 
     if (!is_dir($uploadPath)) {
         mkdir($uploadPath, 0777, true);
@@ -294,10 +362,9 @@ if (isset($_POST["addProfileUser"])) {
     if (!empty($fileName)) {
         $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
         if (in_array($fileType, $allowTypes)) {
-            $check = true;
+
             $up = move_uploaded_file($_FILES["avatarUser"]["tmp_name"], $targetFilePath);
         } else {
-
 ?>
             <script>
                 swal("Notice", 'Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.', "warning");
@@ -305,20 +372,15 @@ if (isset($_POST["addProfileUser"])) {
         <?php
         }
     }
-    $result = $link->query("SELECT * from `user_infor` where `ui_user_id` = '$userId'");
-    $count = mysqli_num_rows($result);
 
+    if ($up == true) {
 
-    if ($check == true && $up == true) {
-        if ($count > 0) {
-            $deleteUserInfor =  $link->query("DELETE  from user_infor  where `ui_user_id` = '$userId'");
-        }
-        $addUserInfor = $link->query("INSERT INTO `user_infor` (`ui_id_infor`, `ui_avatar`, `ui_firstname`, `ui_lastname`, `ui_address`, `ui_DOB`, `ui_phone`, `ui_create_time`, `ui_user_id`) VALUES (NULL,'$fileName','$_POST[firstName]','$_POST[lastName]','$_POST[address]','$_POST[DoB]','$_POST[phone]','" . $timeInVietNam . "','$userId')");
+        $addUserInfor = $link->query("INSERT INTO `user_infor` (`ui_id_infor`, `ui_avatar`, `ui_address`, `ui_DOB`, `ui_phone`, `ui_create_time`, `ui_user_id`) VALUES (NULL,'$fileName','$_POST[address]','$_POST[DoB]','$_POST[phone]','" . $timeInVietNam . "','$userId')");
         if ($addUserInfor) {
         ?>
             <script type="text/javascript">
                 swal("Notice", 'Adding user information success !', "success");
-                setTimeout(window.location.replace("./index.php?view=profile&id=<?= $userId ?>"), 500);
+                location.reload();
             </script>
         <?php
         } else {
@@ -326,30 +388,77 @@ if (isset($_POST["addProfileUser"])) {
         ?>
             <script type="text/javascript">
                 swal("Notice", 'Adding user information False !', "warning");
-                window.location.replace("./index.php?view=profile&id=<?= $userId ?>");
+                location.reload();
+            </script>
+            <?php
+        }
+    }
+}
+if (isset($_POST["updateProfileUser"])) {
+
+
+    $updateUserInfor = $link->query("UPDATE `user` SET `email` = '$_POST[updateEmail]' , `fullname` = '$_POST[updateFullName]', `user_update_time` = '$timeInVietNam' WHERE `user_id`= '$userId' ");
+
+    // File upload configuration 
+    $check = false;
+    $upload_query = false;
+    $targetFilePath = "";
+    $fileType = "";
+    $tm = md5(time());
+    $uploadPath = "./avatar/";
+    if (!is_dir($uploadPath)) {
+        mkdir($uploadPath, 0777, true);
+    }
+    $allowTypes = array('jpg', 'JPG', 'PNG', 'png', 'jpeg', 'gif');
+
+    $shopTimeUpdate = time();
+    $updateImg = "";
+    $updateUserProfile = "";
+
+
+
+    $fileName =  basename($_FILES['editAvatarUser']['name']);
+    $fileUp =  $tm . $fileName;
+
+    if (!empty($fileName)) {
+        $updateImg  = $fileUp;
+        $targetFilePath = $uploadPath . $updateImg;
+        $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+        if (!empty($updateImg)) {
+            $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
+            if (in_array(strtolower($fileType), $allowTypes)) {
+                if (move_uploaded_file($_FILES["editAvatarUser"]["tmp_name"], $targetFilePath)) {
+                    $updateUserProfile = $link->query("UPDATE `user_infor` SET `ui_phone`= '$_POST[updatePhone]' , `ui_address`= '$_POST[updateAddress]', `ui_address`= '$_POST[updateAddress]', `ui_avatar`= '$updateImg',`ui_DOB` = '$_POST[updateDoB]' , `ui_update_time`= '$timeInVietNam' WHERE `ui_user_id`= '$userId' ");
+                }
+            } else {
+            ?>
+                <script>
+                    alert("Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed to upload.");
+                </script>
+            <?php
+
+            }
+        } else {
+            ?>
+            <script>
+                alert("Please select a file to upload.");
             </script>
         <?php
+
         }
     } else {
-        if ($count > 0) {
-            $deleteUserInfor =  $link->query("DELETE  from user_infor  where `ui_user_id` = '$userId'");
-        }
-        $addUserInfor = $link->query("INSERT INTO `user_infor` (`ui_id_infor`,`ui_avatar`,  `ui_firstname`, `ui_lastname`, `ui_address`, `ui_DOB`, `ui_phone`, `ui_create_time`, `ui_user_id`) VALUES (NULL,'$rowUser[ui_avatar]','$_POST[firstName]','$_POST[lastName]','$_POST[address]','$_POST[DoB]','$_POST[phone]','" . $timeInVietNam . "','$userId')");
-        if ($addUserInfor) {
+        $updateImg = $rowUser["ui_avatar"];
+        $updateUserProfile = $link->query("UPDATE `user_infor` SET `ui_phone`= '$_POST[updatePhone]' , `ui_address`= '$_POST[updateAddress]', `ui_DOB`= '$_POST[updateDoB]', `ui_avatar`= '$updateImg' , `ui_update_time`= '$timeInVietNam' WHERE `ui_user_id`= '$userId' ");
+    }
+
+    if ($updateUserProfile == true && $updateUserInfor == true) {
         ?>
-            <script type="text/javascript">
-                swal("Notice", 'Adding user information successfully !', "success");
-                setTimeout(window.location.replace("./index.php?view=profile&id=<?= $userId ?>"), 500);
-            </script>
-        <?php
-        } else {
-        ?>
-            <script type="text/javascript">
-                swal("Notice", 'Adding user information False !', "warning");
-                window.location.replace("./index.php?view=profile&id=<?= $userId ?>");
-            </script>
+        <script>
+            alert("Update successfully");
+            location.replace("./index.php?view=profile");
+        </script>
 <?php
-        }
     }
 }
 

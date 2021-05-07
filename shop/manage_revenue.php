@@ -18,133 +18,76 @@ $totalOffline = mysqli_fetch_assoc($queryOffline);
 $totalOfflinePayment = $totalOffline['offline_payment'];
 $totalSumOfflinePayment = $totalOffline['sum_offline_payment'];
 
+$sumPayment = 0;
+$sumPayment = $totalSumOfflinePayment + $totalSumOnlinePayment;
+
+if ($sumPayment != 0) {
+    $dataPiePoints = array(
+
+        array("label" => "Delivery", "y" => ($totalSumOfflinePayment / $sumPayment * 100)),
+        array("label" => "Online", "y" => ($totalSumOnlinePayment / $sumPayment * 100)),
+    );
+}
 
 
-$offlineQuery = $link->query("SELECT orders.order_shop_id, SUM(orders.order_total_cost) as MoneyOfDay , day(orders.order_create_time) as DayOfMonth FROM orders WHERE orders.order_shop_id = $shopId AND orders.shipping_order_status = 3 AND orders.payment_order_status = 1 GROUP BY day(orders.order_create_time)");
-$onlineQuery = $link->query("SELECT orders.order_shop_id, SUM(payments.money) as MoneyOfDay ,shop.shop_name, day(payments.time) as DayOfMonth FROM orders INNER JOIN payments ON payments.payment_order_id = orders.id INNER JOIN shop ON shop.shop_id = orders.order_shop_id WHERE orders.order_shop_id = '$shopId'AND orders.shipping_order_status = 3 AND orders.payment_order_status = 2 GROUP BY day(payments.time)");
-$paymentOnline = array();
+
 $paymentOffLine = array();
-while ($rowOffline = mysqli_fetch_array($offlineQuery)) {
-    $paymentOffLine[] =  $rowOffline;
-}
-while ($rowOnline = mysqli_fetch_array($onlineQuery)) {
-    $paymentOnline[] =  $rowOnline;
-}
-
 $dataPoints1 = array();
+$paymentOnline = array();
 $dataPoints2 = array();
-foreach ($paymentOffLine as $value) {
-    list($dataPoints1[])  = array(
+if (isset($_POST['submitDateChart'])) {
+    $startDate = $_POST['startDate'];
+    $endDate = $_POST['endDate'];
+    $offlineQuery = $link->query("SELECT orders.order_shop_id, SUM(orders.order_total_cost) as MoneyOfDay , day(orders.shipping_receive_time) as DayOfMonth FROM orders WHERE orders.order_shop_id = $shopId AND orders.shipping_order_status = 3 AND orders.payment_order_status = 1  AND orders.shipping_receive_time BETWEEN '$startDate' AND '$endDate'  GROUP BY day(orders.shipping_receive_time)");
 
-        array("label" => $value['DayOfMonth'], "y" => $value['MoneyOfDay']),
-    );
+    while ($rowOffline = mysqli_fetch_array($offlineQuery)) {
+        $paymentOffLine[] =  $rowOffline;
+    }
+    foreach ($paymentOffLine as $value) {
+        list($dataPoints1[])  = array(
+
+            array("label" => $value['DayOfMonth'], "y" => $value['MoneyOfDay']),
+        );
+    }
+
+
+    $onlineQuery = $link->query("SELECT orders.order_shop_id, (payments.money) as MoneyOfDay , day(orders.shipping_receive_time) as DayOfMonth FROM orders INNER JOIN payments ON payments.payment_order_id = orders.id WHERE orders.order_shop_id = $shopId AND orders.shipping_order_status = 3 AND orders.payment_order_status = 2 AND orders.shipping_receive_time BETWEEN '$startDate' AND '$endDate' GROUP BY day(orders.shipping_receive_time)");
+
+    while ($rowOnline = mysqli_fetch_array($onlineQuery)) {
+        $paymentOnline[] =  $rowOnline;
+    }
+    foreach ($paymentOnline as $value) {
+        list($dataPoints2[])  = array(
+            array("label" => $value['DayOfMonth'], "y" => $value['MoneyOfDay']),
+        );
+    }
+} else {
+    $offlineQuery = $link->query("SELECT orders.order_shop_id, SUM(orders.order_total_cost) as MoneyOfDay , day(orders.shipping_receive_time) as DayOfMonth FROM orders WHERE orders.order_shop_id = $shopId AND orders.shipping_order_status = 3 AND orders.payment_order_status = 1 GROUP BY day(orders.shipping_receive_time)");
+    while ($rowOffline = mysqli_fetch_array($offlineQuery)) {
+        $paymentOffLine[] =  $rowOffline;
+    }
+    foreach ($paymentOffLine as $value) {
+        list($dataPoints1[])  = array(
+
+            array("label" => $value['DayOfMonth'], "y" => $value['MoneyOfDay']),
+        );
+    }
+
+
+    $onlineQuery = $link->query("SELECT orders.order_shop_id, SUM(payments.money) as MoneyOfDay , day(orders.shipping_receive_time) as DayOfMonth FROM orders INNER JOIN payments ON payments.payment_order_id = orders.id WHERE orders.order_shop_id =  $shopId AND orders.shipping_order_status = 3 AND orders.payment_order_status = 2 GROUP BY day(orders.shipping_receive_time)");
+    while ($rowOnline = mysqli_fetch_array($onlineQuery)) {
+        $paymentOnline[] =  $rowOnline;
+    }
+    foreach ($paymentOnline as $value) {
+        list($dataPoints2[])  = array(
+            array("label" => $value['DayOfMonth'], "y" => $value['MoneyOfDay']),
+        );
+    }
 }
-foreach ($paymentOnline as $value) {
-    list($dataPoints2[])  = array(
-        array("label" => $value['DayOfMonth'], "y" => $value['MoneyOfDay']),
-    );
-}
 
 
 
-$dataPoints1s = array(
-    array("x" => 2,    "y" => 1.6735),
-    array("x" => 3,    "y" => 1.619),
-    array("x" => 4,    "y" => 1.5673),
-    array("x" => 5,    "y" => 1.5182),
-    array("x" => 6,    "y" => 1.4715),
-    array("x" => 7,    "y" => 1.4271),
-    array("x" => 8,    "y" => 1.3847),
-    array("x" => 9,    "y" => 1.3444),
-    array("x" => 10,    "y" => 1.3059),
-    array("x" => 11,    "y" => 1.2692),
-    array("x" => 12,    "y" => 1.234),
-    array("x" => 13,    "y" => 1.2005),
-    array("x" => 14,    "y" => 1.1683),
-    array("x" => 15,    "y" => 1.1375),
-    array("x" => 16,    "y" => 1.1081),
-    array("x" => 17,    "y" => 1.0798),
-    array("x" => 18,    "y" => 1.0526),
-    array("x" => 19,    "y" => 1.0266),
-    array("x" => 20,    "y" => 1.0016),
-    array("x" => 21,    "y" => 0.9775),
-    array("x" => 22,    "y" => 0.9544),
-    array("x" => 23,    "y" => 0.9321),
-    array("x" => 24,    "y" => 0.9107),
-    array("x" => 25,    "y" => 0.89),
-    array("x" => 26,    "y" => 0.8701),
-    array("x" => 27,    "y" => 0.8509),
-    array("x" => 28,    "y" => 0.8324),
-    array("x" => 29,    "y" => 0.8145),
-    array("x" => 30,    "y" => 0.7972),
-    array("x" => 31,    "y" => 0.7805),
-    array("x" => 32,    "y" => 0.7644),
-    array("x" => 33,    "y" => 0.7488),
-    array("x" => 34,    "y" => 0.7337),
-    array("x" => 35,    "y" => 0.7191),
-    array("x" => 36,    "y" => 0.705),
-    array("x" => 37,    "y" => 0.6913),
-    array("x" => 38,    "y" => 4.678),
-    array("x" => 39,    "y" => 2.6652),
-    array("x" => 40,    "y" => 3.6527),
-    array("x" => 45,    "y" => 1.5958),
-    array("x" => 50,    "y" => 2.5465),
-    array("x" => 55,    "y" => 0.5036),
-    array("x" => 60,    "y" => 1.466),
-    array("x" => 65,    "y" => 1.4329),
-    array("x" => 70,    "y" => 2.4035),
-    array("x" => 75,    "y" => 8.3774),
-    array("x" => 80,    "y" => 7.354)
-);
-$dataPoints2s = array(
-    array("x" => 2,    "y" => 0.9999),
-    array("x" => 3,    "y" => 1),
-    array("x" => 4,    "y" => 1),
-    array("x" => 5,    "y" => 1),
-    array("x" => 6,    "y" => 1.9999),
-    array("x" => 7,    "y" => 0.9999),
-    array("x" => 8,    "y" => 2.9999),
-    array("x" => 9,    "y" => 0.2),
-    array("x" => 10,    "y" => 0.3997),
-    array("x" => 11,    "y" => 0.5996),
-    array("x" => 12,    "y" => 4.9995),
-    array("x" => 13,    "y" => 2.9994),
-    array("x" => 14,    "y" => 1.9992),
-    array("x" => 15,    "y" => 0.9991),
-    array("x" => 16,    "y" => 0.9989),
-    array("x" => 17,    "y" => 0.9988),
-    array("x" => 18,    "y" => 0.9986),
-    array("x" => 19,    "y" => 0.9984),
-    array("x" => 20,    "y" => 0.9982),
-    array("x" => 21,    "y" => 0.998),
-    array("x" => 22,    "y" => 0.9978),
-    array("x" => 23,    "y" => 0.9975),
-    array("x" => 24,    "y" => 0.9973),
-    array("x" => 25,    "y" => 0.997),
-    array("x" => 26,    "y" => 0.9968),
-    array("x" => 27,    "y" => 0.9965),
-    array("x" => 28,    "y" => 0.9962),
-    array("x" => 29,    "y" => 0.9959),
-    array("x" => 30,    "y" => 0.9956),
-    array("x" => 31,    "y" => 0.9953),
-    array("x" => 32,    "y" => 0.995),
-    array("x" => 33,    "y" => 7.9947),
-    array("x" => 34,    "y" => 6.9944),
-    array("x" => 35,    "y" => 2.994),
-    array("x" => 36,    "y" => 3.9937),
-    array("x" => 37,    "y" => 1.9933),
-    array("x" => 38,    "y" => 6.993),
-    array("x" => 39,    "y" => 5.9926),
-    array("x" => 40,    "y" => 1.9922),
-    array("x" => 45,    "y" => 2.9902),
-    array("x" => 50,    "y" => 4.988),
-    array("x" => 55,    "y" => 3.9857),
-    array("x" => 60,    "y" => 2.9832),
-    array("x" => 65,    "y" => 2.9806),
-    array("x" => 70,    "y" => 1.9778),
-    array("x" => 75,    "y" => 2.9748),
-    array("x" => 80,    "y" => 3.9718)
-);
+
 
 
 ?>
@@ -192,7 +135,7 @@ $dataPoints2s = array(
                             <div class="card-body">
 
                                 <div>
-                                    <p class=" text-center text-muted text-overline m-0">Total of orders wiht offline payment</p>
+                                    <p class=" text-center text-muted text-overline m-0">Total of orders wiht delivery payment</p>
                                     <h3 class="fw-400 text-center m-t-10"> <?= $totalOfflinePayment ?></h3>
                                 </div>
                                 <div>
@@ -206,34 +149,93 @@ $dataPoints2s = array(
                     </div>
                 </div>
                 <div class="row ">
-                    <div class="col-12">
-                        <div class="card">
+                    <div class="col-lg-8">
+                        <div class="card m-b-30">
                             <div class="card-header">
-                                <div class="card-title">
-                                    <h2 style="text-align:center"> Manage Revenue</h2>
+                                <form action="" id="formStartToEnd" method="POST">
+                                    <fieldset>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-3">
+                                                <input type="date" class="btn" name="startDate" id="startDate">
+                                            </div>
+                                            <span class="m-t-10 m-l-30">to</span>
+                                            <div class="col-md-3 mb-3">
+                                                <input type="date" class="btn" name="endDate" id="endDate">
+                                            </div>
+                                            <div class="search m-l-30">
+                                                <input type="submit" name="submitDateChart" id="submitDateChart" value="Search" class="btn btn-info">
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                                <div class="col-12 m-b-20">
+                                    <h3>Chart 1</h3>
                                 </div>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div id="chartContainers" style="height: 370px; width: 100%;"></div>
-                                    </div>
+                                <div class="card-body">
+                                    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-4">
+                        <div class="card m-b-30">
+                            <div class="card-header">
+                                <h3>Chart 2</h3>
+                                <h5>The rate of payment</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="chartPieContainer" style="height: 370px; width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
         </section>
         <!--/ PLACE CODE INSIDE THIS AREA -->
     </main>
     <?php include "../partials/js_libs.php"; ?>
 
     <script>
+        $(document).ready(function() {
+            var timeLimit = $('#endDate').val;
+            console.log("Time limit", timeLimit);
+            jQuery.validator.addMethod("greaterThan",
+                function(value, element, params) {
+                    if (!/Invalid|NaN/.test(new Date(value))) {
+                        return new Date(value) > new Date($(params).val());
+                    }
+                    return isNaN(value) && isNaN($(params).val()) ||
+                        (Number(value) > Number($(params).val()));
+                }, 'Must be greater than {0}.');
+
+            jQuery.validator.addMethod("lesterThan",
+                function(value, element, params) {
+                    if (!/Invalid|NaN/.test(new Date(value))) {
+                        return new Date(value) < new Date($(params).val());
+                    }
+                    return isNaN(value) && isNaN($(params).val()) ||
+                        (Number(value) < Number($(params).val()));
+                }, 'Must be lesterThan than {7}.');
+
+
+            $('#formStartToEnd').validate({
+                rules: {
+                    endDate: {
+                        greaterThan: "#startDate",
+
+                    }
+
+                },
+
+                messages: {
+                    endDate: "The end date should be greater than the start date",
+                },
+            })
+        })
+
+
+        document.getElementById('startDate').value = "<?php echo $_POST['startDate']; ?>";
+        document.getElementById('endDate').value = "<?php echo $_POST['endDate']; ?>";
         document.addEventListener("DOMContentLoaded", function(e) {
             let activeId = null;
             $(document).on('click', '.btn-edit-order', function(e) {
@@ -286,14 +288,14 @@ $dataPoints2s = array(
                 },
                 data: [{
                     type: "column",
-                    name: "Offline payment",
+                    name: "Delivery",
                     indexLabel: "{y}",
                     yValueFormatString: "#,###.## VNĐ",
                     showInLegend: true,
                     dataPoints: <?php echo json_encode($dataPoints1, JSON_NUMERIC_CHECK); ?>
                 }, {
                     type: "column",
-                    name: "Online payment",
+                    name: "Online",
                     indexLabel: "{y}",
                     yValueFormatString: "#,###.## VNĐ",
                     showInLegend: true,
@@ -311,64 +313,27 @@ $dataPoints2s = array(
                 chart.render();
             }
 
-
-
-
-            var chart = new CanvasJS.Chart("chartContainers", {
+            var chart = new CanvasJS.Chart("chartPieContainer", {
                 animationEnabled: true,
                 title: {
-                    text: "User payment trend when buying products at the shop"
+                    text: "Payment rate"
                 },
-                axisX: {
-                    title: "Days"
-                },
-                axisY: {
-                    title: "Offlines payment [Off/P]",
-                    titleFontColor: "#4F81BC",
-                    lineColor: "#4F81BC",
-                    labelFontColor: "#4F81BC",
-                    tickColor: "#4F81BC"
-                },
-                axisY2: {
-                    title: "Online payment [On/P]",
-                    titleFontColor: "#C0504E",
-                    lineColor: "#C0504E",
-                    labelFontColor: "#C0504E",
-                    tickColor: "#C0504E"
-                },
-                legend: {
-                    cursor: "pointer",
-                    dockInsidePlotArea: true,
-                    itemclick: toggleDataSeries
-                },
+                subtitles: [{
+                    text: "2021"
+                }],
                 data: [{
-                    type: "line",
-                    name: "Offlines payment",
-                    markerSize: 0,
-                    toolTipContent: "Day: {x} Days <br>{name}: {y} Off/P",
+                    type: "pie",
+                    yValueFormatString: "#,##0.00\"%\"",
+                    indexLabel: "{label} ({y})",
+                    indexLabelFontColor: "#36454F",
+                    indexLabelFontSize: 9,
+                    indexLabelFontWeight: "bolder",
                     showInLegend: true,
-                    dataPoints: <?php echo json_encode($dataPoints1s, JSON_NUMERIC_CHECK); ?>
-                }, {
-                    type: "line",
-                    axisYType: "secondary",
-                    name: "Online payment",
-                    markerSize: 0,
-                    toolTipContent: "Day: {x} Days <br>{name}: {y} On/P",
-                    showInLegend: true,
-                    dataPoints: <?php echo json_encode($dataPoints2s, JSON_NUMERIC_CHECK); ?>
+                    legendText: "{label}",
+                    dataPoints: <?php echo json_encode($dataPiePoints, JSON_NUMERIC_CHECK); ?>
                 }]
             });
             chart.render();
-
-            function toggleDataSeries(e) {
-                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                    e.dataSeries.visible = false;
-                } else {
-                    e.dataSeries.visible = true;
-                }
-                chart.render();
-            }
-
         }
     </script>
 </body>

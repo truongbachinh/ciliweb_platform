@@ -147,7 +147,6 @@
     }
 
     function deleteAllItem() {
-
         $.ajax({
             type: "POST",
             url: '../cart/process_cart.php?view=delete_all_item',
@@ -231,32 +230,6 @@
         }).catch(err => {});
     }
 
-    // $(document).on('click', '.btn-detail-shop', function(e) {
-    //     e.preventDefault();
-    //     const shopId = parseInt($(this).data("id"));
-    //     console.log(shopId)
-    //     Utils.api('get_shop_info_detail', {
-    //         id: shopId
-    //     }).then(response => {
-    //         $('#detailShopAccount').text(response.data.username);
-    //         $('#detailShopName').text(response.data.shop_name);
-    //         $('#detailShopMail').text(response.data.email);
-    //         $('#detailShopAddress').text(response.data.shop_address);
-    //         $('#detailShopDescription').text(response.data.shop_description);
-    //         // var createDate = date("Y-m-d H:i:s", response.data.shop_create_time);
-    //         // $('#detailShopCreateTime').text(createDate);
-    //         // $('#detailShopUpdateTime').text(date("Y-m-d H:i:s", response.data.shop_update_time));
-    //         $('#detailShop').modal();
-    //     }).catch(err => {
-
-    //     })
-    // });
-
-    // function feedbackProduct(productId) {
-    //     $("#fbProduct").val(productId);
-    //     $('#feedbackProductFrom').modal();
-    // }
-
     function feedbackProduct(productId) {
         var pathFile = "../shop/image_products/";
         Utils.api("feedback_product", {
@@ -318,6 +291,51 @@
         console.log("Setinter oke");
         window.location.replace = "./talk_to_user.php";
     }
+
+
+
+    function editUserInfor(userId) {
+        console.log('userId', userId)
+        Utils.api("get_user_info_detail", {
+            id: userId
+        }).then(response => {
+            $("#updateFullName").val(response.data.fullname)
+            $("#updateEmail").val(response.data.email)
+            $("#updatePhone").val(response.data.ui_phone)
+            $("#updateAddress").val(response.data.ui_address)
+            $("#updateDoB").val(response.data.ui_DOB)
+            $('#editUserInfor').modal();
+        }).catch(err => {});
+    }
+
+
+
+
+    // function editOrderUser(orderId) {
+    //     console.log('hello', orderId)
+    //     $('#editOrderUser .btn-update-order').unbind('click');
+    //     Utils.api("get_order_user_shipping_info", {
+    //         id: orderId
+    //     }).then(response => {
+    //         $("#idOrderUser").val(response.data.id)
+    //         $("#updateOrderId").html(response.data.id)
+    //         $("#updateOrderAccount").html(response.data.username)
+    //         $("#updateOrderTime").html(response.data.order_create_time)
+    //         $("#updateShippingStatus").val(response.data.shipping_order_status)
+    //         $('#editOrderUser').modal();
+    //         $('#editOrderUser .btn-update-order').click(() => {
+    //             Utils.api("update_order_user_shipping_infor", {
+    //                 id: orderId,
+    //                 updateShippingStatus: $("#updateShippingStatus").val(),
+    //             }).then((response) => {
+    //                 swal("Notice", response['msg'], "success").then(function(e) {
+    //                     location.reload()
+    //                 });
+    //                 $('#feedbackForm').modal();
+    //             });
+    //         });
+    //     }).catch(err => {});
+    // }
 </script>
 
 <script src="../user/javascript/conversation.js"></script>

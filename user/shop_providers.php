@@ -19,7 +19,7 @@
                     ?>
                         <a href="" style="text-decoration: none;">
                             <div id="shopIdSearch" data-id="<?= $row['shop_id'] ?>" class="item-shop btn-get-shop-id" style="width: 120px; ">
-                                <div class="card card-block card-4" style="margin-top: 6px;">
+                                <div class="change-color-card-shop card card-block card-4 " style="margin-top: 6px;">
                                     <div class="card-body">
 
                                         <?php
@@ -52,6 +52,10 @@
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script type="text/javascript">
+            var $li = $('.change-color-card-shop').on("click", function() {
+                $li.removeClass('card-change');
+                $(this).addClass('card-change');
+            });
             $(document).ready(function() {
                 var $item = $('div.item-shop'), //Cache your DOM selector
                     visible = 4, //Set the number of items that will be visible
